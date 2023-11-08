@@ -19,8 +19,9 @@ CONTENTS
 def display_content() -> None:
     content = dedent(
         f"""
-        このページでは画像生成を行います😊  
-        by Ikezu Shun🍓
+        このページでは画像生成を行います😊 
+        Powered by DALL·E 3
+        Made by Shun🍓
         """
     )
     st.markdown(content)
@@ -29,20 +30,23 @@ display_content()
 
 client = OpenAI(api_key=EnvEnum.OPENAI_APIKEY.value)
 
-text = st.text_input('生成したい画像のヒントを入力')
+request_text = st.text_input('生成したい画像のヒントを入力')
 submit_button = st.button("送信", type="primary")
 
 if submit_button:
-  response = client.images.generate(
-    model="dall-e-3",
-    prompt=text,
-    size="1024x1024",
-    quality="standard",
-    n=1,
-  )
+  with st.spinner('画像生成中…'):
+    response = client.images.generate(
+      model="dall-e-3",
+      prompt=request_text,
+      size="1024x1024",
+      quality="standard",
+      n=1,
+    )
+    st.success('生成完了！')
   
   image_url = response.data[0].url
 
-  st.image(image_url, caption='生成された画像',use_column_width=True)
-  st.markdown(f'[生成された画像(リンク)]({image_url})')
+  st.image(image_url, caption=request_text, use_column_width=True)
+
+  st.link_button("画像(リンク)", image_url)
   st.balloons()
