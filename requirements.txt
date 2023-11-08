@@ -1,0 +1,3 @@
+python-dotenv==1.0.0
+streamlit==1.28.1
+openai==1.1.1
