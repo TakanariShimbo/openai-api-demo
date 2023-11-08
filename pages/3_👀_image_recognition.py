@@ -13,7 +13,7 @@ client = OpenAI(api_key=EnvEnum.OPENAI_APIKEY.value)
 
 TitleComponent.set_page_configs(
     icon="👀",
-    title="ImageRecognition",
+    title="Image Recognition",
 )
 
 def encode_image(image_array):

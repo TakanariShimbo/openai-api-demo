@@ -37,14 +37,14 @@ class OnSubmitHandler:
 # Set Titles
 TitleComponent.set_page_configs(
     icon="💬",
-    title="ChatGPT",
+    title="Chat GPT",
 )
 
 
 # display model setting
 st.write("### Model Setting")
 selected_model_value = st.selectbox(
-    label="ChatGPT Model",
+    label="Chat GPT Model",
     options=ChatGptEnum.to_value_list(),
     index=SessionStateHandler.get_chat_model_index(),
     placeholder="Select model...",

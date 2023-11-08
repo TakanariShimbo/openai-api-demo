@@ -19,7 +19,7 @@ TITLE
 """
 TitleComponent.set_page_configs(
     icon="🌅",
-    title="ImageGeneration",
+    title="Image Generation",
 )
 
 
