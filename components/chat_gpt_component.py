@@ -42,35 +42,35 @@ class ChatGptComponent:
         self.__selected_model_enum: Optional[ChatGptEnum]
 
     def display_component(self):
-        res = self.__display_model_setting()
+        res = self.__step1_display_model_setting()
         if not res.go_next:
             return
         if res.call_return:
             st.rerun()
             return
 
-        res = self.__apply_model_setting()
+        res = self.__step2_apply_model_setting()
         if not res.go_next:
             return
         if res.call_return:
             st.rerun()
             return
 
-        res = self.__display_chat_history()
+        res = self.__step3_display_chat_history()
         if not res.go_next:
             return
         if res.call_return:
             st.rerun()
             return
 
-        res = self.__display_new_chat()
+        res = self.__step4_display_new_chat()
         if not res.go_next:
             return
         if res.call_return:
             st.rerun()
             return
 
-    def __display_model_setting(self) -> SubComponentResult:
+    def __step1_display_model_setting(self) -> SubComponentResult:
         st.write("### Model Setting")
         self.__selected_model_value = st.selectbox(
             label="Chat GPT Model",
@@ -80,7 +80,7 @@ class ChatGptComponent:
         )
         return SubComponentResult()
 
-    def __apply_model_setting(self) -> SubComponentResult:
+    def __step2_apply_model_setting(self) -> SubComponentResult:
         if not self.__selected_model_value:
             st.error("Please select model...")
             return SubComponentResult(go_next=False)
@@ -96,7 +96,7 @@ class ChatGptComponent:
         self.__selected_model_enum = selected_model_enum
         return SubComponentResult()
 
-    def __display_chat_history(self) -> SubComponentResult:
+    def __step3_display_chat_history(self) -> SubComponentResult:
         if not self.__selected_model_enum:
             st.error("Faild to setting model...")
             return SubComponentResult(go_next=False)
@@ -112,7 +112,7 @@ class ChatGptComponent:
 
         return SubComponentResult()
 
-    def __display_new_chat(self) -> SubComponentResult:
+    def __step4_display_new_chat(self) -> SubComponentResult:
         if not self.__selected_model_enum:
             st.error("Faild to setting model...")
             return SubComponentResult(go_next=False)
