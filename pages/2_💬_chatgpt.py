@@ -75,8 +75,8 @@ else:
 
     inputed_prompt = st.chat_input(
         placeholder="Input prompt ...",
-        on_submit=OnSubmitHandler.on_submit_start(),
-        disabled=not SessionStateHandler.get_chat_submit_button_state(),
+        on_submit=OnSubmitHandler.on_submit_start,
+        disabled=SessionStateHandler.get_chat_submit_button_state(),
     )
     if inputed_prompt:
         answer = OnSubmitHandler.on_submiting(prompt=inputed_prompt)
