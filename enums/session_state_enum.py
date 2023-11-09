@@ -7,3 +7,7 @@ class SessionStateEnum(Enum):
     CHAT_MODEL_INDEX = auto()
 
     IMAGE_GENERATION_MODEL_INDEX = auto()
+    IMAGE_GENERATION_SIZE_INDEX = auto()
+    IMAGE_GENERATION_QUALITY_INDEX = auto()
+    IMAGE_GENERATION_DESCRIPTION = auto()
+    IMAGE_GENERATION_URL = auto()

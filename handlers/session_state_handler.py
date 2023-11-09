@@ -58,3 +58,48 @@ class SessionStateHandler:
     @staticmethod
     def set_image_generation_model_label(model_label: str) -> None:
         st.session_state[SessionStateEnum.IMAGE_GENERATION_MODEL_INDEX.name] = model_label
+    
+    """
+    IMAGE_GENERATOR_SIZE_INDEX
+    """
+    @staticmethod
+    def get_image_generation_size_label() -> int:
+        return st.session_state.get(SessionStateEnum.IMAGE_GENERATION_SIZE_INDEX.name, None)
+
+    @staticmethod
+    def set_image_generation_size_label(size_label: str) -> None:
+        st.session_state[SessionStateEnum.IMAGE_GENERATION_SIZE_INDEX.name] = size_label
+
+    """
+    IMAGE_GENERATOR_QUALITY_INDEX
+    """
+    @staticmethod
+    def get_image_generation_quality_label() -> int:
+        return st.session_state.get(SessionStateEnum.IMAGE_GENERATION_QUALITY_INDEX.name, None)
+
+    @staticmethod
+    def set_image_generation_quality_label(quality_label: str) -> None:
+        st.session_state[SessionStateEnum.IMAGE_GENERATION_QUALITY_INDEX.name] = quality_label
+
+    """
+    IMAGE_GENERATOR_DESCRIPTION
+    """
+    @staticmethod
+    def get_image_generation_description() -> int:
+        return st.session_state.get(SessionStateEnum.IMAGE_GENERATION_DESCRIPTION.name, None)
+
+    @staticmethod
+    def set_image_generation_description(description: str) -> None:
+        st.session_state[SessionStateEnum.IMAGE_GENERATION_DESCRIPTION.name] = description
+
+    """
+    IMAGE_GENERATOR_IMAGE_URL
+    """
+    @staticmethod
+    def get_image_generation_image_url() -> int:
+        return st.session_state.get(SessionStateEnum.IMAGE_GENERATION_URL.name, None)
+
+    @staticmethod
+    def set_image_generation_image_url(image_url: str) -> None:
+        st.session_state[SessionStateEnum.IMAGE_GENERATION_URL.name] = image_url
+
