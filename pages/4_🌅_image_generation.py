@@ -6,13 +6,15 @@ from components.title_component import TitleComponent
 # from enums.env_enum import EnvEnum
 
 # from enums.sender_enum import SenderEnum
-# from handlers.session_state_handler import SessionStateHandler
-from enums.image_generator_enum import (
-    ImageGeneratorModelEnum,
-    ImageGeneratorSizeEnum,
-    ImageGeneratorQualityEnum,
+from handlers.session_state_handler import SessionStateHandler
+from enums.image_generation_enum import (
+    ImageGenerationModelEnum,
+    ImageGenerationSizeEnum,
+    ImageGenerationQualityEnum,
 )
-from handlers.image_generator_handler import ImageGeneratorHandler
+from handlers.image_generation_handler import ImageGenerationHandler
+
+from typing import Optional
 
 """
 TITLE
@@ -40,41 +42,55 @@ def display_content() -> None:
 
 display_content()
 
-# display model setting
-with st.form("setting_form", clear_on_submit=True):
-    st.write("### Settings")
-    col = st.columns(3)
-    selected_model_value = col[0].selectbox(
-        label="DALL-E Model",
-        options=ImageGeneratorModelEnum.to_value_list(),
-        placeholder="Select model...",
-    )
-    st.session_state.model = selected_model_value
-    selected_size_value = col[1].selectbox(
-        label="Size",
-        options=ImageGeneratorSizeEnum.to_value_list(),
-        placeholder="Select size...",
-    )
-    selected_quality_value = col[2].selectbox(
-        label="Quality",
-        options=ImageGeneratorQualityEnum.to_value_list(),
-        placeholder="Quality size...",
-    )
 
-    request_text = st.text_area(label="Description of the image", placeholder="Please enter a description of the image to be generated")
-    submit_button = st.form_submit_button("Send", type="primary")
+def get_index(model_list: list, label: str) -> Optional[int]:
+    if not label:
+        return None
+    return model_list.index(label)
 
-if not selected_model_value:
+    # display model setting
+
+st.write("### Settings")
+col = st.columns(3)
+current_model_label = SessionStateHandler.get_image_generation_model_label()
+selected_model_label = col[0].selectbox(
+    label="DALL-E Model",
+    options=ImageGenerationModelEnum.to_value_list(),
+    index=get_index(ImageGenerationModelEnum.to_value_list(), current_model_label),
+    placeholder="Select model...",
+)
+if selected_model_label:
+    SessionStateHandler.set_image_generation_model_label(model_label=selected_model_label)
+
+selected_size_label = col[1].selectbox(
+    label="Size",
+    options=ImageGenerationSizeEnum.to_value_list(),
+    placeholder="Select size...",
+)
+selected_quality_label = col[2].selectbox(
+    label="Quality",
+    options=ImageGenerationQualityEnum.to_value_list(),
+    placeholder="Quality size...",
+)
+
+request_text = st.text_area(
+    label="Description of the image",
+    placeholder="Please enter a description of the image to be generated",
+)
+submit_button = st.button("Send", type="primary")
+
+
+if not selected_model_label:
     st.error("Please select setting menu")
 
 else:
     if submit_button:
         with st.spinner("Image generating..."):
-            image_url = ImageGeneratorHandler.get_image_url(
+            image_url = ImageGenerationHandler.get_image_url(
                 prompt=request_text,
-                model=selected_model_value,
-                size=selected_size_value,
-                quality=selected_quality_value,
+                model=selected_model_label,
+                size=selected_size_label,
+                quality=selected_quality_label,
             )
             st.success("Generation complete!")
             st.image(image_url, caption=request_text, use_column_width=True)

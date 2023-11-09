@@ -1,7 +1,9 @@
 from enum import Enum, auto
 
 
-class SessionStateType(Enum):
+class SessionStateEnum(Enum):
     CHAT_SUBMIT_BUTTON_STATE = auto()
     CHAT_HISTORY = auto()
     CHAT_MODEL_INDEX = auto()
+
+    IMAGE_GENERATION_MODEL_INDEX = auto()
