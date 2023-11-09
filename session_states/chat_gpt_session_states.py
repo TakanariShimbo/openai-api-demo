@@ -29,7 +29,7 @@ class ChatGptSessionStates:
     @staticmethod
     def get_submit_button_state() -> bool:
         return st.session_state.get(
-            ChatGptSessionStateEnum.SUBMIT_BUTTON_STATE.name,
+            ChatGptSessionStateEnum.CHAT_SUBMIT_BUTTON_STATE.name,
             ChatGptSessionStateDefaults.get_SUBMIT_BUTTON_STATE(),
         )
 
@@ -37,7 +37,7 @@ class ChatGptSessionStates:
     def set_submit_button_state(
         is_submitting: bool = ChatGptSessionStateDefaults.get_SUBMIT_BUTTON_STATE(),
     ) -> None:
-        st.session_state[ChatGptSessionStateEnum.SUBMIT_BUTTON_STATE.name] = is_submitting
+        st.session_state[ChatGptSessionStateEnum.CHAT_SUBMIT_BUTTON_STATE.name] = is_submitting
 
     """
     CHAT_HISTORY
@@ -69,7 +69,7 @@ class ChatGptSessionStates:
     @staticmethod
     def get_model_type() -> ChatGptModelEnum:
         return st.session_state.get(
-            ChatGptSessionStateEnum.MODEL_TYPE.name,
+            ChatGptSessionStateEnum.CHAT_MODEL_TYPE.name,
             ChatGptSessionStateDefaults.get_MODEL_TYPE(),
         )
 
@@ -77,4 +77,4 @@ class ChatGptSessionStates:
     def set_model_type(
         model_type: ChatGptModelEnum = ChatGptSessionStateDefaults.get_MODEL_TYPE(),
     ) -> None:
-        st.session_state[ChatGptSessionStateEnum.MODEL_TYPE.name] = model_type
+        st.session_state[ChatGptSessionStateEnum.CHAT_MODEL_TYPE.name] = model_type

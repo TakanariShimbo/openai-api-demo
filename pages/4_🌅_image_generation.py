@@ -91,7 +91,7 @@ if selected_quality_value:
 
 # --- Text area ---
 inputed_user_prompt = st.text_area(
-    label="Description of the image",
+    label="User Prompt",
     value=ImageGenerationSessionStates.get_user_prompt(),
     placeholder="Please enter a description of the image to be generated",
 )
@@ -101,22 +101,21 @@ if inputed_user_prompt:
 submit_button = st.button("Send", type="primary")
 
 
-if not (selected_model_value or selected_quality_value or selected_quality_value):
-    st.error("Please select setting menu")
+if submit_button:
+    # if not (selected_model_value and selected_quality_value and selected_quality_value and inputed_user_prompt):
+    #     st.error("Please select setting menu")
+    # else:
+    with st.spinner("Image generating..."):
+        current_image_url = ImageGenerationSessionStates.get_image_url()
+        image_url = ImageGenerationHandler.get_image_url(
+            prompt=ImageGenerationSessionStates.get_user_prompt(),
+            model_type=ImageGenerationSessionStates.get_model_type(),
+            size_type=ImageGenerationSessionStates.get_size_type(),
+            quality_type=ImageGenerationSessionStates.get_quality_type(),
+        )
+        if image_url:
+            ImageGenerationSessionStates.set_image_url(image_url=image_url)
+        st.success("Generation complete!")
+        st.balloons()
 
-else:
-    if submit_button:
-        with st.spinner("Image generating..."):
-            current_image_url = ImageGenerationSessionStates.get_image_url()
-            image_url = ImageGenerationHandler.get_image_url(
-                prompt=inputed_user_prompt,
-                model=selected_model_value,
-                size=selected_size_value,
-                quality=selected_quality_value,
-            )
-            if image_url:
-                ImageGenerationSessionStates.set_image_url(image_url=image_url)
-            st.success("Generation complete!")
-            st.balloons()
-
-    display_image()
+display_image()

@@ -2,15 +2,15 @@ from enum import Enum, auto
 
 
 class ChatGptSessionStateEnum(Enum):
-    SUBMIT_BUTTON_STATE = auto()
-    MODEL_TYPE = auto()
+    CHAT_SUBMIT_BUTTON_STATE = auto()
+    CHAT_MODEL_TYPE = auto()
     CHAT_HISTORY = auto()
 
     
 class ImageGenerationSessionStateEnum(Enum):
-    MODEL_TYPE = auto()
-    SIZE_TYPE = auto()
-    QUALITY_TYPE = auto()
-    USER_PROMPT = auto()
-    IMAGE_URL = auto()
+    IMAGE_GENERATION_MODEL_TYPE = auto()
+    IMAGE_GENERATION_SIZE_TYPE = auto()
+    IMAGE_GENERATION_QUALITY_TYPE = auto()
+    IMAGE_GENERATION_USER_PROMPT = auto()
+    IMAGE_GENERATION_IMAGE_URL = auto()
     
