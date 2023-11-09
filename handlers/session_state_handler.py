@@ -6,16 +6,30 @@ from enums.sender_enum import SenderEnum
 from enums.session_state_enum import SessionStateEnum
 
 
+class SessionStateDefaults:
+    @staticmethod
+    def get_CHAT_SUBMIT_BUTTON_STATE():
+        return False
+
+    @staticmethod
+    def get_CHAT_HISTORY():
+        return []
+
+    @staticmethod
+    def get_CHAT_MODEL_INDEX():
+        return 0
+    
+
 class SessionStateHandler:
     """
     CHAT_SUBMIT_BUTTON_STATE
     """
     @staticmethod
     def get_chat_submit_button_state() -> bool:
-        return st.session_state.get(SessionStateEnum.CHAT_SUBMIT_BUTTON_STATE.name, False)
+        return st.session_state.get(SessionStateEnum.CHAT_SUBMIT_BUTTON_STATE.name, SessionStateDefaults.get_CHAT_SUBMIT_BUTTON_STATE())
 
     @staticmethod
-    def set_chat_submit_button_state(is_submitting: bool = False) -> None:
+    def set_chat_submit_button_state(is_submitting: bool = SessionStateDefaults.get_CHAT_SUBMIT_BUTTON_STATE()) -> None:
         st.session_state[SessionStateEnum.CHAT_SUBMIT_BUTTON_STATE.name] = is_submitting
 
     """
@@ -23,7 +37,7 @@ class SessionStateHandler:
     """
     @staticmethod
     def get_chat_history() -> List[Dict[str, str]]:
-        return st.session_state.get(SessionStateEnum.CHAT_HISTORY.name, [])
+        return st.session_state.get(SessionStateEnum.CHAT_HISTORY.name, SessionStateDefaults.get_CHAT_HISTORY())
 
     @staticmethod
     def add_chat_history(sender_type: SenderEnum, content: str) -> None:
@@ -35,17 +49,17 @@ class SessionStateHandler:
 
     @staticmethod
     def reset_chat_history() -> None:
-        st.session_state[SessionStateEnum.CHAT_HISTORY.name] = []
+        st.session_state[SessionStateEnum.CHAT_HISTORY.name] = SessionStateDefaults.get_CHAT_HISTORY()
 
     """
     CHAT_MODEL_INDEX
     """
     @staticmethod
     def get_chat_model_index() -> int:
-        return st.session_state.get(SessionStateEnum.CHAT_MODEL_INDEX.name, 0)
+        return st.session_state.get(SessionStateEnum.CHAT_MODEL_INDEX.name, SessionStateDefaults.get_CHAT_MODEL_INDEX())
 
     @staticmethod
-    def set_chat_model_index(model_index: int = 0) -> None:
+    def set_chat_model_index(model_index: int = SessionStateDefaults.get_CHAT_MODEL_INDEX()) -> None:
         st.session_state[SessionStateEnum.CHAT_MODEL_INDEX.name] = model_index
 
     """
