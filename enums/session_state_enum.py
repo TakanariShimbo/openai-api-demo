@@ -8,9 +8,9 @@ class ChatGptSessionStateEnum(Enum):
 
     
 class ImageGenerationSessionStateEnum(Enum):
-    MODEL_INDEX = auto()
-    SIZE_INDEX = auto()
-    QUALITY_INDEX = auto()
+    MODEL_TYPE = auto()
+    SIZE_TYPE = auto()
+    QUALITY_TYPE = auto()
     USER_PROMPT = auto()
     IMAGE_URL = auto()
     

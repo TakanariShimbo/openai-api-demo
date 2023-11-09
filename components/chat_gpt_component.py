@@ -3,7 +3,7 @@ from typing import Optional
 import streamlit as st
 
 from enums.sender_enum import SenderEnum
-from enums.chatgpt_enum import ChatGptEnum
+from enums.chatgpt_enum import ChatGptModelEnum
 from session_states.chat_gpt_session_states import ChatGptSessionStates
 from handlers.chatgpt_handler import ChatGptHandler
 from components.base import SubComponentResult
@@ -21,7 +21,7 @@ class OnSubmitHandler:
         ChatGptSessionStates.add_chat_history(sender_type=SenderEnum.ASSISTANT, content=answer)
 
     @staticmethod
-    def on_submiting(prompt: str, selected_model_enum: ChatGptEnum):
+    def on_submiting(prompt: str, selected_model_enum: ChatGptModelEnum):
         with st.chat_message(name=SenderEnum.USER.value):
             st.write(prompt)
 
@@ -38,7 +38,7 @@ class OnSubmitHandler:
 
 class ChatGptComponent:
     def __init__(self) -> None:
-        self.__selected_model_enum: Optional[ChatGptEnum]
+        self.__selected_model_enum: Optional[ChatGptModelEnum]
 
     def display_component(self):
         res = self.__step1_setting()
@@ -73,8 +73,8 @@ class ChatGptComponent:
         st.write("### Setting")
         selected_model_value = st.selectbox(
             label="Chat GPT Model",
-            options=ChatGptEnum.to_value_list(),
-            index=ChatGptEnum.from_enum_to_index(enum=ChatGptSessionStates.get_model_type()),
+            options=ChatGptModelEnum.to_value_list(),
+            index=ChatGptModelEnum.from_enum_to_index(enum=ChatGptSessionStates.get_model_type()),
             placeholder="Select model...",
         )
 
@@ -82,7 +82,7 @@ class ChatGptComponent:
             st.error("Please select model...")
             return SubComponentResult(go_next=False)
         
-        selected_model_enum = ChatGptEnum.from_value_to_enum(value=selected_model_value)
+        selected_model_enum = ChatGptModelEnum.from_value_to_enum(value=selected_model_value)
         self.__selected_model_enum = selected_model_enum
         return SubComponentResult()
 

@@ -3,7 +3,7 @@ from typing import List, Dict
 import streamlit as st
 
 from enums.sender_enum import SenderEnum
-from enums.chatgpt_enum import ChatGptEnum
+from enums.chatgpt_enum import ChatGptModelEnum
 from enums.session_state_enum import ChatGptSessionStateEnum
 
 
@@ -17,8 +17,8 @@ class ChatGptSessionStateDefaults:
         return []
 
     @staticmethod
-    def get_MODEL_TYPE() -> ChatGptEnum:
-        return ChatGptEnum.GPT_4_1106_PREVIEW
+    def get_MODEL_TYPE() -> ChatGptModelEnum:
+        return ChatGptModelEnum.GPT_4_1106_PREVIEW
 
 
 class ChatGptSessionStates:
@@ -67,7 +67,7 @@ class ChatGptSessionStates:
     """
 
     @staticmethod
-    def get_model_type() -> ChatGptEnum:
+    def get_model_type() -> ChatGptModelEnum:
         return st.session_state.get(
             ChatGptSessionStateEnum.MODEL_TYPE.name,
             ChatGptSessionStateDefaults.get_MODEL_TYPE(),
@@ -75,6 +75,6 @@ class ChatGptSessionStates:
 
     @staticmethod
     def set_model_type(
-        model_type: ChatGptEnum = ChatGptSessionStateDefaults.get_MODEL_TYPE(),
+        model_type: ChatGptModelEnum = ChatGptSessionStateDefaults.get_MODEL_TYPE(),
     ) -> None:
         st.session_state[ChatGptSessionStateEnum.MODEL_TYPE.name] = model_type

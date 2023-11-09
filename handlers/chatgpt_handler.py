@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Callable
 from openai import OpenAI
 
 from enums.sender_enum import SenderEnum
-from enums.chatgpt_enum import ChatGptEnum
+from enums.chatgpt_enum import ChatGptModelEnum
 from enums.env_enum import EnvEnum
 
 
@@ -15,7 +15,7 @@ class ChatGptHandler:
         cls,
         prompt: str,
         original_chat_history: List[Dict[str, str]] = [],
-        model_type: ChatGptEnum = ChatGptEnum.GPT_3_5_TURBO,
+        model_type: ChatGptModelEnum = ChatGptModelEnum.GPT_3_5_TURBO,
     ) -> Any:
         chat_history = original_chat_history.copy()
         chat_history.append({"role": SenderEnum.USER.value, "content": prompt})
@@ -45,7 +45,7 @@ class ChatGptHandler:
         prompt: str,
         display_func: Callable[[str], None],
         original_chat_history: List[Dict[str, str]] = [],
-        model_type: ChatGptEnum = ChatGptEnum.GPT_3_5_TURBO,
+        model_type: ChatGptModelEnum = ChatGptModelEnum.GPT_3_5_TURBO,
     ) -> str:
         stream_response = cls.query_streamly(prompt=prompt, original_chat_history=original_chat_history, model_type=model_type)
         answer = cls.display_answer_streamly(stream_response=stream_response, display_func=display_func)
