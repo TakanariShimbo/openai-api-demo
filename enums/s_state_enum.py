@@ -13,4 +13,5 @@ class ImageGenerationSStateEnum(Enum):
     IMAGE_GENERATION_QUALITY_TYPE = auto()
     IMAGE_GENERATION_USER_PROMPT = auto()
     IMAGE_GENERATION_IMAGE_URL = auto()
+    IMAGE_GENERATION_BUTTON = auto()
     

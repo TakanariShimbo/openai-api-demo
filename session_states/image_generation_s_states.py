@@ -77,6 +77,18 @@ class ImageGenerationSStates:
         st.session_state[ImageGenerationSStateEnum.IMAGE_GENERATION_USER_PROMPT.name] = user_prompt
 
     """
+    BUTTON
+    """
+
+    @staticmethod
+    def get_button_submit_state() -> str:
+        return st.session_state.get(ImageGenerationSStateEnum.IMAGE_GENERATION_BUTTON.name, False)
+
+    @staticmethod
+    def set_button_submit_state(is_button_submitting: bool = False) -> None:
+        st.session_state[ImageGenerationSStateEnum.IMAGE_GENERATION_BUTTON.name] = is_button_submitting
+
+    """
     IMAGE_URL
     """
 

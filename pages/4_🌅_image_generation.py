@@ -38,6 +38,16 @@ def display_content() -> None:
 
 display_content()
 
+class OnSubmitHandler:
+    @staticmethod
+    def on_click_start():
+        print("callback called")
+        ImageGenerationSStates.set_button_submit_state(is_button_submitting=True)
+
+    @staticmethod
+    def on_click_finish():
+        ImageGenerationSStates.set_button_submit_state(is_button_submitting=False)
+
 
 def display_image():
     image_url = ImageGenerationSStates.get_image_url()
@@ -94,9 +104,8 @@ inputed_user_prompt = st.text_area(
 if inputed_user_prompt:
     ImageGenerationSStates.set_user_prompt(user_prompt=inputed_user_prompt)
 
-submit_button = st.button("Send", type="primary")
 
-
+submit_button = st.button("Send", disabled=ImageGenerationSStates.get_button_submit_state(), on_click=OnSubmitHandler.on_click_start, type="primary")
 if submit_button:
     # if not (selected_model_value and selected_quality_value and selected_quality_value and inputed_user_prompt):
     #     st.error("Please select setting menu")
@@ -113,5 +122,8 @@ if submit_button:
             ImageGenerationSStates.set_image_url(image_url=image_url)
         st.success("Generation complete!")
         st.balloons()
+    
+    OnSubmitHandler.on_click_finish()
+    st.rerun()
 
 display_image()
