@@ -2,12 +2,12 @@ from typing import Any, List, TypeVar, Generic
 from enum import Enum
 
 
-T = TypeVar('T', bound=Enum)
+ChildClass = TypeVar('ChildClass', bound=Enum)
 
 
-class BaseEnum(Generic[T]):
+class BaseEnum(Generic[ChildClass]):
     @classmethod
-    def to_enum_list(cls) -> List[T]:
+    def to_enum_list(cls) -> List[ChildClass]:
         return [model for model in cls]
 
     @classmethod
@@ -19,7 +19,7 @@ class BaseEnum(Generic[T]):
         return [model.value for model in cls]
 
     @classmethod
-    def from_enum_to_index(cls, enum: T) -> int:
+    def from_enum_to_index(cls, enum: ChildClass) -> int:
         return cls.to_enum_list().index(enum)
 
     @classmethod
@@ -31,9 +31,9 @@ class BaseEnum(Generic[T]):
         return cls.to_value_list().index(value)
 
     @classmethod
-    def from_name_to_enum(cls, name: str) -> T:
+    def from_name_to_enum(cls, name: str) -> ChildClass:
         return getattr(cls, name)
 
     @classmethod
-    def from_value_to_enum(cls, value: Any) -> T:
+    def from_value_to_enum(cls, value: Any) -> ChildClass:
         return cls(value)

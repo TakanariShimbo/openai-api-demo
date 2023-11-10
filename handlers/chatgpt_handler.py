@@ -2,8 +2,7 @@ from typing import Any, Dict, List, Callable
 
 from openai import OpenAI
 
-from enums.sender_enum import SenderEnum
-from enums.chatgpt_enum import ChatGptModelEnum
+from enums.chatgpt_enum import ChatGptModelEnum, ChatSenderEnum
 from enums.env_enum import EnvEnum
 
 
@@ -18,7 +17,7 @@ class ChatGptHandler:
         model_type: ChatGptModelEnum = ChatGptModelEnum.GPT_3_5_TURBO,
     ) -> Any:
         chat_history = original_chat_history.copy()
-        chat_history.append({"role": SenderEnum.USER.value, "content": prompt})
+        chat_history.append({"role": ChatSenderEnum.USER.value, "content": prompt})
 
         stream_response = cls.client.chat.completions.create(
             model=model_type.value,

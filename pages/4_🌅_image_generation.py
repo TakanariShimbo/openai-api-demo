@@ -2,10 +2,6 @@ from textwrap import dedent
 import streamlit as st
 from components.title_component import TitleComponent
 
-# from openai import OpenAI
-# from enums.env_enum import EnvEnum
-
-# from enums.sender_enum import SenderEnum
 from session_states.image_generation_s_states import ImageGenerationSStates
 from enums.image_generation_enum import (
     ImageGenerationModelEnum,
