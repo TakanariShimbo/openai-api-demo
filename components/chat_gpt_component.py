@@ -4,7 +4,7 @@ import streamlit as st
 
 from enums.sender_enum import SenderEnum
 from enums.chatgpt_enum import ChatGptModelEnum
-from session_states.chat_gpt_session_states import ChatGptSessionStates
+from session_states.chat_gpt_session_states import ChatGptSStates
 from handlers.chatgpt_handler import ChatGptHandler
 from components.base import SubComponentResult
 
@@ -12,13 +12,13 @@ from components.base import SubComponentResult
 class OnSubmitHandler:
     @staticmethod
     def on_submit_start():
-        ChatGptSessionStates.set_submit_button_state(is_submitting=True)
+        ChatGptSStates.set_submit_button_state(is_submitting=True)
 
     @staticmethod
     def on_submit_finish(prompt: str, answer: str):
-        ChatGptSessionStates.set_submit_button_state(is_submitting=False)
-        ChatGptSessionStates.add_chat_history(sender_type=SenderEnum.USER, content=prompt)
-        ChatGptSessionStates.add_chat_history(sender_type=SenderEnum.ASSISTANT, content=answer)
+        ChatGptSStates.set_submit_button_state(is_submitting=False)
+        ChatGptSStates.add_chat_history(sender_type=SenderEnum.USER, content=prompt)
+        ChatGptSStates.add_chat_history(sender_type=SenderEnum.ASSISTANT, content=answer)
 
     @staticmethod
     def on_submiting(prompt: str, selected_model_enum: ChatGptModelEnum):
@@ -30,7 +30,7 @@ class OnSubmitHandler:
             answer = ChatGptHandler.query_and_display_answer_streamly(
                 prompt=prompt,
                 display_func=answer_area.write,
-                original_chat_history=ChatGptSessionStates.get_chat_history(),
+                original_chat_history=ChatGptSStates.get_chat_history(),
                 model_type=selected_model_enum,
             )
         return answer
@@ -74,7 +74,7 @@ class ChatGptComponent:
         selected_model_value = st.selectbox(
             label="Chat GPT Model",
             options=ChatGptModelEnum.to_value_list(),
-            index=ChatGptModelEnum.from_enum_to_index(enum=ChatGptSessionStates.get_model_type()),
+            index=ChatGptModelEnum.from_enum_to_index(enum=ChatGptSStates.get_model_type()),
             placeholder="Select model...",
         )
 
@@ -92,9 +92,9 @@ class ChatGptComponent:
             st.error("error...")
             return SubComponentResult(go_next=False)
 
-        if ChatGptSessionStates.get_model_type() != selected_model_enum:
-            ChatGptSessionStates.set_model_type(model_type=selected_model_enum)
-            ChatGptSessionStates.reset_chat_history()
+        if ChatGptSStates.get_model_type() != selected_model_enum:
+            ChatGptSStates.set_model_type(model_type=selected_model_enum)
+            ChatGptSStates.reset_chat_history()
             return SubComponentResult(call_rerun=True)
 
         return SubComponentResult()
@@ -106,7 +106,7 @@ class ChatGptComponent:
             return SubComponentResult(go_next=False)
 
         st.write("### Chat History")
-        for chat in ChatGptSessionStates.get_chat_history():
+        for chat in ChatGptSStates.get_chat_history():
             if chat["role"] == SenderEnum.USER.value:
                 with st.chat_message(name=SenderEnum.USER.value):
                     st.write(chat["content"])
@@ -125,7 +125,7 @@ class ChatGptComponent:
         inputed_prompt = st.chat_input(
             placeholder="Input prompt ...",
             on_submit=OnSubmitHandler.on_submit_start,
-            disabled=ChatGptSessionStates.get_submit_button_state(),
+            disabled=ChatGptSStates.get_submit_button_state(),
         )
         if not inputed_prompt:
             return SubComponentResult()

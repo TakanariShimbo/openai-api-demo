@@ -2,6 +2,11 @@ from enum import Enum
 from enums.base_enum import BaseEnum
 
 
+class ChatSenderEnum(Enum):
+    USER = "user"
+    ASSISTANT = "assistant"
+
+    
 class ChatGptModelEnum(BaseEnum["ChatGptModelEnum"], Enum):
     GPT_4_1106_PREVIEW = "gpt-4-1106-preview"
     GPT_4 = "gpt-4"
