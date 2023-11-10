@@ -2,9 +2,8 @@ from typing import Optional
 
 import streamlit as st
 
-from enums.sender_enum import SenderEnum
-from enums.chatgpt_enum import ChatGptModelEnum
-from session_states.chat_gpt_session_states import ChatGptSStates
+from enums.chatgpt_enum import ChatGptModelEnum, ChatSenderEnum
+from session_states.chat_gpt_s_states import ChatGptSStates
 from handlers.chatgpt_handler import ChatGptHandler
 from components.base import SubComponentResult
 
@@ -17,12 +16,12 @@ class OnSubmitHandler:
     @staticmethod
     def on_submit_finish(prompt: str, answer: str):
         ChatGptSStates.set_submit_button_state(is_submitting=False)
-        ChatGptSStates.add_chat_history(sender_type=SenderEnum.USER, content=prompt)
-        ChatGptSStates.add_chat_history(sender_type=SenderEnum.ASSISTANT, content=answer)
+        ChatGptSStates.add_chat_history(sender_type=ChatSenderEnum.USER, content=prompt)
+        ChatGptSStates.add_chat_history(sender_type=ChatSenderEnum.ASSISTANT, content=answer)
 
     @staticmethod
     def on_submiting(prompt: str, selected_model_enum: ChatGptModelEnum):
-        with st.chat_message(name=SenderEnum.USER.value):
+        with st.chat_message(name=ChatSenderEnum.USER.value):
             st.write(prompt)
 
         with st.chat_message(name=selected_model_enum.value):
@@ -107,8 +106,8 @@ class ChatGptComponent:
 
         st.write("### Chat History")
         for chat in ChatGptSStates.get_chat_history():
-            if chat["role"] == SenderEnum.USER.value:
-                with st.chat_message(name=SenderEnum.USER.value):
+            if chat["role"] == ChatSenderEnum.USER.value:
+                with st.chat_message(name=ChatSenderEnum.USER.value):
                     st.write(chat["content"])
             else:
                 with st.chat_message(name=selected_model_enum.value):
