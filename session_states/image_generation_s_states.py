@@ -28,14 +28,14 @@ class ImageGenerationSStates:
     """
 
     @staticmethod
-    def get_button_submit_state() -> bool:
+    def get_submit_button_state() -> bool:
         return st.session_state.get(
             ImageGenerationSStateEnum.IMAGE_GENERATION_SUBMIT_BUTTON_STATE.name,
             ImageGenerationSStateDefaults.get_SUBMIT_BUTTON_STATE(),
         )
 
     @staticmethod
-    def set_button_submit_state(
+    def set_submit_button_state(
         is_submitting: bool = ImageGenerationSStateDefaults.get_SUBMIT_BUTTON_STATE(),
     ) -> None:
         st.session_state[ImageGenerationSStateEnum.IMAGE_GENERATION_SUBMIT_BUTTON_STATE.name] = is_submitting

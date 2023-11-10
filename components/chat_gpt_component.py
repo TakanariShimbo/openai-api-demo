@@ -1,5 +1,3 @@
-from typing import Optional
-
 import streamlit as st
 
 from enums.chatgpt_enum import ChatGptModelEnum, ChatSenderEnum
@@ -20,10 +18,12 @@ class OnSubmitHandler:
         ChatGptSStates.add_chat_history(sender_type=ChatSenderEnum.ASSISTANT, content=answer)
 
     @staticmethod
-    def on_submiting(prompt: str, selected_model_type: ChatGptModelEnum):
+    def display_prompt(prompt: str) -> None:
         with st.chat_message(name=ChatSenderEnum.USER.value):
             st.write(prompt)
 
+    @staticmethod
+    def query_and_display_answer(prompt: str, selected_model_type: ChatGptModelEnum) -> str:
         with st.chat_message(name=selected_model_type.value):
             answer_area = st.empty()
             answer = ChatGptHandler.query_and_display_answer_streamly(
@@ -72,7 +72,7 @@ class ChatGptComponent:
         if not selected_model_value:
             st.error("Please select model...")
             return SubComponentResult(go_next=False)
-        
+
         selected_model_type = ChatGptModelEnum.from_value_to_type(value=selected_model_value)
         if ChatGptSStates.get_model_type() != selected_model_type:
             ChatGptSStates.set_model_type(model_type=selected_model_type)
@@ -104,6 +104,7 @@ class ChatGptComponent:
         if not inputed_prompt:
             return SubComponentResult()
 
-        answer = OnSubmitHandler.on_submiting(prompt=inputed_prompt, selected_model_type=ChatGptSStates.get_model_type())
+        OnSubmitHandler.display_prompt(prompt=inputed_prompt)
+        answer = OnSubmitHandler.query_and_display_answer(prompt=inputed_prompt, selected_model_type=ChatGptSStates.get_model_type())
         OnSubmitHandler.on_submit_finish(prompt=inputed_prompt, answer=answer)
         return SubComponentResult(call_rerun=True)
