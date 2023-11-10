@@ -29,8 +29,6 @@ class OnSubmitHandler:
                 quality_type=ImageGenerationSStates.get_quality_type(),
             )
         ImageGenerationSStates.set_image_url(image_url=image_url)
-        st.success("Generation complete!")
-        st.balloons()
 
 
 class ImageGenerationComponent:
@@ -132,6 +130,7 @@ class ImageGenerationComponent:
         if not image_url:
             return SubComponentResult()
 
+        st.write("### Generated Image")
         st.image(image_url, caption=ImageGenerationSStates.get_user_prompt(), use_column_width=True)
         st.link_button("Image URL", image_url)
         return SubComponentResult()
