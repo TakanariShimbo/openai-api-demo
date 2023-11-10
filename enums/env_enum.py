@@ -6,4 +6,4 @@ load_dotenv()
 
 
 class EnvEnum(Enum):    
-    OPENAI_APIKEY = os.environ["OPENAI_APIKEY"]
+    DEFAULT_OPENAI_APIKEY = os.environ.get("DEFAULT_OPENAI_APIKEY", None)

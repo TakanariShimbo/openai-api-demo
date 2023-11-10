@@ -6,6 +6,10 @@ from enums.s_state_enum import ImageGenerationSStateEnum
 
 class ImageGenerationSStateDefaults:
     @staticmethod
+    def get_SUBMIT_BUTTON_STATE() -> bool:
+        return False
+
+    @staticmethod
     def get_MODEL_TYPE() -> ImageGenerationModelEnum:
         return ImageGenerationModelEnum.DALL_E_3
 
@@ -20,6 +24,23 @@ class ImageGenerationSStateDefaults:
 
 class ImageGenerationSStates:
     """
+    SUBMIT_BUTTON_STATE
+    """
+
+    @staticmethod
+    def get_button_submit_state() -> bool:
+        return st.session_state.get(
+            ImageGenerationSStateEnum.IMAGE_GENERATION_SUBMIT_BUTTON_STATE.name,
+            ImageGenerationSStateDefaults.get_SUBMIT_BUTTON_STATE(),
+        )
+
+    @staticmethod
+    def set_button_submit_state(
+        is_submitting: bool = ImageGenerationSStateDefaults.get_SUBMIT_BUTTON_STATE(),
+    ) -> None:
+        st.session_state[ImageGenerationSStateEnum.IMAGE_GENERATION_SUBMIT_BUTTON_STATE.name] = is_submitting
+
+    """
     MODEL_INDEX
     """
 
@@ -31,7 +52,9 @@ class ImageGenerationSStates:
         )
 
     @staticmethod
-    def set_model_type(model_type: ImageGenerationModelEnum) -> None:
+    def set_model_type(
+        model_type: ImageGenerationModelEnum = ImageGenerationSStateDefaults.get_MODEL_TYPE(),
+    ) -> None:
         st.session_state[ImageGenerationSStateEnum.IMAGE_GENERATION_MODEL_TYPE.name] = model_type
 
     """
@@ -41,12 +64,14 @@ class ImageGenerationSStates:
     @staticmethod
     def get_size_type() -> ImageGenerationSizeEnum:
         return st.session_state.get(
-            ImageGenerationSStateEnum.IMAGE_GENERATION_SIZE_TYPE.name, 
+            ImageGenerationSStateEnum.IMAGE_GENERATION_SIZE_TYPE.name,
             ImageGenerationSStateDefaults.get_SIZE_TYPE(),
         )
 
     @staticmethod
-    def set_size_type(size_type: ImageGenerationSizeEnum) -> None:
+    def set_size_type(
+        size_type: ImageGenerationSizeEnum = ImageGenerationSStateDefaults.get_SIZE_TYPE(),
+    ) -> None:
         st.session_state[ImageGenerationSStateEnum.IMAGE_GENERATION_SIZE_TYPE.name] = size_type
 
     """
@@ -56,12 +81,14 @@ class ImageGenerationSStates:
     @staticmethod
     def get_quality_type() -> ImageGenerationQualityEnum:
         return st.session_state.get(
-            ImageGenerationSStateEnum.IMAGE_GENERATION_QUALITY_TYPE.name, 
+            ImageGenerationSStateEnum.IMAGE_GENERATION_QUALITY_TYPE.name,
             ImageGenerationSStateDefaults.get_QUALITY_TYPE(),
         )
 
     @staticmethod
-    def set_quality_type(quality_type: ImageGenerationQualityEnum) -> None:
+    def set_quality_type(
+        quality_type: ImageGenerationQualityEnum = ImageGenerationSStateDefaults.get_QUALITY_TYPE(),
+    ) -> None:
         st.session_state[ImageGenerationSStateEnum.IMAGE_GENERATION_QUALITY_TYPE.name] = quality_type
 
     """
@@ -75,18 +102,6 @@ class ImageGenerationSStates:
     @staticmethod
     def set_user_prompt(user_prompt: str) -> None:
         st.session_state[ImageGenerationSStateEnum.IMAGE_GENERATION_USER_PROMPT.name] = user_prompt
-
-    """
-    BUTTON
-    """
-
-    @staticmethod
-    def get_button_submit_state() -> str:
-        return st.session_state.get(ImageGenerationSStateEnum.IMAGE_GENERATION_BUTTON.name, False)
-
-    @staticmethod
-    def set_button_submit_state(is_button_submitting: bool = False) -> None:
-        st.session_state[ImageGenerationSStateEnum.IMAGE_GENERATION_BUTTON.name] = is_button_submitting
 
     """
     IMAGE_URL

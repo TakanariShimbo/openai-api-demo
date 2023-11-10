@@ -24,7 +24,30 @@ TitleComponent.set_page_configs(
 """
 CONTENTS
 """
+class OnSubmitHandler:
+    @staticmethod
+    def on_submit_start():
+        ImageGenerationSStates.set_button_submit_state(is_submitting=True)
 
+    @staticmethod
+    def on_submit_finish():
+        ImageGenerationSStates.set_button_submit_state(is_submitting=False)
+
+    @staticmethod
+    def on_submiting(prompt: str, selected_model_enum: ChatGptModelEnum):
+        with st.chat_message(name=ChatSenderEnum.USER.value):
+            st.write(prompt)
+
+        with st.chat_message(name=selected_model_enum.value):
+            answer_area = st.empty()
+            answer = ChatGptHandler.query_and_display_answer_streamly(
+                prompt=prompt,
+                display_func=answer_area.write,
+                original_chat_history=ChatGptSStates.get_chat_history(),
+                model_type=selected_model_enum,
+            )
+        return answer
+    
 
 def display_content() -> None:
     content = dedent(
@@ -41,12 +64,11 @@ display_content()
 class OnSubmitHandler:
     @staticmethod
     def on_click_start():
-        print("callback called")
-        ImageGenerationSStates.set_button_submit_state(is_button_submitting=True)
+        ImageGenerationSStates.set_button_submit_state(is_submitting=True)
 
     @staticmethod
     def on_click_finish():
-        ImageGenerationSStates.set_button_submit_state(is_button_submitting=False)
+        ImageGenerationSStates.set_button_submit_state(is_submitting=False)
 
 
 def display_image():
@@ -66,33 +88,33 @@ setting_col = st.columns(3)
 selected_model_value = setting_col[0].selectbox(
     label="DALL-E Model",
     options=ImageGenerationModelEnum.to_value_list(),
-    index=ImageGenerationModelEnum.from_enum_to_index(enum=ImageGenerationSStates.get_model_type()),
+    index=ImageGenerationModelEnum.from_type_to_index(enum=ImageGenerationSStates.get_model_type()),
     placeholder="Select model...",
 )
 if selected_model_value:
-    selected_model_type = ImageGenerationModelEnum.from_value_to_enum(value=selected_model_value)
+    selected_model_type = ImageGenerationModelEnum.from_value_to_type(value=selected_model_value)
     ImageGenerationSStates.set_model_type(model_type=selected_model_type)
 
 # --- Size select ---
 selected_size_value = setting_col[1].selectbox(
     label="Size",
     options=ImageGenerationSizeEnum.to_value_list(),
-    index=ImageGenerationSizeEnum.from_enum_to_index(enum=ImageGenerationSStates.get_size_type()),
+    index=ImageGenerationSizeEnum.from_type_to_index(enum=ImageGenerationSStates.get_size_type()),
     placeholder="Select size...",
 )
 if selected_size_value:
-    selected_size_type = ImageGenerationSizeEnum.from_value_to_enum(value=selected_size_value)
+    selected_size_type = ImageGenerationSizeEnum.from_value_to_type(value=selected_size_value)
     ImageGenerationSStates.set_size_type(size_type=selected_size_type)
 
 # --- Quality select ---
 selected_quality_value = setting_col[2].selectbox(
     label="Quality",
     options=ImageGenerationQualityEnum.to_value_list(),
-    index=ImageGenerationQualityEnum.from_enum_to_index(enum=ImageGenerationSStates.get_quality_type()),
+    index=ImageGenerationQualityEnum.from_type_to_index(enum=ImageGenerationSStates.get_quality_type()),
     placeholder="Quality size...",
 )
 if selected_quality_value:
-    selected_quality_type = ImageGenerationQualityEnum.from_value_to_enum(value=selected_quality_value)
+    selected_quality_type = ImageGenerationQualityEnum.from_value_to_type(value=selected_quality_value)
     ImageGenerationSStates.set_quality_type(quality_type=selected_quality_type)
 
 # --- Text area ---

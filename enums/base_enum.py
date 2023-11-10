@@ -7,7 +7,7 @@ ChildClass = TypeVar('ChildClass', bound=Enum)
 
 class BaseEnum(Generic[ChildClass]):
     @classmethod
-    def to_enum_list(cls) -> List[ChildClass]:
+    def to_type_list(cls) -> List[ChildClass]:
         return [model for model in cls]
 
     @classmethod
@@ -19,8 +19,8 @@ class BaseEnum(Generic[ChildClass]):
         return [model.value for model in cls]
 
     @classmethod
-    def from_enum_to_index(cls, enum: ChildClass) -> int:
-        return cls.to_enum_list().index(enum)
+    def from_type_to_index(cls, enum: ChildClass) -> int:
+        return cls.to_type_list().index(enum)
 
     @classmethod
     def from_name_to_index(cls, name: str) -> int:
@@ -31,9 +31,9 @@ class BaseEnum(Generic[ChildClass]):
         return cls.to_value_list().index(value)
 
     @classmethod
-    def from_name_to_enum(cls, name: str) -> ChildClass:
+    def from_name_to_type(cls, name: str) -> ChildClass:
         return getattr(cls, name)
 
     @classmethod
-    def from_value_to_enum(cls, value: Any) -> ChildClass:
+    def from_value_to_type(cls, value: Any) -> ChildClass:
         return cls(value)

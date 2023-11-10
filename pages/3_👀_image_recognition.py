@@ -9,7 +9,7 @@ from PIL import Image
 from enums.env_enum import EnvEnum
 from components.title_component import TitleComponent
 
-client = OpenAI(api_key=EnvEnum.OPENAI_APIKEY.value)
+client = OpenAI(api_key=EnvEnum.DEFAULT_OPENAI_APIKEY.value)
 
 TitleComponent.set_page_configs(
     icon="👀",

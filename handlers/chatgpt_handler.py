@@ -7,21 +7,21 @@ from enums.env_enum import EnvEnum
 
 
 class ChatGptHandler:
-    client = OpenAI(api_key=EnvEnum.OPENAI_APIKEY.value)
+    client = OpenAI(api_key=EnvEnum.DEFAULT_OPENAI_APIKEY.value)
 
     @classmethod
     def query_streamly(
         cls,
         prompt: str,
-        original_chat_history: List[Dict[str, str]] = [],
+        chat_history: List[Dict[str, str]] = [],
         model_type: ChatGptModelEnum = ChatGptModelEnum.GPT_3_5_TURBO,
     ) -> Any:
-        chat_history = original_chat_history.copy()
-        chat_history.append({"role": ChatSenderEnum.USER.value, "content": prompt})
+        copyed_chat_history = chat_history.copy()
+        copyed_chat_history.append({"role": ChatSenderEnum.USER.value, "content": prompt})
 
         stream_response = cls.client.chat.completions.create(
             model=model_type.value,
-            messages=chat_history,
+            messages=copyed_chat_history,
             stream=True,
         )
         return stream_response
@@ -43,9 +43,9 @@ class ChatGptHandler:
         cls,
         prompt: str,
         display_func: Callable[[str], None],
-        original_chat_history: List[Dict[str, str]] = [],
+        chat_history: List[Dict[str, str]] = [],
         model_type: ChatGptModelEnum = ChatGptModelEnum.GPT_3_5_TURBO,
     ) -> str:
-        stream_response = cls.query_streamly(prompt=prompt, original_chat_history=original_chat_history, model_type=model_type)
+        stream_response = cls.query_streamly(prompt=prompt, chat_history=chat_history, model_type=model_type)
         answer = cls.display_answer_streamly(stream_response=stream_response, display_func=display_func)
         return answer

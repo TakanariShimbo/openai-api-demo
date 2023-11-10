@@ -11,7 +11,7 @@ from enums.env_enum import EnvEnum
 
 
 class ImageGenerationHandler:
-    client = OpenAI(api_key=EnvEnum.OPENAI_APIKEY.value)
+    client = OpenAI(api_key=EnvEnum.DEFAULT_OPENAI_APIKEY.value)
 
     @classmethod
     def get_image_url(

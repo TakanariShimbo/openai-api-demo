@@ -12,12 +12,12 @@ class ChatGptSStateDefaults:
         return False
 
     @staticmethod
-    def get_CHAT_HISTORY() -> List[Dict[str, str]]:
-        return []
-
-    @staticmethod
     def get_MODEL_TYPE() -> ChatGptModelEnum:
         return ChatGptModelEnum.GPT_4_1106_PREVIEW
+
+    @staticmethod
+    def get_CHAT_HISTORY() -> List[Dict[str, str]]:
+        return []
 
 
 class ChatGptSStates:
@@ -37,6 +37,23 @@ class ChatGptSStates:
         is_submitting: bool = ChatGptSStateDefaults.get_SUBMIT_BUTTON_STATE(),
     ) -> None:
         st.session_state[ChatGptSStateEnum.CHAT_SUBMIT_BUTTON_STATE.name] = is_submitting
+
+    """
+    MODEL_TYPE
+    """
+
+    @staticmethod
+    def get_model_type() -> ChatGptModelEnum:
+        return st.session_state.get(
+            ChatGptSStateEnum.CHAT_MODEL_TYPE.name,
+            ChatGptSStateDefaults.get_MODEL_TYPE(),
+        )
+
+    @staticmethod
+    def set_model_type(
+        model_type: ChatGptModelEnum = ChatGptSStateDefaults.get_MODEL_TYPE(),
+    ) -> None:
+        st.session_state[ChatGptSStateEnum.CHAT_MODEL_TYPE.name] = model_type
 
     """
     CHAT_HISTORY
@@ -60,20 +77,3 @@ class ChatGptSStates:
     @staticmethod
     def reset_chat_history() -> None:
         st.session_state[ChatGptSStateEnum.CHAT_HISTORY.name] = ChatGptSStateDefaults.get_CHAT_HISTORY()
-
-    """
-    MODEL_INDEX
-    """
-
-    @staticmethod
-    def get_model_type() -> ChatGptModelEnum:
-        return st.session_state.get(
-            ChatGptSStateEnum.CHAT_MODEL_TYPE.name,
-            ChatGptSStateDefaults.get_MODEL_TYPE(),
-        )
-
-    @staticmethod
-    def set_model_type(
-        model_type: ChatGptModelEnum = ChatGptSStateDefaults.get_MODEL_TYPE(),
-    ) -> None:
-        st.session_state[ChatGptSStateEnum.CHAT_MODEL_TYPE.name] = model_type

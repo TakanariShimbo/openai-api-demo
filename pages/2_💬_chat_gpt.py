@@ -7,5 +7,4 @@ TitleComponent.set_page_configs(
     title="Chat GPT",
 )
 
-chat_gpt_component = ChatGptComponent()
-chat_gpt_component.display_component()
+ChatGptComponent.display_component()
