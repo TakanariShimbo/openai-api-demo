@@ -49,16 +49,13 @@ class OnSubmitHandler:
 
 class ImageGenerationComponent:
     @classmethod
-    def display_component(cls):
-        res = cls.__sub_display_component()
-        if not res.go_next:
-            return
+    def display_component(cls) -> None:
+        res = cls.__sub_component()
         if res.call_return:
             st.rerun()
-            return
 
     @staticmethod
-    def __sub_display_component() -> SubComponentResult:
+    def __sub_component() -> SubComponentResult:
         """
         SETTING
         """
@@ -90,7 +87,7 @@ class ImageGenerationComponent:
 
         if not selected_model_value or not selected_size_value or not selected_quality_value:
             st.error("Please select params...")
-            return SubComponentResult(go_next=False)
+            return SubComponentResult()
 
         selected_model_type = EnumHandler.value_to_enum_member(enum=ImageGenerationModelEnum, value=selected_model_value)
         selected_size_type = EnumHandler.value_to_enum_member(enum=ImageGenerationSizeEnum, value=selected_size_value)

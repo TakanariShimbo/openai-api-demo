@@ -38,30 +38,13 @@ class OnSubmitHandler:
 
 class ChatGptComponent:
     @classmethod
-    def display_component(cls):
-        res = cls.__step1_apply_setting()
-        if not res.go_next:
-            return
+    def display_component(cls) -> None:
+        res = cls.__sub_component()
         if res.call_return:
             st.rerun()
-            return
-
-        res = cls.__step2_display_chat_history()
-        if not res.go_next:
-            return
-        if res.call_return:
-            st.rerun()
-            return
-
-        res = cls.__step3_display_new_chat()
-        if not res.go_next:
-            return
-        if res.call_return:
-            st.rerun()
-            return
 
     @staticmethod
-    def __step1_apply_setting() -> SubComponentResult:
+    def __sub_component() -> SubComponentResult:
         st.write("### Setting")
         selected_model_value = st.selectbox(
             label="Chat GPT Model",
@@ -72,7 +55,7 @@ class ChatGptComponent:
 
         if not selected_model_value:
             st.error("Please select model...")
-            return SubComponentResult(go_next=False)
+            return SubComponentResult()
 
         selected_model_type = EnumHandler.value_to_enum_member(enum=ChatGptModelEnum, value=selected_model_value)
         if ChatGptSStates.get_model_type() != selected_model_type:
@@ -80,10 +63,6 @@ class ChatGptComponent:
             ChatGptSStates.reset_chat_history()
             return SubComponentResult(call_rerun=True)
 
-        return SubComponentResult()
-
-    @staticmethod
-    def __step2_display_chat_history() -> SubComponentResult:
         st.write("### Chat History")
         for chat in ChatGptSStates.get_chat_history():
             if chat["role"] == ChatSenderEnum.USER.value:
@@ -93,19 +72,17 @@ class ChatGptComponent:
                 with st.chat_message(name=ChatGptSStates.get_model_type().value):
                     st.write(chat["content"])
 
-        return SubComponentResult()
-
-    @staticmethod
-    def __step3_display_new_chat() -> SubComponentResult:
         inputed_prompt = st.chat_input(
             placeholder="Input prompt ...",
             on_submit=OnSubmitHandler.on_submit_start,
             disabled=ChatGptSStates.get_submit_button_state(),
         )
-        if not inputed_prompt:
-            return SubComponentResult()
+        if inputed_prompt:
+            OnSubmitHandler.display_prompt(prompt=inputed_prompt)
+            answer = OnSubmitHandler.query_and_display_answer(prompt=inputed_prompt, selected_model_type=ChatGptSStates.get_model_type())
+            OnSubmitHandler.on_submit_finish(prompt=inputed_prompt, answer=answer)
+            return SubComponentResult(call_rerun=True)
+        
+        return SubComponentResult()
 
-        OnSubmitHandler.display_prompt(prompt=inputed_prompt)
-        answer = OnSubmitHandler.query_and_display_answer(prompt=inputed_prompt, selected_model_type=ChatGptSStates.get_model_type())
-        OnSubmitHandler.on_submit_finish(prompt=inputed_prompt, answer=answer)
-        return SubComponentResult(call_rerun=True)
+
