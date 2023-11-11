@@ -1,10 +1,13 @@
+from typing import Union
+
+import numpy as np
 import streamlit as st
 
 from enums.image_generation_enum import ImageGenerationSizeEnum, ImageGenerationModelEnum, ImageGenerationQualityEnum
 from enums.s_state_enum import ImageGenerationSStateEnum
 
 
-class ImageGenerationSStateDefaults:
+class ImageGenerationSStateDefaults:    
     @staticmethod
     def get_SUBMIT_BUTTON_STATE() -> bool:
         return False
@@ -20,6 +23,10 @@ class ImageGenerationSStateDefaults:
     @staticmethod
     def get_QUALITY_TYPE() -> ImageGenerationQualityEnum:
         return ImageGenerationQualityEnum.STANDARD
+    
+    @staticmethod
+    def get_GENERATED_IMAGE() -> None:
+        return None
 
 
 class ImageGenerationSStates:
@@ -108,9 +115,14 @@ class ImageGenerationSStates:
     """
 
     @staticmethod
-    def get_image_url() -> str:
-        return st.session_state.get(ImageGenerationSStateEnum.IMAGE_GENERATION_IMAGE_URL.name, None)
+    def get_generated_image() -> Union[np.ndarray, str, None]:
+        return st.session_state.get(
+            ImageGenerationSStateEnum.IMAGE_GENERATION_GENERATED_IMAGE.name, 
+            ImageGenerationSStateDefaults.get_GENERATED_IMAGE(),
+        )
 
     @staticmethod
-    def set_image_url(image_url: str) -> None:
-        st.session_state[ImageGenerationSStateEnum.IMAGE_GENERATION_IMAGE_URL.name] = image_url
+    def set_generated_image(
+        generated_image: Union[np.ndarray, str, None] = ImageGenerationSStateDefaults.get_GENERATED_IMAGE(),
+    ) -> None:
+        st.session_state[ImageGenerationSStateEnum.IMAGE_GENERATION_GENERATED_IMAGE.name] = generated_image
