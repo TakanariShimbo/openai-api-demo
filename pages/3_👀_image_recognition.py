@@ -1,51 +1,34 @@
 import base64
-import streamlit as st
-import numpy as np
-import os
-import cv2
 
-from openai import OpenAI
-from PIL import Image
-from enums.env_enum import EnvEnum
+import cv2
+import numpy as np
+import streamlit as st
+
+from handlers.image_recognition_handler import ImageRecognitionHandler
 from components.title_component import TitleComponent
 
-client = OpenAI(api_key=EnvEnum.DEFAULT_OPENAI_APIKEY.value)
 
 TitleComponent.set_page_configs(
     icon="👀",
     title="Image Recognition",
 )
 
-def encode_image(image_array):
-    _, img_encoded = cv2.imencode('.jpeg', image_array)
-    img_b64 = base64.b64encode(img_encoded).decode('utf-8') 
-    return img_b64         
 
-upload_image=st.file_uploader("ファイルアップロード", type='jpeg')
+upload_image = st.file_uploader(label="Upload Image", type=["jpg", "jpeg", "png", "bmp"])
 if upload_image is not None:
-    image=Image.open(upload_image)
-    img_array = np.array(image)
-    st.image(img_array,caption = 'アップロード画像',use_column_width = True)
+    with st.spinner(text="Loading..."):
+        image_bytes = upload_image.getvalue()
+        image_b64 = base64.b64encode(s=image_bytes).decode()
+        image_bgr = cv2.imdecode(
+            buf=np.frombuffer(buffer=image_bytes, dtype=np.uint8),
+            flags=cv2.IMREAD_COLOR,
+        )
+        image_rgb = cv2.cvtColor(src=image_bgr, code=cv2.COLOR_BGR2RGB)
 
-    base64_image = encode_image(img_array)
+    st.image(image=image_rgb, caption=upload_image.name, use_column_width=True)
 
-    response = client.chat.completions.create(
-        model="gpt-4-vision-preview",
-        messages=[
-            {
-                "role": "user",
-                "content": [
-                    {"type": "text", "text": "これは何の画像ですか？"},
-                    {
-                        "type": "image_url",
-                        "image_url": {
-                            "url": f"data:image/jpeg;base64,{base64_image}"
-                        },
-                    },
-                ],
-            }
-        ],
-        max_tokens=300,
+    answer_area = st.empty()
+    ImageRecognitionHandler.query_and_display_answer_streamly(
+        image_b64=image_b64,
+        display_func=answer_area.write,
     )
-
-    st.write(response.choices[0].message.content)

@@ -1,5 +1,3 @@
-from typing import Any, Dict, List, Callable
-
 from openai import OpenAI
 
 from enums.image_generation_enum import (

@@ -6,6 +6,7 @@ from enums.image_generation_enum import (
     ImageGenerationQualityEnum,
 )
 from session_states.image_generation_s_states import ImageGenerationSStates
+from handlers.enum_handler import EnumHandler
 from handlers.image_generation_handler import ImageGenerationHandler
 from components.base import SubComponentResult
 
@@ -21,7 +22,7 @@ class OnSubmitHandler:
 
     @staticmethod
     def generate_image() -> None:
-        with st.spinner("Image generating..."):
+        with st.spinner("Generating..."):
             image_url = ImageGenerationHandler.get_image_url(
                 prompt=ImageGenerationSStates.get_user_prompt(),
                 model_type=ImageGenerationSStates.get_model_type(),
@@ -62,24 +63,24 @@ class ImageGenerationComponent:
         # --- DALL-E Model select ---
         selected_model_value = setting_col[0].selectbox(
             label="DALL-E Model",
-            options=ImageGenerationModelEnum.to_value_list(),
-            index=ImageGenerationModelEnum.from_type_to_index(enum=ImageGenerationSStates.get_model_type()),
+            options=EnumHandler.get_enum_member_values(enum=ImageGenerationModelEnum),
+            index=EnumHandler.enum_member_to_index(member=ImageGenerationSStates.get_model_type()),
             placeholder="Select model...",
         )
 
         # --- Size select ---
         selected_size_value = setting_col[1].selectbox(
             label="Size",
-            options=ImageGenerationSizeEnum.to_value_list(),
-            index=ImageGenerationSizeEnum.from_type_to_index(enum=ImageGenerationSStates.get_size_type()),
+            options=EnumHandler.get_enum_member_values(enum=ImageGenerationSizeEnum),
+            index=EnumHandler.enum_member_to_index(member=ImageGenerationSStates.get_size_type()),
             placeholder="Select size...",
         )
 
         # --- Quality select ---
         selected_quality_value = setting_col[2].selectbox(
             label="Quality",
-            options=ImageGenerationQualityEnum.to_value_list(),
-            index=ImageGenerationQualityEnum.from_type_to_index(enum=ImageGenerationSStates.get_quality_type()),
+            options=EnumHandler.get_enum_member_values(enum=ImageGenerationQualityEnum),
+            index=EnumHandler.enum_member_to_index(member=ImageGenerationSStates.get_quality_type()),
             placeholder="Quality size...",
         )
 
@@ -94,9 +95,9 @@ class ImageGenerationComponent:
             st.error("Please select params...")
             return SubComponentResult(go_next=False)
         
-        selected_model_type = ImageGenerationModelEnum.from_value_to_type(value=selected_model_value)
-        selected_size_type = ImageGenerationSizeEnum.from_value_to_type(value=selected_size_value)
-        selected_quality_type = ImageGenerationQualityEnum.from_value_to_type(value=selected_quality_value)
+        selected_model_type = EnumHandler.value_to_enum_member(enum=ImageGenerationModelEnum, value=selected_model_value)
+        selected_size_type = EnumHandler.value_to_enum_member(enum=ImageGenerationSizeEnum, value=selected_size_value)
+        selected_quality_type = EnumHandler.value_to_enum_member(enum=ImageGenerationQualityEnum, value=selected_quality_value)
 
         if ImageGenerationSStates.get_model_type() != selected_model_type:
             ImageGenerationSStates.set_model_type(model_type=selected_model_type)

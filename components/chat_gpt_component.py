@@ -2,6 +2,7 @@ import streamlit as st
 
 from enums.chatgpt_enum import ChatGptModelEnum, ChatSenderEnum
 from session_states.chat_gpt_s_states import ChatGptSStates
+from handlers.enum_handler import EnumHandler
 from handlers.chatgpt_handler import ChatGptHandler
 from components.base import SubComponentResult
 
@@ -64,8 +65,8 @@ class ChatGptComponent:
         st.write("### Setting")
         selected_model_value = st.selectbox(
             label="Chat GPT Model",
-            options=ChatGptModelEnum.to_value_list(),
-            index=ChatGptModelEnum.from_type_to_index(enum=ChatGptSStates.get_model_type()),
+            options=EnumHandler.get_enum_member_values(enum=ChatGptModelEnum),
+            index=EnumHandler.enum_member_to_index(member=ChatGptSStates.get_model_type()),
             placeholder="Select model...",
         )
 
@@ -73,7 +74,7 @@ class ChatGptComponent:
             st.error("Please select model...")
             return SubComponentResult(go_next=False)
 
-        selected_model_type = ChatGptModelEnum.from_value_to_type(value=selected_model_value)
+        selected_model_type = EnumHandler.value_to_enum_member(enum=ChatGptModelEnum, value=selected_model_value)
         if ChatGptSStates.get_model_type() != selected_model_type:
             ChatGptSStates.set_model_type(model_type=selected_model_type)
             ChatGptSStates.reset_chat_history()
