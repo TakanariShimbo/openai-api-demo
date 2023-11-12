@@ -18,27 +18,41 @@ from components.base import SubComponentResult
 
 class OnSubmitHandler:
     @staticmethod
-    def on_submit_start():
+    def on_submit_start() -> None:
         ImageGenerationSStates.set_submit_button_state(is_submitting=True)
 
     @staticmethod
-    def on_submit_finish(inputed_user_prompt: str, generated_image: Union[np.ndarray, str]):
-        ImageGenerationSStates.set_inputed_prompt(inputed_prompt=inputed_user_prompt)
+    def on_submit_finish(
+        selected_model_type: ImageGenerationModelEnum,
+        selected_size_type: ImageGenerationSizeEnum,
+        selected_quality_type: ImageGenerationQualityEnum,
+        inputed_prompt: str, 
+        generated_image: Union[np.ndarray, str],
+    ) -> None:
+        ImageGenerationSStates.set_model_type(model_type=selected_model_type)
+        ImageGenerationSStates.set_size_type(size_type=selected_size_type)
+        ImageGenerationSStates.set_quality_type(quality_type=selected_quality_type)
+        ImageGenerationSStates.set_inputed_prompt(inputed_prompt=inputed_prompt)
         ImageGenerationSStates.set_generated_image(generated_image=generated_image)
         ImageGenerationSStates.set_submit_button_state()
 
     @staticmethod
-    def generate_image(inputed_prompt: str) -> str:
+    def generate_image(
+        inputed_prompt: str,
+        selected_model_type: ImageGenerationModelEnum,
+        selected_size_type: ImageGenerationSizeEnum,
+        selected_quality_type: ImageGenerationQualityEnum,
+    ) -> str:
         image_url = ImageGenerationHandler.get_image_url(
             prompt=inputed_prompt,
-            model_type=ImageGenerationSStates.get_model_type(),
-            size_type=ImageGenerationSStates.get_size_type(),
-            quality_type=ImageGenerationSStates.get_quality_type(),
+            model_type=selected_model_type,
+            size_type=selected_size_type,
+            quality_type=selected_quality_type,
         )
         return image_url
 
     @staticmethod
-    def convert_image(image_url: str) -> np.ndarray:
+    def download_image(image_url: str) -> np.ndarray:
         response = requests.get(url=image_url)
         response.raise_for_status()
         image_bytes = bytearray(response.content)
@@ -56,79 +70,77 @@ class ImageGenerationComponent:
 
     @staticmethod
     def __sub_component() -> SubComponentResult:
-        """
-        SETTING
-        """
-        st.write("### Settings")
-        setting_col = st.columns(3)
-        # --- DALL-E Model select ---
-        selected_model_value = setting_col[0].selectbox(
-            label="Model",
-            options=EnumHandler.get_enum_member_values(enum=ImageGenerationModelEnum),
-            index=EnumHandler.enum_member_to_index(member=ImageGenerationSStates.get_model_type()),
-            placeholder="Select model...",
-        )
+        form = st.form(key="Image Generation Form")
+        with form:
+            setting_col = st.columns(3)
 
-        # --- Size select ---
-        selected_size_value = setting_col[1].selectbox(
-            label="Size",
-            options=EnumHandler.get_enum_member_values(enum=ImageGenerationSizeEnum),
-            index=EnumHandler.enum_member_to_index(member=ImageGenerationSStates.get_size_type()),
-            placeholder="Select size...",
-        )
+            # --- DALL-E Model select ---
+            selected_model_value = setting_col[0].selectbox(
+                label="Model",
+                options=EnumHandler.get_enum_member_values(enum=ImageGenerationModelEnum),
+                index=EnumHandler.enum_member_to_index(member=ImageGenerationSStates.get_model_type()),
+                placeholder="Select model...",
+            )
 
-        # --- Quality select ---
-        selected_quality_value = setting_col[2].selectbox(
-            label="Quality",
-            options=EnumHandler.get_enum_member_values(enum=ImageGenerationQualityEnum),
-            index=EnumHandler.enum_member_to_index(member=ImageGenerationSStates.get_quality_type()),
-            placeholder="Quality size...",
-        )
+            # --- Size select ---
+            selected_size_value = setting_col[1].selectbox(
+                label="Size",
+                options=EnumHandler.get_enum_member_values(enum=ImageGenerationSizeEnum),
+                index=EnumHandler.enum_member_to_index(member=ImageGenerationSStates.get_size_type()),
+                placeholder="Select size...",
+            )
 
-        if not selected_model_value or not selected_size_value or not selected_quality_value:
-            st.error("Please select params...")
-            return SubComponentResult()
+            # --- Quality select ---
+            selected_quality_value = setting_col[2].selectbox(
+                label="Quality",
+                options=EnumHandler.get_enum_member_values(enum=ImageGenerationQualityEnum),
+                index=EnumHandler.enum_member_to_index(member=ImageGenerationSStates.get_quality_type()),
+                placeholder="Quality size...",
+            )
 
-        selected_model_type = EnumHandler.value_to_enum_member(enum=ImageGenerationModelEnum, value=selected_model_value)
-        selected_size_type = EnumHandler.value_to_enum_member(enum=ImageGenerationSizeEnum, value=selected_size_value)
-        selected_quality_type = EnumHandler.value_to_enum_member(enum=ImageGenerationQualityEnum, value=selected_quality_value)
+            # --- Text area ---
+            inputed_prompt = st.text_area(
+                label="Prompt",
+                value=ImageGenerationSStates.get_inputed_prompt(),
+                placeholder="Please enter a description of the image to be generated",
+            )
 
-        if ImageGenerationSStates.get_model_type() != selected_model_type:
-            ImageGenerationSStates.set_model_type(model_type=selected_model_type)
-
-        if ImageGenerationSStates.get_size_type() != selected_size_type:
-            ImageGenerationSStates.set_size_type(size_type=selected_size_type)
-
-        if ImageGenerationSStates.get_quality_type() != selected_size_type:
-            ImageGenerationSStates.set_quality_type(quality_type=selected_quality_type)
-
-        """
-        Generation
-        """
-        st.write("### Generation")
-        # --- Text area ---
-        inputed_prompt = st.text_area(
-            label="Prompt",
-            value=ImageGenerationSStates.get_inputed_prompt(),
-            placeholder="Please enter a description of the image to be generated",
-        )
-
-        # --- Submit button ---
-        is_submited = st.button(
-            label="Sumbit",
-            disabled=ImageGenerationSStates.get_submit_button_state(),
-            on_click=OnSubmitHandler.on_submit_start,
-            type="primary",
-        )
-
+            # --- Submit button ---
+            is_submited = st.form_submit_button(
+                label="Sumbit",
+                disabled=ImageGenerationSStates.get_submit_button_state(),
+                on_click=OnSubmitHandler.on_submit_start,
+                type="primary",
+            )
+            
         if is_submited:
+            with form:
+                if not selected_model_value or not selected_size_value or not selected_quality_value or not inputed_prompt:
+                    st.warning("Please fill out the form completely...")
+                    return SubComponentResult()
+                
+                selected_model_type = EnumHandler.value_to_enum_member(enum=ImageGenerationModelEnum, value=selected_model_value)
+                selected_size_type = EnumHandler.value_to_enum_member(enum=ImageGenerationSizeEnum, value=selected_size_value)
+                selected_quality_type = EnumHandler.value_to_enum_member(enum=ImageGenerationQualityEnum, value=selected_quality_value)
+
             with st.status("Generating..."):
                 st.write("Querying...")
-                generated_image_url = OnSubmitHandler.generate_image(inputed_prompt=inputed_prompt)
+                generated_image_url = OnSubmitHandler.generate_image(
+                    inputed_prompt=inputed_prompt,
+                    selected_model_type=selected_model_type,
+                    selected_size_type=selected_size_type,
+                    selected_quality_type=selected_quality_type,
+                )
                 st.write("Downloading...")
-                generated_image_rgb = OnSubmitHandler.convert_image(image_url=generated_image_url)
+                generated_image_rgb = OnSubmitHandler.download_image(image_url=generated_image_url)
 
-            OnSubmitHandler.on_submit_finish(inputed_user_prompt=inputed_prompt, generated_image=generated_image_rgb)
+            OnSubmitHandler.on_submit_finish(
+                selected_model_type=selected_model_type,
+                selected_size_type=selected_size_type,
+                selected_quality_type=selected_quality_type,
+                inputed_prompt=inputed_prompt, 
+                generated_image=generated_image_rgb,
+            )
             return SubComponentResult(call_rerun=True)
 
         st.image(
