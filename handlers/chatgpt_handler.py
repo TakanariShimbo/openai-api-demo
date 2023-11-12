@@ -40,7 +40,8 @@ class ChatGptHandler:
 
         stream_response = cls.client.chat.completions.create(
             model=model_type.value,
-            messages=copyed_chat_history
+            messages=copyed_chat_history,
+            stream=True,
         )
 
         answer = ""
