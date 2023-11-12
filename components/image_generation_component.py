@@ -10,7 +10,7 @@ from enums.image_generation_enum import (
     ImageGenerationSizeEnum,
     ImageGenerationQualityEnum,
 )
-from session_states.image_generation_s_states import ImageGenerationSStates, ImageGenerationSStateDefaults
+from session_states.image_generation_s_states import ImageGenerationSStates
 from handlers.enum_handler import EnumHandler
 from handlers.image_generation_handler import ImageGenerationHandler
 from components.base import SubComponentResult
