@@ -23,20 +23,20 @@ class OnSubmitHandler:
 
     @staticmethod
     def on_submit_finish(inputed_user_prompt: str, generated_image: Union[np.ndarray, str]):
-        ImageGenerationSStates.set_user_prompt(user_prompt=inputed_user_prompt)
+        ImageGenerationSStates.set_inputed_prompt(inputed_prompt=inputed_user_prompt)
         ImageGenerationSStates.set_generated_image(generated_image=generated_image)
         ImageGenerationSStates.set_submit_button_state()
 
     @staticmethod
-    def generate_image(inputed_user_prompt: str) -> str:
+    def generate_image(inputed_prompt: str) -> str:
         image_url = ImageGenerationHandler.get_image_url(
-            prompt=inputed_user_prompt,
+            prompt=inputed_prompt,
             model_type=ImageGenerationSStates.get_model_type(),
             size_type=ImageGenerationSStates.get_size_type(),
             quality_type=ImageGenerationSStates.get_quality_type(),
         )
         return image_url
-    
+
     @staticmethod
     def convert_image(image_url: str) -> np.ndarray:
         response = requests.get(url=image_url)
@@ -63,7 +63,7 @@ class ImageGenerationComponent:
         setting_col = st.columns(3)
         # --- DALL-E Model select ---
         selected_model_value = setting_col[0].selectbox(
-            label="DALL-E Model",
+            label="Model",
             options=EnumHandler.get_enum_member_values(enum=ImageGenerationModelEnum),
             index=EnumHandler.enum_member_to_index(member=ImageGenerationSStates.get_model_type()),
             placeholder="Select model...",
@@ -107,9 +107,9 @@ class ImageGenerationComponent:
         """
         st.write("### Generation")
         # --- Text area ---
-        inputed_user_prompt = st.text_area(
-            label="User Prompt",
-            value=ImageGenerationSStates.get_user_prompt(),
+        inputed_prompt = st.text_area(
+            label="Prompt",
+            value=ImageGenerationSStates.get_inputed_prompt(),
             placeholder="Please enter a description of the image to be generated",
         )
 
@@ -121,17 +121,19 @@ class ImageGenerationComponent:
             type="primary",
         )
 
-        image_area = st.empty()
         if is_submited:
-            image_area.image(image=ImageGenerationHandler.get_DUMMY_IMAGE(), caption="Loading...", use_column_width=True)
-            generated_image_url = OnSubmitHandler.generate_image(inputed_user_prompt=inputed_user_prompt)
-            generated_image_rgb = OnSubmitHandler.convert_image(image_url=generated_image_url)
-            OnSubmitHandler.on_submit_finish(inputed_user_prompt=inputed_user_prompt, generated_image=generated_image_rgb)
+            with st.status("Generating..."):
+                st.write("Querying...")
+                generated_image_url = OnSubmitHandler.generate_image(inputed_prompt=inputed_prompt)
+                st.write("Downloading...")
+                generated_image_rgb = OnSubmitHandler.convert_image(image_url=generated_image_url)
+
+            OnSubmitHandler.on_submit_finish(inputed_user_prompt=inputed_prompt, generated_image=generated_image_rgb)
             return SubComponentResult(call_rerun=True)
-        
-        generated_image = ImageGenerationSStates.get_generated_image()
-        if type(generated_image) == type(None):
-            return SubComponentResult()
-        
-        image_area.image(image=generated_image, caption=ImageGenerationSStates.get_user_prompt(), use_column_width=True)
+
+        st.image(
+            image=ImageGenerationSStates.get_generated_image(),
+            caption=ImageGenerationSStates.get_inputed_prompt(),
+            use_column_width=True,
+        )
         return SubComponentResult()

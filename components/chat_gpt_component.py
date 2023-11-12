@@ -47,7 +47,7 @@ class ChatGptComponent:
     def __sub_component() -> SubComponentResult:
         st.write("### Setting")
         selected_model_value = st.selectbox(
-            label="Chat GPT Model",
+            label="Model",
             options=EnumHandler.get_enum_member_values(enum=ChatGptModelEnum),
             index=EnumHandler.enum_member_to_index(member=ChatGptSStates.get_model_type()),
             placeholder="Select model...",

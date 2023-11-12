@@ -1,5 +1,3 @@
-import cv2
-import numpy as np
 from openai import OpenAI
 
 from enums.image_generation_enum import (
@@ -12,7 +10,6 @@ from enums.env_enum import EnvEnum
 
 class ImageGenerationHandler:
     client = OpenAI(api_key=EnvEnum.DEFAULT_OPENAI_APIKEY.value)
-    DUMMY_IMAGE = cv2.imread(filename="images/dummy.jpg", flags=cv2.IMREAD_COLOR)
 
     @classmethod
     def get_image_url(
@@ -31,7 +28,3 @@ class ImageGenerationHandler:
         )
         image_url = response.data[0].url
         return image_url
-
-    @classmethod
-    def get_DUMMY_IMAGE(cls) -> np.ndarray:
-        return cls.DUMMY_IMAGE
