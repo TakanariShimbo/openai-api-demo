@@ -16,7 +16,7 @@ TitleComponent.set_page_configs(
 with st.form(key="Image Recognition Form"):
     inputed_prompt = st.text_input(label="Prompt")
     uploaded_image = st.file_uploader(label="Uploader", type=["jpg", "jpeg", "png", "bmp"])
-    is_submit = st.form_submit_button(label="Submit")
+    is_submit = st.form_submit_button(label="Submit", type="primary")
 
 if is_submit:
     if not inputed_prompt or not uploaded_image:
