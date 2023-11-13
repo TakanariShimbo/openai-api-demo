@@ -6,11 +6,7 @@ from pydantic import BaseModel, ValidationError, Field
 import requests
 import streamlit as st
 
-from enums.image_generation_enum import (
-    ImageGenerationModelEnum,
-    ImageGenerationSizeEnum,
-    ImageGenerationQualityEnum,
-)
+from enums.image_generation_enum import ImageGenerationModelEnum, ImageGenerationSizeEnum, ImageGenerationQualityEnum
 from session_states.image_generation_s_states import ImageGenerationSStates
 from handlers.enum_handler import EnumHandler
 from handlers.image_generation_handler import ImageGenerationHandler
