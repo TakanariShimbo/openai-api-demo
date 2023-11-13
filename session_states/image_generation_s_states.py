@@ -50,9 +50,9 @@ class ImageGenerationSStates:
 
     @staticmethod
     def set_submit_button_state(
-        is_submitting: bool = ImageGenerationSStateDefaults.get_SUBMIT_BUTTON_STATE(),
+        is_locked: bool = ImageGenerationSStateDefaults.get_SUBMIT_BUTTON_STATE(),
     ) -> None:
-        st.session_state[ImageGenerationSStateEnum.IMAGE_GENERATION_SUBMIT_BUTTON_STATE.name] = is_submitting
+        st.session_state[ImageGenerationSStateEnum.IMAGE_GENERATION_SUBMIT_BUTTON_STATE.name] = is_locked
 
     """
     MODEL_INDEX
