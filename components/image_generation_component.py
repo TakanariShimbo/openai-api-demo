@@ -13,7 +13,7 @@ from handlers.image_generation_handler import ImageGenerationHandler
 from components.base import SubComponentResult
 
 
-class FormsSchema(BaseModel):
+class FormSchema(BaseModel):
     model: str
     size: str
     quality: str
@@ -42,12 +42,12 @@ class OnSubmitHandler:
         ImageGenerationSStates.set_submit_button_state()
 
     @staticmethod
-    def generate_image(form_values_schema: FormsSchema) -> str:
+    def generate_image(form_schema: FormSchema) -> str:
         image_url = ImageGenerationHandler.get_image_url(
-            prompt=form_values_schema.prompt,
-            model_type=form_values_schema.model_type,
-            size_type=form_values_schema.size_type,
-            quality_type=form_values_schema.quality_type,
+            prompt=form_schema.prompt,
+            model_type=form_schema.model_type,
+            size_type=form_schema.size_type,
+            quality_type=form_schema.quality_type,
         )
         return image_url
 
@@ -62,13 +62,13 @@ class OnSubmitHandler:
 
     @staticmethod
     def update_s_states(
-        form_values_schema: FormsSchema,
+        form_schema: FormSchema,
         generated_image: Union[np.ndarray, str],
     ) -> None:
-        ImageGenerationSStates.set_model_type(model_type=form_values_schema.model_type)
-        ImageGenerationSStates.set_size_type(size_type=form_values_schema.size_type)
-        ImageGenerationSStates.set_quality_type(quality_type=form_values_schema.quality_type)
-        ImageGenerationSStates.set_inputed_prompt(inputed_prompt=form_values_schema.prompt)
+        ImageGenerationSStates.set_model_type(model_type=form_schema.model_type)
+        ImageGenerationSStates.set_size_type(size_type=form_schema.size_type)
+        ImageGenerationSStates.set_quality_type(quality_type=form_schema.quality_type)
+        ImageGenerationSStates.set_inputed_prompt(inputed_prompt=form_schema.prompt)
         ImageGenerationSStates.set_generated_image(generated_image=generated_image)
 
     @staticmethod
@@ -89,13 +89,13 @@ class ImageGenerationComponent:
 
     @staticmethod
     def __sub_component() -> SubComponentResult:
-        forms_dict = {}
+        form_dict = {}
         form = st.form(key="Image Generation Form")
         with form:
             setting_col = st.columns(3)
 
             # --- DALL-E Model select ---
-            forms_dict["model"] = setting_col[0].selectbox(
+            form_dict["model"] = setting_col[0].selectbox(
                 label="Model",
                 options=EnumHandler.get_enum_member_values(enum=ImageGenerationModelEnum),
                 index=EnumHandler.enum_member_to_index(member=ImageGenerationSStates.get_model_type()),
@@ -103,7 +103,7 @@ class ImageGenerationComponent:
             )
 
             # --- Size select ---
-            forms_dict["size"] = setting_col[1].selectbox(
+            form_dict["size"] = setting_col[1].selectbox(
                 label="Size",
                 options=EnumHandler.get_enum_member_values(enum=ImageGenerationSizeEnum),
                 index=EnumHandler.enum_member_to_index(member=ImageGenerationSStates.get_size_type()),
@@ -111,7 +111,7 @@ class ImageGenerationComponent:
             )
 
             # --- Quality select ---
-            forms_dict["quality"] = setting_col[2].selectbox(
+            form_dict["quality"] = setting_col[2].selectbox(
                 label="Quality",
                 options=EnumHandler.get_enum_member_values(enum=ImageGenerationQualityEnum),
                 index=EnumHandler.enum_member_to_index(member=ImageGenerationSStates.get_quality_type()),
@@ -119,7 +119,7 @@ class ImageGenerationComponent:
             )
 
             # --- Text area ---
-            forms_dict["prompt"] = st.text_area(
+            form_dict["prompt"] = st.text_area(
                 label="Prompt",
                 disabled=ImageGenerationSStates.get_submit_button_state(),
                 value=ImageGenerationSStates.get_inputed_prompt(),
@@ -136,7 +136,7 @@ class ImageGenerationComponent:
 
         if is_submited:
             try:
-                form_values_schema = FormsSchema(**forms_dict)
+                form_schema = FormSchema(**form_dict)
             except ValidationError:
                 OnSubmitHandler.set_error_message()
                 OnSubmitHandler.unlock_submit_button()
@@ -144,12 +144,12 @@ class ImageGenerationComponent:
 
             with st.status("Generating..."):
                 st.write("Querying...")
-                generated_image_url = OnSubmitHandler.generate_image(form_values_schema=form_values_schema)
+                generated_image_url = OnSubmitHandler.generate_image(form_schema=form_schema)
                 st.write(f"[Downloading...]({generated_image_url})")
                 generated_image_rgb = OnSubmitHandler.download_image(image_url=generated_image_url)
 
             OnSubmitHandler.update_s_states(
-                form_values_schema=form_values_schema,
+                form_schema=form_schema,
                 generated_image=generated_image_rgb,
             )
 
@@ -158,7 +158,7 @@ class ImageGenerationComponent:
             return SubComponentResult(call_rerun=True)
 
         try:
-            form_values_schema = FormsSchema(**forms_dict)
+            form_schema = FormSchema(**form_dict)
         except ValidationError:
             error_message = ImageGenerationSStates.get_error_message()
             if error_message:
