@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Optional
 
 import cv2
 import numpy as np
@@ -10,10 +10,6 @@ from enums.s_state_enum import ImageGenerationSStateEnum
 
 class ImageGenerationSStateDefaults:   
     __DUMMY_IMAGE = cv2.imread(filename="images/dummy.jpg", flags=cv2.IMREAD_COLOR) 
-    
-    @staticmethod
-    def get_SUBMIT_BUTTON_STATE() -> bool:
-        return False
 
     @staticmethod
     def get_MODEL_TYPE() -> ImageGenerationModelEnum:
@@ -34,28 +30,19 @@ class ImageGenerationSStateDefaults:
     @classmethod
     def get_GENERATED_IMAGE(cls) -> np.ndarray:
         return cls.__DUMMY_IMAGE
+    
+    @staticmethod
+    def get_SUBMIT_BUTTON_STATE() -> bool:
+        return False
+    
+    @staticmethod
+    def get_ERROR_MESSAGE() -> None:
+        return None
 
 
 class ImageGenerationSStates:
     """
-    SUBMIT_BUTTON_STATE
-    """
-
-    @staticmethod
-    def get_submit_button_state() -> bool:
-        return st.session_state.get(
-            ImageGenerationSStateEnum.IMAGE_GENERATION_SUBMIT_BUTTON_STATE.name,
-            ImageGenerationSStateDefaults.get_SUBMIT_BUTTON_STATE(),
-        )
-
-    @staticmethod
-    def set_submit_button_state(
-        is_locked: bool = ImageGenerationSStateDefaults.get_SUBMIT_BUTTON_STATE(),
-    ) -> None:
-        st.session_state[ImageGenerationSStateEnum.IMAGE_GENERATION_SUBMIT_BUTTON_STATE.name] = is_locked
-
-    """
-    MODEL_INDEX
+    MODEL_TYPE
     """
 
     @staticmethod
@@ -72,7 +59,7 @@ class ImageGenerationSStates:
         st.session_state[ImageGenerationSStateEnum.IMAGE_GENERATION_MODEL_TYPE.name] = model_type
 
     """
-    SIZE_INDEX
+    SIZE_TYPE
     """
 
     @staticmethod
@@ -89,7 +76,7 @@ class ImageGenerationSStates:
         st.session_state[ImageGenerationSStateEnum.IMAGE_GENERATION_SIZE_TYPE.name] = size_type
 
     """
-    QUALITY_INDEX
+    QUALITY_TYPE
     """
 
     @staticmethod
@@ -121,7 +108,7 @@ class ImageGenerationSStates:
         st.session_state[ImageGenerationSStateEnum.IMAGE_GENERATION_INPUTED_PROMPT.name] = inputed_prompt
 
     """
-    IMAGE_URL
+    GENERATED_IMAGE
     """
 
     @staticmethod
@@ -136,3 +123,37 @@ class ImageGenerationSStates:
         generated_image: Union[np.ndarray, str] = ImageGenerationSStateDefaults.get_GENERATED_IMAGE(),
     ) -> None:
         st.session_state[ImageGenerationSStateEnum.IMAGE_GENERATION_GENERATED_IMAGE.name] = generated_image
+
+    """
+    SUBMIT_BUTTON_STATE
+    """
+
+    @staticmethod
+    def get_submit_button_state() -> bool:
+        return st.session_state.get(
+            ImageGenerationSStateEnum.IMAGE_GENERATION_SUBMIT_BUTTON_STATE.name,
+            ImageGenerationSStateDefaults.get_SUBMIT_BUTTON_STATE(),
+        )
+
+    @staticmethod
+    def set_submit_button_state(
+        is_locked: bool = ImageGenerationSStateDefaults.get_SUBMIT_BUTTON_STATE(),
+    ) -> None:
+        st.session_state[ImageGenerationSStateEnum.IMAGE_GENERATION_SUBMIT_BUTTON_STATE.name] = is_locked
+
+    """
+    ERROR_MESSAGE
+    """
+
+    @staticmethod
+    def get_error_message() -> Optional[str]:
+        return st.session_state.get(
+            ImageGenerationSStateEnum.IMAGE_GENERATION_ERROR_MESSAGE.name, 
+            ImageGenerationSStateDefaults.get_ERROR_MESSAGE(),
+        )
+
+    @staticmethod
+    def set_error_message(
+        error_message: Optional[str] = ImageGenerationSStateDefaults.get_ERROR_MESSAGE(),
+    ) -> None:
+        st.session_state[ImageGenerationSStateEnum.IMAGE_GENERATION_ERROR_MESSAGE.name] = error_message

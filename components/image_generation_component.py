@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Optional
 
 import cv2
 import numpy as np
@@ -71,6 +71,10 @@ class OnSubmitHandler:
         ImageGenerationSStates.set_inputed_prompt(inputed_prompt=form_values_schema.prompt)
         ImageGenerationSStates.set_generated_image(generated_image=generated_image)
 
+    @staticmethod
+    def set_error_message(error_message: Optional[str] = None) -> None:
+        ImageGenerationSStates.set_error_message(error_message)
+
 
 class ImageGenerationComponent:
     @classmethod
@@ -129,6 +133,7 @@ class ImageGenerationComponent:
             try:
                 form_values_schema = FormsSchema(**forms_dict)
             except ValidationError:
+                OnSubmitHandler.set_error_message(error_message="Please fill out the form completely.")
                 OnSubmitHandler.unlock_submit_button()
                 return SubComponentResult(call_rerun=True)
 
@@ -149,8 +154,10 @@ class ImageGenerationComponent:
         try:
             form_values_schema = FormsSchema(**forms_dict)
         except ValidationError:
-            with form:
-                st.warning("Please fill out the form completely.")
+            error_message = ImageGenerationSStates.get_error_message()
+            if not error_message:
+                with form:
+                    st.warning(error_message)
 
         st.image(
             image=ImageGenerationSStates.get_generated_image(),
