@@ -18,22 +18,11 @@ from components.base import SubComponentResult
 
 class OnSubmitHandler:
     @staticmethod
-    def on_submit_start() -> None:
+    def lock_submit_button() -> None:
         ImageGenerationSStates.set_submit_button_state(is_submitting=True)
 
     @staticmethod
-    def on_submit_finish(
-        selected_model_type: ImageGenerationModelEnum,
-        selected_size_type: ImageGenerationSizeEnum,
-        selected_quality_type: ImageGenerationQualityEnum,
-        inputed_prompt: str, 
-        generated_image: Union[np.ndarray, str],
-    ) -> None:
-        ImageGenerationSStates.set_model_type(model_type=selected_model_type)
-        ImageGenerationSStates.set_size_type(size_type=selected_size_type)
-        ImageGenerationSStates.set_quality_type(quality_type=selected_quality_type)
-        ImageGenerationSStates.set_inputed_prompt(inputed_prompt=inputed_prompt)
-        ImageGenerationSStates.set_generated_image(generated_image=generated_image)
+    def unlock_submit_button() -> None:
         ImageGenerationSStates.set_submit_button_state()
 
     @staticmethod
@@ -59,6 +48,20 @@ class OnSubmitHandler:
         image_bgr = cv2.imdecode(buf=np.asarray(image_bytes, dtype=np.uint8), flags=cv2.IMREAD_COLOR)
         image_rgb = cv2.cvtColor(src=image_bgr, code=cv2.COLOR_BGR2RGB)
         return image_rgb
+
+    @staticmethod
+    def update_s_states(
+        selected_model_type: ImageGenerationModelEnum,
+        selected_size_type: ImageGenerationSizeEnum,
+        selected_quality_type: ImageGenerationQualityEnum,
+        inputed_prompt: str,
+        generated_image: Union[np.ndarray, str],
+    ) -> None:
+        ImageGenerationSStates.set_model_type(model_type=selected_model_type)
+        ImageGenerationSStates.set_size_type(size_type=selected_size_type)
+        ImageGenerationSStates.set_quality_type(quality_type=selected_quality_type)
+        ImageGenerationSStates.set_inputed_prompt(inputed_prompt=inputed_prompt)
+        ImageGenerationSStates.set_generated_image(generated_image=generated_image)
 
 
 class ImageGenerationComponent:
@@ -109,19 +112,18 @@ class ImageGenerationComponent:
             is_submited = st.form_submit_button(
                 label="Sumbit",
                 disabled=ImageGenerationSStates.get_submit_button_state(),
-                on_click=OnSubmitHandler.on_submit_start,
+                on_click=OnSubmitHandler.lock_submit_button,
                 type="primary",
             )
-            
+
         if is_submited:
-            with form:
-                if not selected_model_value or not selected_size_value or not selected_quality_value or not inputed_prompt:
-                    st.warning("Please fill out the form completely...")
-                    return SubComponentResult()
-                
-                selected_model_type = EnumHandler.value_to_enum_member(enum=ImageGenerationModelEnum, value=selected_model_value)
-                selected_size_type = EnumHandler.value_to_enum_member(enum=ImageGenerationSizeEnum, value=selected_size_value)
-                selected_quality_type = EnumHandler.value_to_enum_member(enum=ImageGenerationQualityEnum, value=selected_quality_value)
+            if not selected_model_value or not selected_size_value or not selected_quality_value or not inputed_prompt:
+                OnSubmitHandler.unlock_submit_button()
+                return SubComponentResult(call_rerun=True)
+
+            selected_model_type = EnumHandler.value_to_enum_member(enum=ImageGenerationModelEnum, value=selected_model_value)
+            selected_size_type = EnumHandler.value_to_enum_member(enum=ImageGenerationSizeEnum, value=selected_size_value)
+            selected_quality_type = EnumHandler.value_to_enum_member(enum=ImageGenerationQualityEnum, value=selected_quality_value)
 
             with st.status("Generating..."):
                 st.write("Querying...")
@@ -134,15 +136,21 @@ class ImageGenerationComponent:
                 st.write("Downloading...")
                 generated_image_rgb = OnSubmitHandler.download_image(image_url=generated_image_url)
 
-            OnSubmitHandler.on_submit_finish(
+            OnSubmitHandler.update_s_states(
                 selected_model_type=selected_model_type,
                 selected_size_type=selected_size_type,
                 selected_quality_type=selected_quality_type,
-                inputed_prompt=inputed_prompt, 
+                inputed_prompt=inputed_prompt,
                 generated_image=generated_image_rgb,
             )
+            
+            OnSubmitHandler.unlock_submit_button()
             return SubComponentResult(call_rerun=True)
 
+        if not selected_model_value or not selected_size_value or not selected_quality_value or not inputed_prompt:
+            with form:
+                st.warning("Please fill out the form completely.")
+        
         st.image(
             image=ImageGenerationSStates.get_generated_image(),
             caption=ImageGenerationSStates.get_inputed_prompt(),
