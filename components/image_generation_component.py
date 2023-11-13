@@ -1,4 +1,4 @@
-from typing import Union, Optional
+from typing import Union
 
 import cv2
 import numpy as np
@@ -72,8 +72,12 @@ class OnSubmitHandler:
         ImageGenerationSStates.set_generated_image(generated_image=generated_image)
 
     @staticmethod
-    def set_error_message(error_message: Optional[str] = None) -> None:
-        ImageGenerationSStates.set_error_message(error_message)
+    def set_error_message(error_message: str = "Please fill out the form completely.") -> None:
+        ImageGenerationSStates.set_error_message(error_message=error_message)
+
+    @staticmethod
+    def reset_error_message() -> None:
+        ImageGenerationSStates.set_error_message()
 
 
 class ImageGenerationComponent:
@@ -117,6 +121,7 @@ class ImageGenerationComponent:
             # --- Text area ---
             forms_dict["prompt"] = st.text_area(
                 label="Prompt",
+                disabled=ImageGenerationSStates.get_submit_button_state(),
                 value=ImageGenerationSStates.get_inputed_prompt(),
                 placeholder="Please enter a description of the image to be generated",
             )
@@ -133,14 +138,14 @@ class ImageGenerationComponent:
             try:
                 form_values_schema = FormsSchema(**forms_dict)
             except ValidationError:
-                OnSubmitHandler.set_error_message(error_message="Please fill out the form completely.")
+                OnSubmitHandler.set_error_message()
                 OnSubmitHandler.unlock_submit_button()
                 return SubComponentResult(call_rerun=True)
 
             with st.status("Generating..."):
                 st.write("Querying...")
                 generated_image_url = OnSubmitHandler.generate_image(form_values_schema=form_values_schema)
-                st.write("Downloading...")
+                st.write(f"[Downloading...]({generated_image_url})")
                 generated_image_rgb = OnSubmitHandler.download_image(image_url=generated_image_url)
 
             OnSubmitHandler.update_s_states(
@@ -148,6 +153,7 @@ class ImageGenerationComponent:
                 generated_image=generated_image_rgb,
             )
 
+            OnSubmitHandler.reset_error_message()
             OnSubmitHandler.unlock_submit_button()
             return SubComponentResult(call_rerun=True)
 
@@ -155,7 +161,7 @@ class ImageGenerationComponent:
             form_values_schema = FormsSchema(**forms_dict)
         except ValidationError:
             error_message = ImageGenerationSStates.get_error_message()
-            if not error_message:
+            if error_message:
                 with form:
                     st.warning(error_message)
 
