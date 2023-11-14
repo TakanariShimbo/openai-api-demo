@@ -23,7 +23,7 @@ client = OpenAI(api_key=EnvEnum.DEFAULT_OPENAI_APIKEY.value)
 generation_form = st.form(key="Speech to text")
 with generation_form:
     current_prompt = get_session_state("prompt")
-    prompt = st.text_input(label="Prompt", value=current_prompt)
+    prompt = st.text_input(label="Prompt", value=current_prompt, placeholder="Please enter a description of the speech to be generated")
     generation_submit_button = st.form_submit_button(label="Sumbit", type="primary")
 
 if generation_submit_button:
