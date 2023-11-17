@@ -9,6 +9,7 @@ import streamlit as st
 from enums.image_generation_enum import ImageGenerationModelEnum, ImageGenerationSizeEnum, ImageGenerationQualityEnum
 from session_states.image_generation_s_states import ImageGenerationSStates
 from handlers.enum_handler import EnumHandler
+from handlers.image_handler import ImageHandler
 from handlers.image_generation_handler import ImageGenerationHandler
 from components.base import SubComponentResult
 
@@ -53,12 +54,7 @@ class OnSubmitHandler:
 
     @staticmethod
     def download_image(image_url: str) -> np.ndarray:
-        response = requests.get(url=image_url)
-        response.raise_for_status()
-        image_bytes = bytearray(response.content)
-        image_bgr = cv2.imdecode(buf=np.asarray(image_bytes, dtype=np.uint8), flags=cv2.IMREAD_COLOR)
-        image_rgb = cv2.cvtColor(src=image_bgr, code=cv2.COLOR_BGR2RGB)
-        return image_rgb
+        return ImageHandler.download_as_array_rgb(image_url=image_url)
 
     @staticmethod
     def update_s_states(

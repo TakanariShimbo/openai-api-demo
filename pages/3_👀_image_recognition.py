@@ -1,10 +1,7 @@
-import base64
-
-import cv2
-import numpy as np
 import streamlit as st
 
 from handlers.image_recognition_handler import ImageRecognitionHandler
+from handlers.image_handler import ImageHandler
 from components.title_component import TitleComponent
 
 
@@ -24,13 +21,8 @@ if is_submit:
     else:
         with st.spinner(text="Image Loading..."):
             image_bytes = uploaded_image.getvalue()
-            image_b64 = base64.b64encode(s=image_bytes).decode()
-            image_bgr = cv2.imdecode(
-                buf=np.frombuffer(buffer=image_bytes, dtype=np.uint8),
-                flags=cv2.IMREAD_COLOR,
-            )
-            image_rgb = cv2.cvtColor(src=image_bgr, code=cv2.COLOR_BGR2RGB)
-
+            image_b64 = ImageHandler.bytes_to_b64(image_bytes=image_bytes)
+            image_rgb = ImageHandler.bytes_to_array_rgb(image_bytes=image_bytes)
         st.image(image=image_rgb, caption=uploaded_image.name, use_column_width=True)
         
         answer_area = st.empty()
