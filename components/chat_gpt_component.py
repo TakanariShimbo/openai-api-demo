@@ -51,10 +51,11 @@ class ChatGptComponent:
             options=EnumHandler.get_enum_member_values(enum=ChatGptModelEnum),
             index=EnumHandler.enum_member_to_index(member=ChatGptSStates.get_model_type()),
             placeholder="Select model...",
+            key="ChatModelSelectBox",
         )
 
         if not selected_model_value:
-            st.error("Please select model...")
+            st.warning("Please select model...")
             return SubComponentResult()
 
         selected_model_type = EnumHandler.value_to_enum_member(enum=ChatGptModelEnum, value=selected_model_value)
@@ -76,6 +77,7 @@ class ChatGptComponent:
             placeholder="Input prompt ...",
             on_submit=OnSubmitHandler.on_submit_start,
             disabled=ChatGptSStates.get_submit_button_state(),
+            key="ChatInput",
         )
         if inputed_prompt:
             OnSubmitHandler.display_prompt(prompt=inputed_prompt)
