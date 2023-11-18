@@ -1,7 +1,9 @@
 import streamlit as st
 
-from handlers.image_recognition_handler import ImageRecognitionHandler
+from enums.image_recognition_enum import ImageRecognitionExtensionsEnum
 from handlers.image_handler import ImageHandler
+from handlers.enum_handler import EnumHandler
+from handlers.image_recognition_handler import ImageRecognitionHandler
 from components.title_component import TitleComponent
 
 
@@ -11,8 +13,13 @@ TitleComponent.set_page_configs(
 )
 
 with st.form(key="Image Recognition Form"):
+
     inputed_prompt = st.text_input(label="Prompt")
-    uploaded_image = st.file_uploader(label="Uploader", type=["jpg", "jpeg", "png", "bmp"])
+    uploaded_image = st.file_uploader(
+        label="Uploader", 
+        type=EnumHandler.get_enum_member_values(enum=ImageRecognitionExtensionsEnum),
+    )
+    
     is_submit = st.form_submit_button(label="Submit", type="primary")
 
 if is_submit:

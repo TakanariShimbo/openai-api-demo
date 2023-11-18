@@ -1,8 +1,8 @@
 import streamlit as st
+
+from handlers.speech_generation_handler import SpeechGenerationHandler
 from components.title_component import TitleComponent
-from openai import OpenAI
-import os
-from enums.env_enum import EnvEnum
+
 
 """
 TITLE
@@ -12,31 +12,18 @@ TitleComponent.set_page_configs(
     title="Text to Speech",
 )
 
-def get_session_state(session_state_name: str):
-    return st.session_state.get(session_state_name, None)
-
-def set_session_state(session_state_name: str, value):
-    st.session_state[session_state_name] = value
-
-client = OpenAI(api_key=EnvEnum.DEFAULT_OPENAI_APIKEY.value)
-
-generation_form = st.form(key="Speech to text")
-with generation_form:
-    current_prompt = get_session_state("prompt")
-    prompt = st.text_input(label="Prompt", value=current_prompt, placeholder="Please enter a description of the speech to be generated")
+form = st.form(key="Speech to text form")
+with form:
+    inputed_prompt = st.text_input(label="Prompt", placeholder="Please enter a description of the speech to be generated")
     generation_submit_button = st.form_submit_button(label="Sumbit", type="primary")
 
 if generation_submit_button:
-    set_session_state("prompt", prompt)
-    with st.spinner("Generating"):
-        response = client.audio.speech.create(
-            model="tts-1",
-            voice="alloy",
-            input=prompt
-        )
-        audio_bytes = bytes()
-        for data in response.iter_bytes():
-            audio_bytes += data
-        set_session_state("audio_bytes", audio_bytes)
+    if not inputed_prompt:
+        st.warning("Please fill out the form completely...")
+    else:
+        with st.spinner("Generating"):
+            speech_bytes = SpeechGenerationHandler.get_speech_bytes(
+                prompt=inputed_prompt,
+            )
 
-st.audio(data=get_session_state("audio_bytes"), format="audio/mp3")
+        st.audio(data=speech_bytes, format="audio/mp3")
