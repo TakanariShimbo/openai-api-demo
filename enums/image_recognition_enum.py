@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class ImageRecognitionExtensionsEnum(Enum):
+class ExtensionsEnum(Enum):
     JPG = "jpg"
     JPEG = "jpeg"
     PNG = "png"

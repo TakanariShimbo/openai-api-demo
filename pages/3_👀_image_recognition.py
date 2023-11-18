@@ -1,6 +1,6 @@
 import streamlit as st
 
-from enums.image_recognition_enum import ImageRecognitionExtensionsEnum
+from enums.image_recognition_enum import ExtensionsEnum
 from handlers.image_handler import ImageHandler
 from handlers.enum_handler import EnumHandler
 from handlers.image_recognition_handler import ImageRecognitionHandler
@@ -17,7 +17,7 @@ with st.form(key="Image Recognition Form"):
     inputed_prompt = st.text_input(label="Prompt")
     uploaded_image = st.file_uploader(
         label="Uploader", 
-        type=EnumHandler.get_enum_member_values(enum=ImageRecognitionExtensionsEnum),
+        type=EnumHandler.get_enum_member_values(enum=ExtensionsEnum),
     )
     
     is_submit = st.form_submit_button(label="Submit", type="primary")

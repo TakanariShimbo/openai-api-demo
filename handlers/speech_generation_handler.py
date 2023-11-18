@@ -1,6 +1,6 @@
 from openai import OpenAI
 
-from enums.speech_generation_enum import SpeechGenerationVoiceEnum
+from enums.speech_generation_enum import VoiceEnum
 from enums.env_enum import EnvEnum
 
 
@@ -11,7 +11,7 @@ class SpeechGenerationHandler:
     def get_speech_bytes(
         cls,
         prompt: str,
-        voice: SpeechGenerationVoiceEnum = SpeechGenerationVoiceEnum.ALLOY,
+        voice: VoiceEnum = VoiceEnum.ALLOY,
     ) -> bytes:
         response = cls.client.audio.speech.create(
             model="tts-1",
