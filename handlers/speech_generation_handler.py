@@ -1,7 +1,7 @@
 from openai import OpenAI
 
-from enums.speech_generation_enum import VoiceEnum
 from enums.env_enum import EnvEnum
+from enums.speech_generation_enum import VoiceEnum
 
 
 class SpeechGenerationHandler:

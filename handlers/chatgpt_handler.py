@@ -2,8 +2,8 @@ from typing import Any, List, Callable
 
 from openai import OpenAI
 
-from enums.chatgpt_enum import ModelEnum, SenderEnum
 from enums.env_enum import EnvEnum
+from enums.chatgpt_enum import ModelEnum, SenderEnum
 
 
 class ChatGptHandler:

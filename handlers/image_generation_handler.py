@@ -1,11 +1,11 @@
 from openai import OpenAI
 
+from enums.env_enum import EnvEnum
 from enums.image_generation_enum import (
     ModelEnum,
     SizeEnum,
     QualityEnum,
 )
-from enums.env_enum import EnvEnum
 
 
 class ImageGenerationHandler:

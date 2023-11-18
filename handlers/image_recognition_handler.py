@@ -2,8 +2,8 @@ from typing import Any, Callable
 
 from openai import OpenAI
 
-from enums.chatgpt_enum import SenderEnum
 from enums.env_enum import EnvEnum
+from enums.chatgpt_enum import SenderEnum
 
 
 VISION_MODEL = "gpt-4-vision-preview"
