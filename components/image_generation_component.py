@@ -88,10 +88,10 @@ class ImageGenerationComponent:
         form_dict = {}
         form = st.form(key="Image Generation Form")
         with form:
-            setting_col = st.columns(3)
+            left_col, center_col, right_col = st.columns(3)
 
             # --- DALL-E Model select ---
-            form_dict["model"] = setting_col[0].selectbox(
+            form_dict["model"] = left_col.selectbox(
                 label="Model",
                 options=EnumHandler.get_enum_member_values(enum=ImageGenerationModelEnum),
                 index=EnumHandler.enum_member_to_index(member=ImageGenerationSStates.get_model_type()),
@@ -99,7 +99,7 @@ class ImageGenerationComponent:
             )
 
             # --- Size select ---
-            form_dict["size"] = setting_col[1].selectbox(
+            form_dict["size"] = center_col.selectbox(
                 label="Size",
                 options=EnumHandler.get_enum_member_values(enum=ImageGenerationSizeEnum),
                 index=EnumHandler.enum_member_to_index(member=ImageGenerationSStates.get_size_type()),
@@ -107,7 +107,7 @@ class ImageGenerationComponent:
             )
 
             # --- Quality select ---
-            form_dict["quality"] = setting_col[2].selectbox(
+            form_dict["quality"] = right_col.selectbox(
                 label="Quality",
                 options=EnumHandler.get_enum_member_values(enum=ImageGenerationQualityEnum),
                 index=EnumHandler.enum_member_to_index(member=ImageGenerationSStates.get_quality_type()),
