@@ -1,9 +1,7 @@
 from typing import Union
 
-import cv2
 import numpy as np
 from pydantic import BaseModel, ValidationError, Field
-import requests
 import streamlit as st
 
 from enums.image_generation_enum import ImageGenerationModelEnum, ImageGenerationSizeEnum, ImageGenerationQualityEnum
