@@ -2,7 +2,7 @@ from typing import Any, List, Callable
 
 from openai import OpenAI
 
-from enums.chatgpt_enum import ChatGptModelEnum, ChatSenderEnum
+from enums.chatgpt_enum import ModelEnum, SenderEnum
 from enums.env_enum import EnvEnum
 
 
@@ -14,10 +14,10 @@ class ChatGptHandler:
         cls,
         prompt: str,
         chat_history: List[Any] = [],
-        model_type: ChatGptModelEnum = ChatGptModelEnum.GPT_3_5_TURBO,
+        model_type: ModelEnum = ModelEnum.GPT_3_5_TURBO,
     ) -> str:
         copyed_chat_history = chat_history.copy()
-        copyed_chat_history.append({"role": ChatSenderEnum.USER.value, "content": prompt})
+        copyed_chat_history.append({"role": SenderEnum.USER.value, "content": prompt})
 
         response = cls.client.chat.completions.create(
             model=model_type.value,
@@ -33,10 +33,10 @@ class ChatGptHandler:
         prompt: str,
         display_func: Callable[[str], None] = print,
         chat_history: List[Any] = [],
-        model_type: ChatGptModelEnum = ChatGptModelEnum.GPT_3_5_TURBO,
+        model_type: ModelEnum = ModelEnum.GPT_3_5_TURBO,
     ) -> str:
         copyed_chat_history = chat_history.copy()
-        copyed_chat_history.append({"role": ChatSenderEnum.USER.value, "content": prompt})
+        copyed_chat_history.append({"role": SenderEnum.USER.value, "content": prompt})
 
         stream_response = cls.client.chat.completions.create(
             model=model_type.value,

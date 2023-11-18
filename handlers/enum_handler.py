@@ -1,4 +1,4 @@
-from typing import Any, List, Type, TypeVar
+from typing import Any, List, Type, TypeVar, Optional
 from enum import Enum
 
 

@@ -1,12 +1,13 @@
 from enum import Enum
 
 
-class ChatSenderEnum(Enum):
+class SenderEnum(Enum):
     USER = "user"
     ASSISTANT = "assistant"
 
     
-class ChatGptModelEnum(Enum):
+class ModelEnum(Enum):
+    NONE = None
     GPT_4_1106_PREVIEW = "gpt-4-1106-preview"
     GPT_4 = "gpt-4"
     GPT_3_5_TURBO = "gpt-3.5-turbo"

@@ -1,9 +1,9 @@
 from openai import OpenAI
 
 from enums.image_generation_enum import (
-    ImageGenerationModelEnum,
-    ImageGenerationSizeEnum,
-    ImageGenerationQualityEnum,
+    ModelEnum,
+    SizeEnum,
+    QualityEnum,
 )
 from enums.env_enum import EnvEnum
 
@@ -15,9 +15,9 @@ class ImageGenerationHandler:
     def get_image_url(
         cls,
         prompt: str,
-        model_type: ImageGenerationModelEnum = ImageGenerationModelEnum.DALL_E_3,
-        size_type: ImageGenerationSizeEnum = ImageGenerationSizeEnum.SIZE_1024X1024,
-        quality_type: ImageGenerationQualityEnum = ImageGenerationQualityEnum.STANDARD,
+        model_type: ModelEnum = ModelEnum.DALL_E_3,
+        size_type: SizeEnum = SizeEnum.SIZE_1024X1024,
+        quality_type: QualityEnum = QualityEnum.STANDARD,
     ) -> str:
         response = cls.client.images.generate(
             prompt=prompt,

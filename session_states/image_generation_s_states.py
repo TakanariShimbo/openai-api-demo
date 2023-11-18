@@ -4,156 +4,79 @@ import cv2
 import numpy as np
 import streamlit as st
 
-from enums.image_generation_enum import ImageGenerationSizeEnum, ImageGenerationModelEnum, ImageGenerationQualityEnum
+from enums.image_generation_enum import SizeEnum, ModelEnum, QualityEnum
 from enums.s_state_enum import ImageGenerationSStateEnum
+from session_states.base_s_states import BaseSState
 
 
-class ImageGenerationSStateDefaults:   
-    __DUMMY_IMAGE = cv2.imread(filename="images/dummy.jpg", flags=cv2.IMREAD_COLOR) 
+DUMMY_IMAGE = cv2.imread(filename="images/dummy.jpg", flags=cv2.IMREAD_COLOR)
+
+
+class SubmitSState(BaseSState[bool]):
+    @staticmethod
+    def get_name() -> str:
+        return f"{ImageGenerationSStateEnum.SUBMIT}"
 
     @staticmethod
-    def get_MODEL_TYPE() -> ImageGenerationModelEnum:
-        return ImageGenerationModelEnum.DALL_E_3
-
-    @staticmethod
-    def get_SIZE_TYPE() -> ImageGenerationSizeEnum:
-        return ImageGenerationSizeEnum.SIZE_1024X1024
-
-    @staticmethod
-    def get_QUALITY_TYPE() -> ImageGenerationQualityEnum:
-        return ImageGenerationQualityEnum.STANDARD
-    
-    @classmethod
-    def get_INPUTED_PROMTP(cls) -> str:
-        return ""
-    
-    @classmethod
-    def get_GENERATED_IMAGE(cls) -> np.ndarray:
-        return cls.__DUMMY_IMAGE
-    
-    @staticmethod
-    def get_SUBMIT_BUTTON_STATE() -> bool:
+    def get_default() -> bool:
         return False
-    
+
+
+class ErrorMessageSState(BaseSState[Optional[str]]):
     @staticmethod
-    def get_ERROR_MESSAGE() -> None:
+    def get_name() -> str:
+        return f"{ImageGenerationSStateEnum.ERROR_MESSAGE}"
+
+    @staticmethod
+    def get_default() -> Optional[str]:
         return None
 
 
-class ImageGenerationSStates:
-    """
-    MODEL_TYPE
-    """
+class ModelSState(BaseSState[ModelEnum]):
+    @staticmethod
+    def get_name() -> str:
+        return f"{ImageGenerationSStateEnum.MODEL}"
 
     @staticmethod
-    def get_model_type() -> ImageGenerationModelEnum:
-        return st.session_state.get(
-            ImageGenerationSStateEnum.IMAGE_GENERATION_MODEL_TYPE.name,
-            ImageGenerationSStateDefaults.get_MODEL_TYPE(),
-        )
+    def get_default() -> ModelEnum:
+        return ModelEnum.DALL_E_3
+
+
+class SizeSState(BaseSState[SizeEnum]):
+    @staticmethod
+    def get_name() -> str:
+        return f"{ImageGenerationSStateEnum.SIZE}"
 
     @staticmethod
-    def set_model_type(
-        model_type: ImageGenerationModelEnum = ImageGenerationSStateDefaults.get_MODEL_TYPE(),
-    ) -> None:
-        st.session_state[ImageGenerationSStateEnum.IMAGE_GENERATION_MODEL_TYPE.name] = model_type
+    def get_default() -> SizeEnum:
+        return SizeEnum.SIZE_1024X1024
 
-    """
-    SIZE_TYPE
-    """
+
+class QualitySState(BaseSState[QualityEnum]):
+    @staticmethod
+    def get_name() -> str:
+        return f"{ImageGenerationSStateEnum.QUALITY}"
 
     @staticmethod
-    def get_size_type() -> ImageGenerationSizeEnum:
-        return st.session_state.get(
-            ImageGenerationSStateEnum.IMAGE_GENERATION_SIZE_TYPE.name,
-            ImageGenerationSStateDefaults.get_SIZE_TYPE(),
-        )
+    def get_default() -> QualityEnum:
+        return QualityEnum.STANDARD
+
+
+class PromptSState(BaseSState[Optional[str]]):
+    @staticmethod
+    def get_name() -> str:
+        return f"{ImageGenerationSStateEnum.PROMPT}"
 
     @staticmethod
-    def set_size_type(
-        size_type: ImageGenerationSizeEnum = ImageGenerationSStateDefaults.get_SIZE_TYPE(),
-    ) -> None:
-        st.session_state[ImageGenerationSStateEnum.IMAGE_GENERATION_SIZE_TYPE.name] = size_type
+    def get_default() -> Optional[str]:
+        return None
 
-    """
-    QUALITY_TYPE
-    """
+
+class GeneratedImageSState(BaseSState[Union[np.ndarray, str]]):
+    @staticmethod
+    def get_name() -> str:
+        return f"{ImageGenerationSStateEnum.GENERATED_IMAGE}"
 
     @staticmethod
-    def get_quality_type() -> ImageGenerationQualityEnum:
-        return st.session_state.get(
-            ImageGenerationSStateEnum.IMAGE_GENERATION_QUALITY_TYPE.name,
-            ImageGenerationSStateDefaults.get_QUALITY_TYPE(),
-        )
-
-    @staticmethod
-    def set_quality_type(
-        quality_type: ImageGenerationQualityEnum = ImageGenerationSStateDefaults.get_QUALITY_TYPE(),
-    ) -> None:
-        st.session_state[ImageGenerationSStateEnum.IMAGE_GENERATION_QUALITY_TYPE.name] = quality_type
-
-    """
-    USER_PROMPT
-    """
-
-    @staticmethod
-    def get_inputed_prompt() -> str:
-        return st.session_state.get(
-            ImageGenerationSStateEnum.IMAGE_GENERATION_INPUTED_PROMPT.name, 
-            ImageGenerationSStateDefaults.get_INPUTED_PROMTP(),
-        )
-
-    @staticmethod
-    def set_inputed_prompt(inputed_prompt: str) -> None:
-        st.session_state[ImageGenerationSStateEnum.IMAGE_GENERATION_INPUTED_PROMPT.name] = inputed_prompt
-
-    """
-    GENERATED_IMAGE
-    """
-
-    @staticmethod
-    def get_generated_image() -> Union[np.ndarray, str]:
-        return st.session_state.get(
-            ImageGenerationSStateEnum.IMAGE_GENERATION_GENERATED_IMAGE.name, 
-            ImageGenerationSStateDefaults.get_GENERATED_IMAGE(),
-        )
-
-    @staticmethod
-    def set_generated_image(
-        generated_image: Union[np.ndarray, str] = ImageGenerationSStateDefaults.get_GENERATED_IMAGE(),
-    ) -> None:
-        st.session_state[ImageGenerationSStateEnum.IMAGE_GENERATION_GENERATED_IMAGE.name] = generated_image
-
-    """
-    SUBMIT_BUTTON_STATE
-    """
-
-    @staticmethod
-    def get_submit_button_state() -> bool:
-        return st.session_state.get(
-            ImageGenerationSStateEnum.IMAGE_GENERATION_SUBMIT_BUTTON_STATE.name,
-            ImageGenerationSStateDefaults.get_SUBMIT_BUTTON_STATE(),
-        )
-
-    @staticmethod
-    def set_submit_button_state(
-        is_locked: bool = ImageGenerationSStateDefaults.get_SUBMIT_BUTTON_STATE(),
-    ) -> None:
-        st.session_state[ImageGenerationSStateEnum.IMAGE_GENERATION_SUBMIT_BUTTON_STATE.name] = is_locked
-
-    """
-    ERROR_MESSAGE
-    """
-
-    @staticmethod
-    def get_error_message() -> Optional[str]:
-        return st.session_state.get(
-            ImageGenerationSStateEnum.IMAGE_GENERATION_ERROR_MESSAGE.name, 
-            ImageGenerationSStateDefaults.get_ERROR_MESSAGE(),
-        )
-
-    @staticmethod
-    def set_error_message(
-        error_message: Optional[str] = ImageGenerationSStateDefaults.get_ERROR_MESSAGE(),
-    ) -> None:
-        st.session_state[ImageGenerationSStateEnum.IMAGE_GENERATION_ERROR_MESSAGE.name] = error_message
+    def get_default() -> Union[np.ndarray, str]:
+        return DUMMY_IMAGE

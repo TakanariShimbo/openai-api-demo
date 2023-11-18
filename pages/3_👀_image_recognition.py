@@ -24,7 +24,7 @@ with st.form(key="Image Recognition Form"):
 
 if is_submit:
     if not inputed_prompt or not uploaded_image:
-        st.warning("Please fill out the form completely...")
+        st.warning("Please fill out the form completely.")
     else:
         with st.spinner(text="Image Loading..."):
             image_bytes = uploaded_image.getvalue()

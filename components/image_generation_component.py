@@ -4,8 +4,8 @@ import numpy as np
 from pydantic import BaseModel, ValidationError, Field
 import streamlit as st
 
-from enums.image_generation_enum import ImageGenerationModelEnum, ImageGenerationSizeEnum, ImageGenerationQualityEnum
-from session_states.image_generation_s_states import ImageGenerationSStates
+from enums.image_generation_enum import ModelEnum, SizeEnum, QualityEnum
+from session_states.image_generation_s_states import SubmitSState, ErrorMessageSState, ModelSState, SizeSState, QualitySState, PromptSState, GeneratedImageSState
 from handlers.enum_handler import EnumHandler
 from handlers.image_handler import ImageHandler
 from handlers.image_generation_handler import ImageGenerationHandler
@@ -19,26 +19,26 @@ class FormSchema(BaseModel):
     prompt: str = Field(min_length=1)
 
     @property
-    def model_type(self) -> ImageGenerationModelEnum:
-        return EnumHandler.value_to_enum_member(enum=ImageGenerationModelEnum, value=self.model)
+    def model_type(self) -> ModelEnum:
+        return EnumHandler.value_to_enum_member(enum=ModelEnum, value=self.model)
 
     @property
-    def size_type(self) -> ImageGenerationSizeEnum:
-        return EnumHandler.value_to_enum_member(enum=ImageGenerationSizeEnum, value=self.size)
+    def size_type(self) -> SizeEnum:
+        return EnumHandler.value_to_enum_member(enum=SizeEnum, value=self.size)
 
     @property
-    def quality_type(self) -> ImageGenerationQualityEnum:
-        return EnumHandler.value_to_enum_member(enum=ImageGenerationQualityEnum, value=self.quality)
+    def quality_type(self) -> QualityEnum:
+        return EnumHandler.value_to_enum_member(enum=QualityEnum, value=self.quality)
 
 
 class OnSubmitHandler:
     @staticmethod
-    def lock_submit_button() -> None:
-        ImageGenerationSStates.set_submit_button_state(is_locked=True)
+    def lock_submit_button():
+        SubmitSState.set(value=True)
 
     @staticmethod
-    def unlock_submit_button() -> None:
-        ImageGenerationSStates.set_submit_button_state()
+    def unlock_submit_button():
+        SubmitSState.set(value=False)
 
     @staticmethod
     def generate_image(form_schema: FormSchema) -> str:
@@ -59,19 +59,19 @@ class OnSubmitHandler:
         form_schema: FormSchema,
         generated_image: Union[np.ndarray, str],
     ) -> None:
-        ImageGenerationSStates.set_model_type(model_type=form_schema.model_type)
-        ImageGenerationSStates.set_size_type(size_type=form_schema.size_type)
-        ImageGenerationSStates.set_quality_type(quality_type=form_schema.quality_type)
-        ImageGenerationSStates.set_inputed_prompt(inputed_prompt=form_schema.prompt)
-        ImageGenerationSStates.set_generated_image(generated_image=generated_image)
+        ModelSState.set(value=form_schema.model_type)
+        SizeSState.set(value=form_schema.size_type)
+        QualitySState.set(value=form_schema.quality_type)
+        PromptSState.set(value=form_schema.prompt)
+        GeneratedImageSState.set(value=generated_image)
 
     @staticmethod
     def set_error_message(error_message: str = "Please fill out the form completely.") -> None:
-        ImageGenerationSStates.set_error_message(error_message=error_message)
+        ErrorMessageSState.set(value=error_message)
 
     @staticmethod
     def reset_error_message() -> None:
-        ImageGenerationSStates.set_error_message()
+        ErrorMessageSState.set()
 
 
 class ImageGenerationComponent:
@@ -88,42 +88,41 @@ class ImageGenerationComponent:
         with form:
             left_col, center_col, right_col = st.columns(3)
 
-            # --- DALL-E Model select ---
             form_dict["model"] = left_col.selectbox(
                 label="Model",
-                options=EnumHandler.get_enum_member_values(enum=ImageGenerationModelEnum),
-                index=EnumHandler.enum_member_to_index(member=ImageGenerationSStates.get_model_type()),
+                options=EnumHandler.get_enum_member_values(enum=ModelEnum),
+                index=EnumHandler.enum_member_to_index(member=ModelSState.get()),
                 placeholder="Select model...",
+                key="DallE ModelSelectBox",
             )
 
-            # --- Size select ---
             form_dict["size"] = center_col.selectbox(
                 label="Size",
-                options=EnumHandler.get_enum_member_values(enum=ImageGenerationSizeEnum),
-                index=EnumHandler.enum_member_to_index(member=ImageGenerationSStates.get_size_type()),
+                options=EnumHandler.get_enum_member_values(enum=SizeEnum),
+                index=EnumHandler.enum_member_to_index(member=SizeSState.get()),
                 placeholder="Select size...",
+                key="DallE SizeSelectBox",
             )
 
-            # --- Quality select ---
             form_dict["quality"] = right_col.selectbox(
                 label="Quality",
-                options=EnumHandler.get_enum_member_values(enum=ImageGenerationQualityEnum),
-                index=EnumHandler.enum_member_to_index(member=ImageGenerationSStates.get_quality_type()),
+                options=EnumHandler.get_enum_member_values(enum=QualityEnum),
+                index=EnumHandler.enum_member_to_index(member=QualitySState.get()),
                 placeholder="Quality size...",
+                key="DallE QualitySelectBox",
             )
 
-            # --- Text area ---
             form_dict["prompt"] = st.text_area(
                 label="Prompt",
-                disabled=ImageGenerationSStates.get_submit_button_state(),
-                value=ImageGenerationSStates.get_inputed_prompt(),
+                disabled=SubmitSState.get(),
+                value=PromptSState.get(),
                 placeholder="Please enter a description of the image to be generated",
+                key="DallE PromptTextArea",
             )
 
-            # --- Submit button ---
             is_submited = st.form_submit_button(
                 label="Sumbit",
-                disabled=ImageGenerationSStates.get_submit_button_state(),
+                disabled=SubmitSState.get(),
                 on_click=OnSubmitHandler.lock_submit_button,
                 type="primary",
             )
@@ -154,14 +153,14 @@ class ImageGenerationComponent:
         try:
             form_schema = FormSchema(**form_dict)
         except ValidationError:
-            error_message = ImageGenerationSStates.get_error_message()
+            error_message = ErrorMessageSState.get()
             if error_message:
                 with form:
                     st.warning(error_message)
 
         st.image(
-            image=ImageGenerationSStates.get_generated_image(),
-            caption=ImageGenerationSStates.get_inputed_prompt(),
+            image=GeneratedImageSState.get(),
+            caption=PromptSState.get(),
             use_column_width=True,
         )
         return SubComponentResult()

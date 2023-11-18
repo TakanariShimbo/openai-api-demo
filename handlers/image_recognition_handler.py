@@ -2,7 +2,7 @@ from typing import Any, Callable
 
 from openai import OpenAI
 
-from enums.chatgpt_enum import ChatSenderEnum
+from enums.chatgpt_enum import SenderEnum
 from enums.env_enum import EnvEnum
 
 
@@ -55,7 +55,7 @@ class ImageRecognitionHandler:
     @staticmethod
     def __get_user_prompt_with_image(prompt: str, image_b64: str) -> Any:
         return {
-            "role": ChatSenderEnum.USER.value,
+            "role": SenderEnum.USER.value,
             "content": [
                 {
                     "type": "text",
