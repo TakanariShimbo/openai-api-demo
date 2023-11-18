@@ -4,6 +4,7 @@ from openai import OpenAI
 
 from enums.env_enum import EnvEnum
 from enums.chatgpt_enum import ModelEnum, SenderEnum
+from exceptions.exceptions import InvalidModelTypeException, EmptyResponseException
 
 
 class ChatGptHandler:
@@ -16,17 +17,19 @@ class ChatGptHandler:
         chat_history: List[Any] = [],
         model_type: ModelEnum = ModelEnum.GPT_3_5_TURBO,
     ) -> str:
+        if model_type == ModelEnum.NONE:
+            raise InvalidModelTypeException()
+
         copyed_chat_history = chat_history.copy()
         copyed_chat_history.append({"role": SenderEnum.USER.value, "content": prompt})
 
-        response = cls.client.chat.completions.create(
-            model=model_type.value,
-            messages=copyed_chat_history
-        )
+        response = cls.client.chat.completions.create(model=model_type.value, messages=copyed_chat_history)
 
         answer = response.choices[0].message.content
+        if not answer:
+            raise EmptyResponseException()
         return answer
-    
+
     @classmethod
     def query_and_display_answer_streamly(
         cls,
@@ -35,6 +38,9 @@ class ChatGptHandler:
         chat_history: List[Any] = [],
         model_type: ModelEnum = ModelEnum.GPT_3_5_TURBO,
     ) -> str:
+        if model_type == ModelEnum.NONE:
+            raise InvalidModelTypeException()
+
         copyed_chat_history = chat_history.copy()
         copyed_chat_history.append({"role": SenderEnum.USER.value, "content": prompt})
 
@@ -46,7 +52,7 @@ class ChatGptHandler:
 
         answer = ""
         for chunk in stream_response:
-            answer_peace = chunk.choices[0].delta.content or "" # type: ignore
+            answer_peace = chunk.choices[0].delta.content or ""  # type: ignore
             answer += answer_peace
             display_func(answer)
         return answer

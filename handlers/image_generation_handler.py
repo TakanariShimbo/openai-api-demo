@@ -1,11 +1,8 @@
 from openai import OpenAI
 
 from enums.env_enum import EnvEnum
-from enums.image_generation_enum import (
-    ModelEnum,
-    SizeEnum,
-    QualityEnum,
-)
+from enums.image_generation_enum import ModelEnum, SizeEnum, QualityEnum
+from exceptions.exceptions import EmptyResponseException
 
 
 class ImageGenerationHandler:
@@ -27,4 +24,6 @@ class ImageGenerationHandler:
             n=1,
         )
         image_url = response.data[0].url
+        if not image_url:
+            raise EmptyResponseException()
         return image_url

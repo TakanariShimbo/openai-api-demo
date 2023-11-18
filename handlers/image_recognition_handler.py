@@ -4,6 +4,7 @@ from openai import OpenAI
 
 from enums.env_enum import EnvEnum
 from enums.chatgpt_enum import SenderEnum
+from exceptions.exceptions import EmptyResponseException
 
 
 VISION_MODEL = "gpt-4-vision-preview"
@@ -16,7 +17,7 @@ class ImageRecognitionHandler:
     def query(
         cls,
         image_b64: str,
-        prompt: str = "この画像を200字程度で説明をしてください。",
+        prompt: str,
     ) -> str:
         response = cls.client.chat.completions.create(
             model=VISION_MODEL,
@@ -27,13 +28,15 @@ class ImageRecognitionHandler:
         )
 
         answer = response.choices[0].message.content
+        if not answer:
+            raise EmptyResponseException()
         return answer
 
     @classmethod
     def query_and_display_answer_streamly(
         cls,
         image_b64: str,
-        prompt: str = "この画像を200字程度で説明をしてください。",
+        prompt: str,
         display_func: Callable[[str], None] = print,
     ) -> str:
         stream_response = cls.client.chat.completions.create(
