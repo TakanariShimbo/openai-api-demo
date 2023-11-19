@@ -1,5 +1,5 @@
 from copy import deepcopy
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 from enums.chatgpt_enum import ModelEnum, SenderEnum
 from enums.s_state_enum import ChatGptSStateEnum
@@ -14,6 +14,16 @@ class SubmitSState(BaseSState[bool]):
     @staticmethod
     def get_default() -> bool:
         return False
+
+
+class ErrorMessageSState(BaseSState[Optional[str]]):
+    @staticmethod
+    def get_name() -> str:
+        return f"{ChatGptSStateEnum.ERROR_MESSAGE}"
+
+    @staticmethod
+    def get_default() -> Optional[str]:
+        return None
 
 
 class ModelSState(BaseSState[ModelEnum]):

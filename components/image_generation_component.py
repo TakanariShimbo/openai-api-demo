@@ -13,22 +13,22 @@ from components.base import SubComponentResult
 
 
 class FormSchema(BaseModel):
-    model: str
-    size: str
-    quality: str
+    model_value: str
+    size_value: str
+    quality_value: str
     prompt: str = Field(min_length=1)
 
     @property
     def model_type(self) -> ModelEnum:
-        return EnumHandler.value_to_enum_member(enum=ModelEnum, value=self.model)
+        return EnumHandler.value_to_enum_member(enum=ModelEnum, value=self.model_value)
 
     @property
     def size_type(self) -> SizeEnum:
-        return EnumHandler.value_to_enum_member(enum=SizeEnum, value=self.size)
+        return EnumHandler.value_to_enum_member(enum=SizeEnum, value=self.size_value)
 
     @property
     def quality_type(self) -> QualityEnum:
-        return EnumHandler.value_to_enum_member(enum=QualityEnum, value=self.quality)
+        return EnumHandler.value_to_enum_member(enum=QualityEnum, value=self.quality_value)
 
 
 class OnSubmitHandler:
@@ -40,6 +40,14 @@ class OnSubmitHandler:
     def unlock_submit_button():
         SubmitSState.reset()
 
+    @staticmethod
+    def set_error_message(error_message: str = "Please fill out the form completely.") -> None:
+        ErrorMessageSState.set(value=error_message)
+
+    @staticmethod
+    def reset_error_message() -> None:
+        ErrorMessageSState.reset()
+        
     @staticmethod
     def generate_image(form_schema: FormSchema) -> str:
         image_url = ImageGenerationHandler.get_image_url(
@@ -65,14 +73,6 @@ class OnSubmitHandler:
         PromptSState.set(value=form_schema.prompt)
         GeneratedImageSState.set(value=generated_image)
 
-    @staticmethod
-    def set_error_message(error_message: str = "Please fill out the form completely.") -> None:
-        ErrorMessageSState.set(value=error_message)
-
-    @staticmethod
-    def reset_error_message() -> None:
-        ErrorMessageSState.reset()
-
 
 class ImageGenerationComponent:
     @classmethod
@@ -88,7 +88,7 @@ class ImageGenerationComponent:
         with form:
             left_col, center_col, right_col = st.columns(3)
 
-            form_dict["model"] = left_col.selectbox(
+            form_dict["model_value"] = left_col.selectbox(
                 label="Model",
                 options=EnumHandler.get_enum_member_values(enum=ModelEnum),
                 index=EnumHandler.enum_member_to_index(member=ModelSState.get()),
@@ -96,7 +96,7 @@ class ImageGenerationComponent:
                 key="DallE ModelSelectBox",
             )
 
-            form_dict["size"] = center_col.selectbox(
+            form_dict["size_value"] = center_col.selectbox(
                 label="Size",
                 options=EnumHandler.get_enum_member_values(enum=SizeEnum),
                 index=EnumHandler.enum_member_to_index(member=SizeSState.get()),
@@ -104,7 +104,7 @@ class ImageGenerationComponent:
                 key="DallE SizeSelectBox",
             )
 
-            form_dict["quality"] = right_col.selectbox(
+            form_dict["quality_value"] = right_col.selectbox(
                 label="Quality",
                 options=EnumHandler.get_enum_member_values(enum=QualityEnum),
                 index=EnumHandler.enum_member_to_index(member=QualitySState.get()),

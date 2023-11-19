@@ -3,6 +3,7 @@ from enum import Enum, auto
 
 class ChatGptSStateEnum(Enum):
     SUBMIT = auto()
+    ERROR_MESSAGE = auto()
     MODEL = auto()
     CHAT_HISTORY = auto()
 
