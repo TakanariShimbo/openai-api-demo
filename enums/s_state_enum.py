@@ -8,6 +8,14 @@ class ChatGptSStateEnum(Enum):
     CHAT_HISTORY = auto()
 
 
+class ImageRecognitionSStateEnum(Enum):
+    SUBMIT = auto()
+    ERROR_MESSAGE = auto()
+    PROMPT = auto()
+    UPLOADED_IMAGE = auto()
+    ANSWER = auto()
+
+
 class ImageGenerationSStateEnum(Enum):
     SUBMIT = auto()
     ERROR_MESSAGE = auto()
