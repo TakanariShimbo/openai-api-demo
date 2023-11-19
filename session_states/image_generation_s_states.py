@@ -3,7 +3,7 @@ from typing import Union, Optional
 import cv2
 import numpy as np
 
-from enums.image_generation_enum import SizeEnum, ModelEnum, QualityEnum
+from enums.image_generation_enum import SizeEnum, AiModelEnum, QualityEnum
 from enums.s_state_enum import ImageGenerationSStateEnum
 from session_states.base_s_states import BaseSState
 
@@ -31,14 +31,14 @@ class ErrorMessageSState(BaseSState[Optional[str]]):
         return None
 
 
-class ModelSState(BaseSState[ModelEnum]):
+class AiModelSState(BaseSState[AiModelEnum]):
     @staticmethod
     def get_name() -> str:
         return f"{ImageGenerationSStateEnum.MODEL}"
 
     @staticmethod
-    def get_default() -> ModelEnum:
-        return ModelEnum.DALL_E_3
+    def get_default() -> AiModelEnum:
+        return AiModelEnum.DALL_E_3
 
 
 class SizeSState(BaseSState[SizeEnum]):

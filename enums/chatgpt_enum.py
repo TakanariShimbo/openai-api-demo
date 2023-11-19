@@ -6,7 +6,7 @@ class SenderEnum(Enum):
     ASSISTANT = "assistant"
 
     
-class ModelEnum(Enum):
+class AiModelEnum(Enum):
     NONE = None
     GPT_4_1106_PREVIEW = "gpt-4-1106-preview"
     GPT_4 = "gpt-4"

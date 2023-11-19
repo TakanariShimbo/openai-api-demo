@@ -1,7 +1,7 @@
 from openai import OpenAI
 
 from enums.env_enum import EnvEnum
-from enums.image_generation_enum import ModelEnum, SizeEnum, QualityEnum
+from enums.image_generation_enum import AiModelEnum, SizeEnum, QualityEnum
 from exceptions.exceptions import EmptyResponseException
 
 
@@ -12,7 +12,7 @@ class ImageGenerationHandler:
     def get_image_url(
         cls,
         prompt: str,
-        model_type: ModelEnum = ModelEnum.DALL_E_3,
+        model_type: AiModelEnum = AiModelEnum.DALL_E_3,
         size_type: SizeEnum = SizeEnum.SIZE_1024X1024,
         quality_type: QualityEnum = QualityEnum.STANDARD,
     ) -> str:

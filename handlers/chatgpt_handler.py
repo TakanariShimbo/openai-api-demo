@@ -3,7 +3,7 @@ from typing import Any, List, Callable
 from openai import OpenAI
 
 from enums.env_enum import EnvEnum
-from enums.chatgpt_enum import ModelEnum, SenderEnum
+from enums.chatgpt_enum import AiModelEnum, SenderEnum
 from exceptions.exceptions import InvalidModelTypeException, EmptyResponseException
 
 
@@ -15,9 +15,9 @@ class ChatGptHandler:
         cls,
         prompt: str,
         chat_history: List[Any] = [],
-        model_type: ModelEnum = ModelEnum.GPT_3_5_TURBO,
+        model_type: AiModelEnum = AiModelEnum.GPT_3_5_TURBO,
     ) -> str:
-        if model_type == ModelEnum.NONE:
+        if model_type == AiModelEnum.NONE:
             raise InvalidModelTypeException()
 
         copyed_chat_history = chat_history.copy()
@@ -36,9 +36,9 @@ class ChatGptHandler:
         prompt: str,
         display_func: Callable[[str], None] = print,
         chat_history: List[Any] = [],
-        model_type: ModelEnum = ModelEnum.GPT_3_5_TURBO,
+        model_type: AiModelEnum = AiModelEnum.GPT_3_5_TURBO,
     ) -> str:
-        if model_type == ModelEnum.NONE:
+        if model_type == AiModelEnum.NONE:
             raise InvalidModelTypeException()
 
         copyed_chat_history = chat_history.copy()

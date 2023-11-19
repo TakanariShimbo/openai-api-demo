@@ -3,20 +3,20 @@ from typing import Optional
 from pydantic import BaseModel, ValidationError, Field
 import streamlit as st
 
-from enums.chatgpt_enum import ModelEnum, SenderEnum
-from session_states.chat_gpt_s_states import SubmitSState, ErrorMessageSState, ModelSState, ChatHistorySState
+from enums.chatgpt_enum import AiModelEnum, SenderEnum
+from session_states.chat_gpt_s_states import SubmitSState, ErrorMessageSState, AiModelSState, ChatHistorySState
 from handlers.enum_handler import EnumHandler
 from handlers.chatgpt_handler import ChatGptHandler
 from components.base import SubComponentResult
 
 
 class FormSchema(BaseModel):
-    model_value: str
+    ai_model_value: Optional[str]
     prompt: str = Field(min_length=1)
 
     @property
-    def model_type(self) -> ModelEnum:
-        return EnumHandler.value_to_enum_member(enum=ModelEnum, value=self.model_value)
+    def ai_model_type(self) -> AiModelEnum:
+        return EnumHandler.value_to_enum_member(enum=AiModelEnum, value=self.ai_model_value)
 
 
 class OnSubmitHandler:
@@ -43,25 +43,25 @@ class OnSubmitHandler:
 
     @staticmethod
     def query_and_display_answer(form_schema: FormSchema) -> Optional[str]:
-        if not form_schema.model_type.value:
+        if not form_schema.ai_model_type.value:
             return None
 
-        with st.chat_message(name=form_schema.model_type.value):
+        with st.chat_message(name=form_schema.ai_model_type.value):
             answer_area = st.empty()
             answer = ChatGptHandler.query_and_display_answer_streamly(
                 prompt=form_schema.prompt,
                 display_func=answer_area.write,
                 chat_history=ChatHistorySState.get_for_query(),
-                model_type=form_schema.model_type,
+                model_type=form_schema.ai_model_type,
             )
         return answer
 
     @staticmethod
     def update_s_states(form_schema: FormSchema, answer: Optional[str]):
-        ModelSState.set(value=form_schema.model_type)
+        AiModelSState.set(value=form_schema.ai_model_type)
         ChatHistorySState.add(sender_type=SenderEnum.USER, sender_name=SenderEnum.USER.name, content=form_schema.prompt)
-        if form_schema.model_type.value and answer:
-            ChatHistorySState.add(sender_type=SenderEnum.ASSISTANT, sender_name=form_schema.model_type.value, content=answer)
+        if form_schema.ai_model_type.value and answer:
+            ChatHistorySState.add(sender_type=SenderEnum.ASSISTANT, sender_name=form_schema.ai_model_type.value, content=answer)
 
 
 class ChatGptComponent:
@@ -76,10 +76,10 @@ class ChatGptComponent:
         form_dict = {}
 
         st.write("### Setting")
-        form_dict["model_value"] = st.selectbox(
+        form_dict["ai_model_value"] = st.selectbox(
             label="Model",
-            options=EnumHandler.get_enum_member_values(enum=ModelEnum),
-            index=EnumHandler.enum_member_to_index(member=ModelSState.get()),
+            options=EnumHandler.get_enum_member_values(enum=AiModelEnum),
+            index=EnumHandler.enum_member_to_index(member=AiModelSState.get()),
             placeholder="Select model...",
             key="ChatGpt ModelSelectBox",
         )

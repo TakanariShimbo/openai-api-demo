@@ -4,8 +4,8 @@ import numpy as np
 from pydantic import BaseModel, ValidationError, Field
 import streamlit as st
 
-from enums.image_generation_enum import ModelEnum, SizeEnum, QualityEnum
-from session_states.image_generation_s_states import SubmitSState, ErrorMessageSState, ModelSState, SizeSState, QualitySState, PromptSState, GeneratedImageSState
+from enums.image_generation_enum import AiModelEnum, SizeEnum, QualityEnum
+from session_states.image_generation_s_states import SubmitSState, ErrorMessageSState, AiModelSState, SizeSState, QualitySState, PromptSState, GeneratedImageSState
 from handlers.enum_handler import EnumHandler
 from handlers.image_handler import ImageHandler
 from handlers.image_generation_handler import ImageGenerationHandler
@@ -13,14 +13,14 @@ from components.base import SubComponentResult
 
 
 class FormSchema(BaseModel):
-    model_value: str
+    ai_model_value: str
     size_value: str
     quality_value: str
     prompt: str = Field(min_length=1)
 
     @property
-    def model_type(self) -> ModelEnum:
-        return EnumHandler.value_to_enum_member(enum=ModelEnum, value=self.model_value)
+    def ai_model_type(self) -> AiModelEnum:
+        return EnumHandler.value_to_enum_member(enum=AiModelEnum, value=self.ai_model_value)
 
     @property
     def size_type(self) -> SizeEnum:
@@ -47,12 +47,12 @@ class OnSubmitHandler:
     @staticmethod
     def reset_error_message() -> None:
         ErrorMessageSState.reset()
-        
+
     @staticmethod
     def generate_image(form_schema: FormSchema) -> str:
         image_url = ImageGenerationHandler.get_image_url(
             prompt=form_schema.prompt,
-            model_type=form_schema.model_type,
+            model_type=form_schema.ai_model_type,
             size_type=form_schema.size_type,
             quality_type=form_schema.quality_type,
         )
@@ -67,7 +67,7 @@ class OnSubmitHandler:
         form_schema: FormSchema,
         generated_image: Union[np.ndarray, str],
     ) -> None:
-        ModelSState.set(value=form_schema.model_type)
+        AiModelSState.set(value=form_schema.ai_model_type)
         SizeSState.set(value=form_schema.size_type)
         QualitySState.set(value=form_schema.quality_type)
         PromptSState.set(value=form_schema.prompt)
@@ -88,10 +88,10 @@ class ImageGenerationComponent:
         with form:
             left_col, center_col, right_col = st.columns(3)
 
-            form_dict["model_value"] = left_col.selectbox(
+            form_dict["ai_model_value"] = left_col.selectbox(
                 label="Model",
-                options=EnumHandler.get_enum_member_values(enum=ModelEnum),
-                index=EnumHandler.enum_member_to_index(member=ModelSState.get()),
+                options=EnumHandler.get_enum_member_values(enum=AiModelEnum),
+                index=EnumHandler.enum_member_to_index(member=AiModelSState.get()),
                 placeholder="Select model...",
                 key="DallE ModelSelectBox",
             )
