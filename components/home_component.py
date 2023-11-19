@@ -14,7 +14,7 @@ class HomeComponent:
 
             **Creators**  
             - Takanari Shimbo 🦥  
-            - Shun Ikezu 🍓  
+            - Shunichi Ikezu 🍓  
             - Yuki Yoshizawa 🤘
             """
         )
