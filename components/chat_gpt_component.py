@@ -73,30 +73,41 @@ class ChatGptComponent:
 
     @staticmethod
     def __sub_component() -> SubComponentResult:
+        history_container = st.container()
+        with history_container:
+            st.markdown("#### Chat History")
+            for chat in ChatHistorySState.get():
+                with st.chat_message(name=chat["role_name"]):
+                    st.write(chat["content"])
+
         form_dict = {}
+        form = st.form(key="Chat GPT Form", clear_on_submit=True)
+        with form:
+            st.markdown("#### Prompt Form")
+            
+            form_dict["ai_model_value"] = st.selectbox(
+                label="Model",
+                options=EnumHandler.get_enum_member_values(enum=AiModelEnum),
+                index=EnumHandler.enum_member_to_index(member=AiModelSState.get()),
+                placeholder="Select model...",
+                key="ChatGpt ModelSelectBox",
+            )
 
-        st.write("### Setting")
-        form_dict["ai_model_value"] = st.selectbox(
-            label="Model",
-            options=EnumHandler.get_enum_member_values(enum=AiModelEnum),
-            index=EnumHandler.enum_member_to_index(member=AiModelSState.get()),
-            placeholder="Select model...",
-            key="ChatGpt ModelSelectBox",
-        )
+            form_dict["prompt"] = st.text_area(
+                label="Prompt",
+                disabled=SubmitSState.get(),
+                placeholder="Please input prompt...",
+                key="ChatGpt PromptTextArea",
+            )
 
-        st.write("### Chat History")
-        for chat in ChatHistorySState.get():
-            with st.chat_message(name=chat["role_name"]):
-                st.write(chat["content"])
+            is_submited = st.form_submit_button(
+                label="Sumbit",
+                disabled=SubmitSState.get(),
+                on_click=OnSubmitHandler.lock_submit_button,
+                type="primary",
+            )
 
-        form_dict["prompt"] = st.chat_input(
-            placeholder="Input prompt ...",
-            on_submit=OnSubmitHandler.lock_submit_button,
-            disabled=SubmitSState.get(),
-            key="ChatGpt ChatInput",
-        )
-
-        if form_dict["prompt"]:
+        if is_submited:
             try:
                 form_schema = FormSchema(**form_dict)
             except ValidationError:
@@ -104,8 +115,9 @@ class ChatGptComponent:
                 OnSubmitHandler.unlock_submit_button()
                 return SubComponentResult(call_rerun=True)
 
-            OnSubmitHandler.display_prompt(prompt=form_schema.prompt)
-            answer = OnSubmitHandler.query_and_display_answer(form_schema=form_schema)
+            with history_container:
+                OnSubmitHandler.display_prompt(prompt=form_schema.prompt)
+                answer = OnSubmitHandler.query_and_display_answer(form_schema=form_schema)
             OnSubmitHandler.update_s_states(form_schema=form_schema, answer=answer)
             OnSubmitHandler.reset_error_message()
             OnSubmitHandler.unlock_submit_button()

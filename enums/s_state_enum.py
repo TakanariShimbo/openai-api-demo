@@ -7,7 +7,7 @@ class ChatGptSStateEnum(Enum):
     MODEL = auto()
     CHAT_HISTORY = auto()
 
-    
+
 class ImageGenerationSStateEnum(Enum):
     SUBMIT = auto()
     ERROR_MESSAGE = auto()
@@ -16,4 +16,3 @@ class ImageGenerationSStateEnum(Enum):
     QUALITY = auto()
     PROMPT = auto()
     GENERATED_IMAGE = auto()
-    
