@@ -38,7 +38,7 @@ class OnSubmitHandler:
 
     @staticmethod
     def unlock_submit_button():
-        SubmitSState.set(value=False)
+        SubmitSState.reset()
 
     @staticmethod
     def generate_image(form_schema: FormSchema) -> str:
@@ -71,7 +71,7 @@ class OnSubmitHandler:
 
     @staticmethod
     def reset_error_message() -> None:
-        ErrorMessageSState.set()
+        ErrorMessageSState.reset()
 
 
 class ImageGenerationComponent:

@@ -14,7 +14,7 @@ class BaseSState(Generic[T], abc.ABC):
         """
         This method should return the name of the session state variable.
         """
-        pass
+        raise NotImplementedError("Subclasses must implement this method")
 
     @staticmethod
     @abc.abstractmethod
@@ -22,26 +22,20 @@ class BaseSState(Generic[T], abc.ABC):
         """
         This method should return the default value for the session state variable.
         """
-        pass
+        raise NotImplementedError("Subclasses must implement this method")
 
     @classmethod
     def get(cls) -> T:
-        """
-        Retrieve the value from the session state.
-        Returns the default value if the key is not present.
-        """
         try:
             return st.session_state[cls.get_name()]
-        except:
-            cls.set()
+        except KeyError:
+            cls.reset()
             return st.session_state[cls.get_name()]
 
     @classmethod
-    def set(cls, value: Optional[T] = None) -> None:
-        """
-        Set the value in the session state.
-        If no value is provided, use the default value.
-        """
-        if value is None:
-            value = cls.get_default()
+    def set(cls, value: T) -> None:
         st.session_state[cls.get_name()] = value
+
+    @classmethod
+    def reset(cls) -> None:
+        st.session_state[cls.get_name()] = cls.get_default()

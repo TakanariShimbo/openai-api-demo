@@ -16,7 +16,7 @@ class OnSubmitHandler:
 
     @staticmethod
     def unlock_submit_button():
-        SubmitSState.set(value=False)
+        SubmitSState.reset()
 
     @staticmethod
     def display_prompt(prompt: str) -> None:

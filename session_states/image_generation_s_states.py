@@ -2,7 +2,6 @@ from typing import Union, Optional
 
 import cv2
 import numpy as np
-import streamlit as st
 
 from enums.image_generation_enum import SizeEnum, ModelEnum, QualityEnum
 from enums.s_state_enum import ImageGenerationSStateEnum
