@@ -86,6 +86,7 @@ class ImageGenerationComponent:
         form_dict = {}
         form = st.form(key="Image Generation Form", clear_on_submit=True)
         with form:
+            st.markdown("#### Prompt Form")
             left_col, center_col, right_col = st.columns(3)
 
             form_dict["ai_model_value"] = left_col.selectbox(
@@ -134,11 +135,12 @@ class ImageGenerationComponent:
                 OnSubmitHandler.unlock_submit_button()
                 return SubComponentResult(call_rerun=True)
 
-            with st.status("Generating..."):
-                st.write("Querying...")
-                generated_image_url = OnSubmitHandler.generate_image(form_schema=form_schema)
-                st.write(f"[Downloading...]({generated_image_url})")
-                generated_image_rgb = OnSubmitHandler.download_image(image_url=generated_image_url)
+            with form:
+                with st.status("Generating..."):
+                    st.write("Querying...")
+                    generated_image_url = OnSubmitHandler.generate_image(form_schema=form_schema)
+                    st.write(f"[Downloading...]({generated_image_url})")
+                    generated_image_rgb = OnSubmitHandler.download_image(image_url=generated_image_url)
 
             OnSubmitHandler.update_s_states(
                 form_schema=form_schema,
@@ -157,6 +159,7 @@ class ImageGenerationComponent:
                 with form:
                     st.warning(error_message)
 
+        st.markdown("#### Generated Image")
         st.image(
             image=GeneratedImageSState.get(),
             caption=PromptSState.get(),
