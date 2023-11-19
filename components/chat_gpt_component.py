@@ -4,10 +4,10 @@ from pydantic import BaseModel, ValidationError, Field
 import streamlit as st
 
 from enums.chatgpt_enum import AiModelEnum, SenderEnum
-from session_states.chat_gpt_s_states import SubmitSState, ErrorMessageSState, AiModelSState, ChatHistorySState
 from handlers.enum_handler import EnumHandler
 from handlers.chatgpt_handler import ChatGptHandler
-from components.base import SubComponentResult
+from session_states.chat_gpt_s_states import SubmitSState, ErrorMessageSState, AiModelSState, ChatHistorySState
+from components.sub_compornent_result import SubComponentResult
 
 
 class FormSchema(BaseModel):

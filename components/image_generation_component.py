@@ -5,11 +5,11 @@ from pydantic import BaseModel, ValidationError, Field
 import streamlit as st
 
 from enums.image_generation_enum import AiModelEnum, SizeEnum, QualityEnum
-from session_states.image_generation_s_states import SubmitSState, ErrorMessageSState, AiModelSState, SizeSState, QualitySState, PromptSState, GeneratedImageSState
 from handlers.enum_handler import EnumHandler
 from handlers.image_handler import ImageHandler
 from handlers.image_generation_handler import ImageGenerationHandler
-from components.base import SubComponentResult
+from session_states.image_generation_s_states import SubmitSState, ErrorMessageSState, AiModelSState, SizeSState, QualitySState, PromptSState, GeneratedImageSState
+from components.sub_compornent_result import SubComponentResult
 
 
 class FormSchema(BaseModel):
@@ -84,7 +84,7 @@ class ImageGenerationComponent:
     @staticmethod
     def __sub_component() -> SubComponentResult:
         form_dict = {}
-        form = st.form(key="Image Generation Form")
+        form = st.form(key="Image Generation Form", clear_on_submit=True)
         with form:
             left_col, center_col, right_col = st.columns(3)
 
@@ -115,8 +115,7 @@ class ImageGenerationComponent:
             form_dict["prompt"] = st.text_area(
                 label="Prompt",
                 disabled=SubmitSState.get(),
-                value=PromptSState.get(),
-                placeholder="Please enter a description of the image to be generated",
+                placeholder="Please input prompt...",
                 key="DallE PromptTextArea",
             )
 
