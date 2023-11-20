@@ -1,6 +1,10 @@
 from enum import Enum, auto
 
 
+class GlobalSStateEnum(Enum):
+    PAGE = auto()
+
+
 class ChatGptSStateEnum(Enum):
     SUBMIT = auto()
     ERROR_MESSAGE = auto()
