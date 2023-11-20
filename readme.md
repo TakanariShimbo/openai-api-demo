@@ -27,5 +27,5 @@
 
 2. run streamlit
     ```
-    streamlit run 1_🏠_home.py
+    streamlit run server.py
     ```
