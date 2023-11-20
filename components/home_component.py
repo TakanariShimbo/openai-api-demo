@@ -20,4 +20,4 @@ class HomeComponent:
         )
         st.markdown(content)
         st.balloons()
-        st.write(st.session_state)
+        # st.write(st.session_state)
