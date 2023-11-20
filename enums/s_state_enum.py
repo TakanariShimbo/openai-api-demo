@@ -24,3 +24,11 @@ class ImageGenerationSStateEnum(Enum):
     QUALITY = auto()
     PROMPT = auto()
     GENERATED_IMAGE = auto()
+
+
+class SpeechGenerationSStateEnum(Enum):
+    SUBMIT = auto()
+    ERROR_MESSAGE = auto()
+    PROMPT = auto()
+    VOICE = auto()
+    GENERATED_SPEECH = auto()
