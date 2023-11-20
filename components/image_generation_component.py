@@ -50,7 +50,7 @@ class OnSubmitHandler:
 
     @staticmethod
     def generate_image(form_schema: FormSchema) -> str:
-        image_url = ImageGenerationHandler.get_image_url(
+        image_url = ImageGenerationHandler.generate_image(
             prompt=form_schema.prompt,
             model_type=form_schema.ai_model_type,
             size_type=form_schema.size_type,

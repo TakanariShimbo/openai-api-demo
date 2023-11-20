@@ -58,7 +58,7 @@ class OnSubmitHandler:
     @staticmethod
     def query_and_display_answer(form_schema: FormSchema) -> Optional[str]:
         answer_area = st.empty()
-        answer = ImageRecognitionHandler.query_and_display_answer_streamly(
+        answer = ImageRecognitionHandler.query_answer_and_display_streamly(
             image_b64=form_schema.uploaded_image_b64,
             prompt=form_schema.prompt,
             display_func=answer_area.write,

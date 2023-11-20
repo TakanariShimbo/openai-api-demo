@@ -8,7 +8,7 @@ class SpeechGenerationHandler:
     client = OpenAI(api_key=EnvEnum.DEFAULT_OPENAI_APIKEY.value)
 
     @classmethod
-    def get_speech_bytes(
+    def generate_speech(
         cls,
         prompt: str,
         voice: VoiceEnum = VoiceEnum.ALLOY,

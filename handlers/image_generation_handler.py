@@ -9,7 +9,7 @@ class ImageGenerationHandler:
     client = OpenAI(api_key=EnvEnum.DEFAULT_OPENAI_APIKEY.value)
 
     @classmethod
-    def get_image_url(
+    def generate_image(
         cls,
         prompt: str,
         model_type: AiModelEnum = AiModelEnum.DALL_E_3,

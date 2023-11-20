@@ -8,11 +8,11 @@ class HomeComponent:
     def display_content() -> None:
         content = dedent(
             f"""
+            #### Overview
             Welcome to demo site of OpenAI API 🤖  
             Let's enjoy OpenAI API 👏  
 
-
-            **Creators**  
+            #### Creators  
             - Takanari Shimbo 🦥  
             - Shunichi Ikezu 🍓  
             - Yuki Yoshizawa 🤘

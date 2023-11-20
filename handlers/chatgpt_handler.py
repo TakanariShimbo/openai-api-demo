@@ -11,7 +11,7 @@ class ChatGptHandler:
     client = OpenAI(api_key=EnvEnum.DEFAULT_OPENAI_APIKEY.value)
 
     @classmethod
-    def query(
+    def query_answer(
         cls,
         prompt: str,
         chat_history: List[Any] = [],
@@ -31,7 +31,7 @@ class ChatGptHandler:
         return answer
 
     @classmethod
-    def query_and_display_answer_streamly(
+    def query_answer_and_display_streamly(
         cls,
         prompt: str,
         display_func: Callable[[str], None] = print,

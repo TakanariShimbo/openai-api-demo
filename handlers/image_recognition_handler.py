@@ -14,7 +14,7 @@ class ImageRecognitionHandler:
     client = OpenAI(api_key=EnvEnum.DEFAULT_OPENAI_APIKEY.value)
 
     @classmethod
-    def query(
+    def query_answer(
         cls,
         image_b64: str,
         prompt: str,
@@ -33,7 +33,7 @@ class ImageRecognitionHandler:
         return answer
 
     @classmethod
-    def query_and_display_answer_streamly(
+    def query_answer_and_display_streamly(
         cls,
         image_b64: str,
         prompt: str,

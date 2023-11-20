@@ -42,13 +42,13 @@ class OnSubmitHandler:
             st.write(prompt)
 
     @staticmethod
-    def query_and_display_answer(form_schema: FormSchema) -> Optional[str]:
+    def query_answer_and_display_streamly(form_schema: FormSchema) -> Optional[str]:
         if not form_schema.ai_model_type.value:
             return None
 
         with st.chat_message(name=form_schema.ai_model_type.value):
             answer_area = st.empty()
-            answer = ChatGptHandler.query_and_display_answer_streamly(
+            answer = ChatGptHandler.query_answer_and_display_streamly(
                 prompt=form_schema.prompt,
                 display_func=answer_area.write,
                 chat_history=ChatHistorySState.get_for_query(),
@@ -117,7 +117,7 @@ class ChatGptComponent:
 
             with history_container:
                 OnSubmitHandler.display_prompt(prompt=form_schema.prompt)
-                answer = OnSubmitHandler.query_and_display_answer(form_schema=form_schema)
+                answer = OnSubmitHandler.query_answer_and_display_streamly(form_schema=form_schema)
             OnSubmitHandler.update_s_states(form_schema=form_schema, answer=answer)
             OnSubmitHandler.reset_error_message()
             OnSubmitHandler.unlock_submit_button()

@@ -36,7 +36,7 @@ class OnSubmitHandler:
 
     @staticmethod
     def generate_speech(form_schema: FormSchema) -> bytes:
-        speech_bytes = SpeechGenerationHandler.get_speech_bytes(
+        speech_bytes = SpeechGenerationHandler.generate_speech(
             prompt=form_schema.prompt,
             voice=form_schema.voice_type,
         )

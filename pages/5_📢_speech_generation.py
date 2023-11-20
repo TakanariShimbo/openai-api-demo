@@ -4,7 +4,7 @@ from components.speech_generation_component import SpeechGenerationComponent
 
 TitleComponent.set_page_configs(
     icon="📢",
-    title="Text to Speech",
+    title="Speech Generation",
 )
 
 SpeechGenerationComponent.display_component()
