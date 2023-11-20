@@ -56,7 +56,7 @@ class OnSubmitHandler:
         )
 
     @staticmethod
-    def query_and_display_answer(form_schema: FormSchema) -> Optional[str]:
+    def query_answer_and_display_streamly(form_schema: FormSchema) -> Optional[str]:
         answer_area = st.empty()
         answer = ImageRecognitionHandler.query_answer_and_display_streamly(
             image_b64=form_schema.uploaded_image_b64,
@@ -117,7 +117,7 @@ class ImageRecognitionComponent:
             
             st.markdown("#### Recognized result")
             OnSubmitHandler.display_uploaded_image(form_schema=form_schema)
-            answer = OnSubmitHandler.query_and_display_answer(form_schema=form_schema)
+            answer = OnSubmitHandler.query_answer_and_display_streamly(form_schema=form_schema)
 
             OnSubmitHandler.update_s_states(form_schema=form_schema, answer=answer)
             OnSubmitHandler.reset_error_message()
