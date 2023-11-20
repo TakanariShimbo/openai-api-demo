@@ -8,6 +8,7 @@ class GlobalSStateEnum(Enum):
 class ChatGptSStateEnum(Enum):
     SUBMIT = auto()
     ERROR_MESSAGE = auto()
+    PROMPT = auto()
     MODEL = auto()
     CHAT_HISTORY = auto()
 

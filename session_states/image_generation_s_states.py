@@ -14,7 +14,7 @@ DUMMY_IMAGE = cv2.imread(filename="images/dummy.jpg", flags=cv2.IMREAD_COLOR)
 class SubmitSState(BaseSState[bool]):
     @staticmethod
     def get_name() -> str:
-        return f"{ImageGenerationSStateEnum.SUBMIT}"
+        return f"{ImageGenerationSStateEnum.SUBMIT}".replace(".", "_")
 
     @staticmethod
     def get_default() -> bool:
@@ -24,7 +24,7 @@ class SubmitSState(BaseSState[bool]):
 class ErrorMessageSState(BaseSState[Optional[str]]):
     @staticmethod
     def get_name() -> str:
-        return f"{ImageGenerationSStateEnum.ERROR_MESSAGE}"
+        return f"{ImageGenerationSStateEnum.ERROR_MESSAGE}".replace(".", "_")
 
     @staticmethod
     def get_default() -> Optional[str]:
@@ -34,7 +34,7 @@ class ErrorMessageSState(BaseSState[Optional[str]]):
 class AiModelSState(BaseSState[AiModelEnum]):
     @staticmethod
     def get_name() -> str:
-        return f"{ImageGenerationSStateEnum.MODEL}"
+        return f"{ImageGenerationSStateEnum.MODEL}".replace(".", "_")
 
     @staticmethod
     def get_default() -> AiModelEnum:
@@ -44,7 +44,7 @@ class AiModelSState(BaseSState[AiModelEnum]):
 class SizeSState(BaseSState[SizeEnum]):
     @staticmethod
     def get_name() -> str:
-        return f"{ImageGenerationSStateEnum.SIZE}"
+        return f"{ImageGenerationSStateEnum.SIZE}".replace(".", "_")
 
     @staticmethod
     def get_default() -> SizeEnum:
@@ -54,7 +54,7 @@ class SizeSState(BaseSState[SizeEnum]):
 class QualitySState(BaseSState[QualityEnum]):
     @staticmethod
     def get_name() -> str:
-        return f"{ImageGenerationSStateEnum.QUALITY}"
+        return f"{ImageGenerationSStateEnum.QUALITY}".replace(".", "_")
 
     @staticmethod
     def get_default() -> QualityEnum:
@@ -64,7 +64,7 @@ class QualitySState(BaseSState[QualityEnum]):
 class PromptSState(BaseSState[Optional[str]]):
     @staticmethod
     def get_name() -> str:
-        return f"{ImageGenerationSStateEnum.PROMPT}"
+        return f"{ImageGenerationSStateEnum.PROMPT}".replace(".", "_")
 
     @staticmethod
     def get_default() -> Optional[str]:
@@ -74,7 +74,7 @@ class PromptSState(BaseSState[Optional[str]]):
 class GeneratedImageSState(BaseSState[Union[np.ndarray, str]]):
     @staticmethod
     def get_name() -> str:
-        return f"{ImageGenerationSStateEnum.GENERATED_IMAGE}"
+        return f"{ImageGenerationSStateEnum.GENERATED_IMAGE}".replace(".", "_")
 
     @staticmethod
     def get_default() -> Union[np.ndarray, str]:

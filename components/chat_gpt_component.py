@@ -11,12 +11,8 @@ from components.sub_compornent_result import SubComponentResult
 
 
 class FormSchema(BaseModel):
-    ai_model_value: Optional[str]
+    ai_model_type: AiModelEnum
     prompt: str = Field(min_length=1)
-
-    @property
-    def ai_model_type(self) -> AiModelEnum:
-        return EnumHandler.value_to_enum_member(enum=AiModelEnum, value=self.ai_model_value)
 
 
 class OnSubmitHandler:
@@ -85,10 +81,10 @@ class ChatGptComponent:
         with form:
             st.markdown("#### Prompt Form")
             
-            form_dict["ai_model_value"] = st.selectbox(
+            form_dict["ai_model_type"] = st.selectbox(
                 label="Model",
-                options=EnumHandler.get_enum_member_values(enum=AiModelEnum),
-                index=EnumHandler.enum_member_to_index(member=AiModelSState.get()),
+                options=EnumHandler.get_enum_members(enum=AiModelEnum),
+                format_func=lambda x: x.value,
                 placeholder="Select model...",
                 key="ChatGpt ModelSelectBox",
             )

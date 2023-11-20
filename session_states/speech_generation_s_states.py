@@ -8,7 +8,7 @@ from session_states.base_s_states import BaseSState
 class SubmitSState(BaseSState[bool]):
     @staticmethod
     def get_name() -> str:
-        return f"{SpeechGenerationSStateEnum.SUBMIT}"
+        return f"{SpeechGenerationSStateEnum.SUBMIT}".replace(".", "_")
 
     @staticmethod
     def get_default() -> bool:
@@ -18,7 +18,7 @@ class SubmitSState(BaseSState[bool]):
 class ErrorMessageSState(BaseSState[Optional[str]]):
     @staticmethod
     def get_name() -> str:
-        return f"{SpeechGenerationSStateEnum.ERROR_MESSAGE}"
+        return f"{SpeechGenerationSStateEnum.ERROR_MESSAGE}".replace(".", "_")
 
     @staticmethod
     def get_default() -> Optional[str]:
@@ -28,7 +28,7 @@ class ErrorMessageSState(BaseSState[Optional[str]]):
 class PromptSState(BaseSState[Optional[str]]):
     @staticmethod
     def get_name() -> str:
-        return f"{SpeechGenerationSStateEnum.PROMPT}"
+        return f"{SpeechGenerationSStateEnum.PROMPT}".replace(".", "_")
 
     @staticmethod
     def get_default() -> Optional[str]:
@@ -38,7 +38,7 @@ class PromptSState(BaseSState[Optional[str]]):
 class VoiceSState(BaseSState[VoiceEnum]):
     @staticmethod
     def get_name() -> str:
-        return f"{SpeechGenerationSStateEnum.VOICE}"
+        return f"{SpeechGenerationSStateEnum.VOICE}".replace(".", "_")
 
     @staticmethod
     def get_default() -> VoiceEnum:
@@ -48,7 +48,7 @@ class VoiceSState(BaseSState[VoiceEnum]):
 class GeneratedSpeechSState(BaseSState[Optional[bytes]]):
     @staticmethod
     def get_name() -> str:
-        return f"{SpeechGenerationSStateEnum.GENERATED_SPEECH}"
+        return f"{SpeechGenerationSStateEnum.GENERATED_SPEECH}".replace(".", "_")
 
     @staticmethod
     def get_default() -> Optional[bytes]:

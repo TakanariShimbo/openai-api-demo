@@ -19,7 +19,7 @@ class SubmitSState(BaseSState[bool]):
 class ErrorMessageSState(BaseSState[Optional[str]]):
     @staticmethod
     def get_name() -> str:
-        return f"{ChatGptSStateEnum.ERROR_MESSAGE}"
+        return f"{ChatGptSStateEnum.ERROR_MESSAGE}".replace(".", "_")
 
     @staticmethod
     def get_default() -> Optional[str]:
@@ -29,7 +29,7 @@ class ErrorMessageSState(BaseSState[Optional[str]]):
 class AiModelSState(BaseSState[AiModelEnum]):
     @staticmethod
     def get_name() -> str:
-        return f"{ChatGptSStateEnum.MODEL}"
+        return f"{ChatGptSStateEnum.MODEL}".replace(".", "_")
 
     @staticmethod
     def get_default() -> AiModelEnum:
@@ -39,7 +39,7 @@ class AiModelSState(BaseSState[AiModelEnum]):
 class ChatHistorySState(BaseSState[List[Dict[str, str]]]):
     @staticmethod
     def get_name() -> str:
-        return f"{ChatGptSStateEnum.CHAT_HISTORY}"
+        return f"{ChatGptSStateEnum.CHAT_HISTORY}".replace(".", "_")
 
     @staticmethod
     def get_default() -> List[Dict[str, str]]:
@@ -59,5 +59,5 @@ class ChatHistorySState(BaseSState[List[Dict[str, str]]]):
     def get_for_query(cls) -> List[Dict[str, str]]:
         chats = deepcopy(cls.get())
         for chat in chats:
-            chat.pop('role_name', None)
+            chat.pop("role_name", None)
         return chats

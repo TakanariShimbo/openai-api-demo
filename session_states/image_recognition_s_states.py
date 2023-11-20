@@ -9,7 +9,7 @@ from session_states.base_s_states import BaseSState
 class SubmitSState(BaseSState[bool]):
     @staticmethod
     def get_name() -> str:
-        return f"{ImageRecognitionSStateEnum.SUBMIT}"
+        return f"{ImageRecognitionSStateEnum.SUBMIT}".replace(".", "_")
 
     @staticmethod
     def get_default() -> bool:
@@ -19,7 +19,7 @@ class SubmitSState(BaseSState[bool]):
 class ErrorMessageSState(BaseSState[Optional[str]]):
     @staticmethod
     def get_name() -> str:
-        return f"{ImageRecognitionSStateEnum.ERROR_MESSAGE}"
+        return f"{ImageRecognitionSStateEnum.ERROR_MESSAGE}".replace(".", "_")
 
     @staticmethod
     def get_default() -> Optional[str]:
@@ -29,7 +29,7 @@ class ErrorMessageSState(BaseSState[Optional[str]]):
 class PromptSState(BaseSState[Optional[str]]):
     @staticmethod
     def get_name() -> str:
-        return f"{ImageRecognitionSStateEnum.PROMPT}"
+        return f"{ImageRecognitionSStateEnum.PROMPT}".replace(".", "_")
 
     @staticmethod
     def get_default() -> Optional[str]:
@@ -39,7 +39,7 @@ class PromptSState(BaseSState[Optional[str]]):
 class UploadedImageSState(BaseSState[Optional[np.ndarray]]):
     @staticmethod
     def get_name() -> str:
-        return f"{ImageRecognitionSStateEnum.UPLOADED_IMAGE}"
+        return f"{ImageRecognitionSStateEnum.UPLOADED_IMAGE}".replace(".", "_")
 
     @staticmethod
     def get_default() -> Optional[np.ndarray]:
@@ -49,7 +49,7 @@ class UploadedImageSState(BaseSState[Optional[np.ndarray]]):
 class AnswerSState(BaseSState[Optional[str]]):
     @staticmethod
     def get_name() -> str:
-        return f"{ImageRecognitionSStateEnum.ANSWER}"
+        return f"{ImageRecognitionSStateEnum.ANSWER}".replace(".", "_")
 
     @staticmethod
     def get_default() -> Optional[str]:

@@ -13,16 +13,15 @@ from components.speech_generation_component import SpeechGenerationComponent
 class PageManagerComponent:
     @classmethod
     def display_content(cls) -> None:
-        selected_page_value = st.sidebar.selectbox(
-            label='Pages', 
-            options=EnumHandler.get_enum_member_values(PageEnum),
-            key="Global PageSelectBox",
+        st.sidebar.selectbox(
+            label='Pages',
+            options=EnumHandler.get_enum_members(PageEnum),
+            format_func=lambda x: x.value,
+            key=PageSState.get_name(),
         )
-        selected_page_type = EnumHandler.value_to_enum_member(enum=PageEnum, value=selected_page_value)
-        # PageSState.set(value=page_type)
-        # current_page_type = PageSState.get()
-        st.write(f"## {selected_page_value}")
-        cls.__display_selected_page(page_type=selected_page_type)
+
+        st.write(f"## {PageSState.get()}")
+        cls.__display_selected_page(page_type=PageSState.get())
 
     @staticmethod
     def __display_selected_page(page_type: PageEnum):
