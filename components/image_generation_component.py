@@ -13,22 +13,10 @@ from components.sub_compornent_result import SubComponentResult
 
 
 class FormSchema(BaseModel):
-    ai_model_value: str
-    size_value: str
-    quality_value: str
+    ai_model_type: AiModelEnum
+    size_type: SizeEnum
+    quality_type: QualityEnum
     prompt: str = Field(min_length=1)
-
-    @property
-    def ai_model_type(self) -> AiModelEnum:
-        return EnumHandler.value_to_enum_member(enum=AiModelEnum, value=self.ai_model_value)
-
-    @property
-    def size_type(self) -> SizeEnum:
-        return EnumHandler.value_to_enum_member(enum=SizeEnum, value=self.size_value)
-
-    @property
-    def quality_type(self) -> QualityEnum:
-        return EnumHandler.value_to_enum_member(enum=QualityEnum, value=self.quality_value)
 
 
 class OnSubmitHandler:
@@ -84,40 +72,43 @@ class ImageGenerationComponent:
     @staticmethod
     def __sub_component() -> SubComponentResult:
         form_dict = {}
-        form = st.form(key="Image Generation Form", clear_on_submit=True)
+        form = st.form(key="ImageGeneration_PromptForm", clear_on_submit=True)
         with form:
             st.markdown("#### Prompt Form")
             left_col, center_col, right_col = st.columns(3)
 
-            form_dict["ai_model_value"] = left_col.selectbox(
+            form_dict["ai_model_type"] = left_col.selectbox(
                 label="Model",
-                options=EnumHandler.get_enum_member_values(enum=AiModelEnum),
+                options=EnumHandler.get_enum_members(enum=AiModelEnum),
+                format_func=lambda x: x.value,
                 index=EnumHandler.enum_member_to_index(member=AiModelSState.get()),
                 placeholder="Select model...",
-                key="DallE ModelSelectBox",
+                key="ImageGeneration_ModelSelectBox",
             )
 
-            form_dict["size_value"] = center_col.selectbox(
+            form_dict["size_type"] = center_col.selectbox(
                 label="Size",
-                options=EnumHandler.get_enum_member_values(enum=SizeEnum),
+                options=EnumHandler.get_enum_members(enum=SizeEnum),
+                format_func=lambda x: x.value,
                 index=EnumHandler.enum_member_to_index(member=SizeSState.get()),
                 placeholder="Select size...",
-                key="DallE SizeSelectBox",
+                key="ImageGeneration_SizeSelectBox",
             )
 
-            form_dict["quality_value"] = right_col.selectbox(
+            form_dict["quality_type"] = right_col.selectbox(
                 label="Quality",
-                options=EnumHandler.get_enum_member_values(enum=QualityEnum),
+                options=EnumHandler.get_enum_members(enum=QualityEnum),
+                format_func=lambda x: x.value,
                 index=EnumHandler.enum_member_to_index(member=QualitySState.get()),
                 placeholder="Quality size...",
-                key="DallE QualitySelectBox",
+                key="ImageGeneration_QualitySelectBox",
             )
 
             form_dict["prompt"] = st.text_area(
                 label="Prompt",
                 disabled=SubmitSState.get(),
                 placeholder="Please input prompt...",
-                key="DallE PromptTextArea",
+                key="ImageGeneration_PromptTextArea",
             )
 
             is_submited = st.form_submit_button(

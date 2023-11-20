@@ -1,4 +1,4 @@
-from typing import TypeVar, Generic, Optional
+from typing import TypeVar, Generic
 import abc
 
 import streamlit as st
@@ -33,18 +33,10 @@ class BaseSState(Generic[T], abc.ABC):
             return st.session_state[cls.get_name()]
 
     @classmethod
-    def set(cls, value: Optional[T] = None) -> None:
-        if value is None:
-            cls.reset() 
+    def set(cls, value: T) -> None:
         st.session_state[cls.get_name()] = value
 
     @classmethod
     def reset(cls) -> None:
         st.session_state[cls.get_name()] = cls.get_default()
 
-    @classmethod
-    def init(cls) -> None:
-        try:
-            st.session_state[cls.get_name()]
-        except KeyError:
-            cls.reset()

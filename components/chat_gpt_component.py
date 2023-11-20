@@ -77,7 +77,7 @@ class ChatGptComponent:
                     st.write(chat["content"])
 
         form_dict = {}
-        form = st.form(key="Chat GPT Form", clear_on_submit=True)
+        form = st.form(key="ChatGpt_PromptForm", clear_on_submit=True)
         with form:
             st.markdown("#### Prompt Form")
             
@@ -85,15 +85,16 @@ class ChatGptComponent:
                 label="Model",
                 options=EnumHandler.get_enum_members(enum=AiModelEnum),
                 format_func=lambda x: x.value,
+                index=EnumHandler.enum_member_to_index(member=AiModelSState.get()),
                 placeholder="Select model...",
-                key="ChatGpt ModelSelectBox",
+                key="ChatGpt_ModelSelectBox",
             )
 
             form_dict["prompt"] = st.text_area(
                 label="Prompt",
                 disabled=SubmitSState.get(),
                 placeholder="Please input prompt...",
-                key="ChatGpt PromptTextArea",
+                key="ChatGpt_PromptTextArea",
             )
 
             is_submited = st.form_submit_button(

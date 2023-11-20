@@ -83,7 +83,7 @@ class ImageRecognitionComponent:
     @staticmethod
     def __sub_component() -> SubComponentResult:
         form_dict = {}
-        form = st.form(key="Image Recognition Form", clear_on_submit=True)
+        form = st.form(key="ImageRecognition_PromptForm", clear_on_submit=True)
         with form:
             st.markdown("#### Prompt Form")
 
@@ -91,13 +91,13 @@ class ImageRecognitionComponent:
                 label="Prompt",
                 disabled=SubmitSState.get(),
                 placeholder="Please input prompt...",
-                key="ImageRecognition PromptInput",
+                key="ImageRecognition_PromptInput",
             )
 
             form_dict["uploaded_file"] = st.file_uploader(
                 label="Uploader", 
                 type=EnumHandler.get_enum_member_values(enum=ExtensionsEnum),
-                key="ImageRecognition UploadedFile",
+                key="ImageRecognition_UploadedFile",
             )
             
             is_submited = st.form_submit_button(

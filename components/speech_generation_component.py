@@ -9,12 +9,8 @@ from components.sub_compornent_result import SubComponentResult
 
 
 class FormSchema(BaseModel):
-    voice_value: str
+    voice_type: VoiceEnum
     prompt: str = Field(min_length=1)
-
-    @property
-    def voice_type(self) -> VoiceEnum:
-        return EnumHandler.value_to_enum_member(enum=VoiceEnum, value=self.voice_value)
 
 
 class OnSubmitHandler:
@@ -62,23 +58,24 @@ class SpeechGenerationComponent:
     @staticmethod
     def __sub_component() -> SubComponentResult:
         form_dict = {}
-        form = st.form(key="Speech Generation Form", clear_on_submit=True)
+        form = st.form(key="SpeechGeneration_PromptForm", clear_on_submit=True)
         with form:
             st.markdown("#### Prompt Form")
 
-            form_dict["voice_value"] = st.selectbox(
+            form_dict["voice_type"] = st.selectbox(
                 label="Voice",
-                options=EnumHandler.get_enum_member_values(enum=VoiceEnum),
+                options=EnumHandler.get_enum_members(enum=VoiceEnum),
+                format_func=lambda x: x.value,
                 index=EnumHandler.enum_member_to_index(member=VoiceSState.get()),
                 placeholder="Select voice...",
-                key="SpeechGeneration VoiceSelectBox",
+                key="SpeechGeneration_VoiceSelectBox",
             )
 
             form_dict["prompt"] = st.text_area(
                 label="Prompt",
                 disabled=SubmitSState.get(),
                 placeholder="Please input prompt...",
-                key="SpeechGeneration PromptTextArea",
+                key="SpeechGeneration_PromptTextArea",
             )
 
             is_submited = st.form_submit_button(
