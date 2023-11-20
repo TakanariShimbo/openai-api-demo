@@ -45,11 +45,11 @@ class VoiceSState(BaseSState[VoiceEnum]):
         return VoiceEnum.ALLOY
     
 
-class GeneratedSpeechSState(BaseSState[Optional[str]]):
+class GeneratedSpeechSState(BaseSState[Optional[bytes]]):
     @staticmethod
     def get_name() -> str:
         return f"{SpeechGenerationSStateEnum.GENERATED_SPEECH}"
 
     @staticmethod
-    def get_default() -> Optional[str]:
+    def get_default() -> Optional[bytes]:
         return None
