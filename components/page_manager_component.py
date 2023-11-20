@@ -20,7 +20,7 @@ class PageManagerComponent:
             key=PageSState.get_name(),
         )
 
-        st.write(f"## {PageSState.get()}")
+        st.write(f"## {PageSState.get().value}")
         cls.__display_selected_page(page_type=PageSState.get())
 
     @staticmethod
