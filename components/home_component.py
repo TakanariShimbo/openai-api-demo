@@ -10,7 +10,7 @@ class HomeComponent:
             f"""
             #### Overview
             Welcome to demo site of OpenAI API 🤖  
-            Let's enjoy OpenAI API 👏  
+            Let's enjoy some functions 👏  
 
             #### Creators  
             - Takanari Shimbo 🦥  
