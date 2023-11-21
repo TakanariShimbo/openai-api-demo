@@ -65,7 +65,7 @@ class SpeechGenerationComponent:
             form_dict["voice_type"] = st.selectbox(
                 label="Voice",
                 options=EnumHandler.get_enum_members(enum=VoiceEnum),
-                format_func=lambda x: x.value,
+                format_func=lambda x: x.name,
                 index=EnumHandler.enum_member_to_index(member=VoiceTypeSState.get()),
                 placeholder="Select voice...",
                 key="SpeechGeneration_VoiceSelectBox",

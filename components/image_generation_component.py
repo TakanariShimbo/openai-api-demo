@@ -80,7 +80,7 @@ class ImageGenerationComponent:
             form_dict["ai_model_type"] = left_col.selectbox(
                 label="Model",
                 options=EnumHandler.get_enum_members(enum=AiModelEnum),
-                format_func=lambda x: x.value,
+                format_func=lambda x: x.name,
                 index=EnumHandler.enum_member_to_index(member=AiModelTypeSState.get()),
                 placeholder="Select model...",
                 key="ImageGeneration_ModelSelectBox",
@@ -89,7 +89,7 @@ class ImageGenerationComponent:
             form_dict["size_type"] = center_col.selectbox(
                 label="Size",
                 options=EnumHandler.get_enum_members(enum=SizeEnum),
-                format_func=lambda x: x.value,
+                format_func=lambda x: x.name,
                 index=EnumHandler.enum_member_to_index(member=SizeTypeSState.get()),
                 placeholder="Select size...",
                 key="ImageGeneration_SizeSelectBox",
@@ -98,7 +98,7 @@ class ImageGenerationComponent:
             form_dict["quality_type"] = right_col.selectbox(
                 label="Quality",
                 options=EnumHandler.get_enum_members(enum=QualityEnum),
-                format_func=lambda x: x.value,
+                format_func=lambda x: x.name,
                 index=EnumHandler.enum_member_to_index(member=QualityTypeSState.get()),
                 placeholder="Quality size...",
                 key="ImageGeneration_QualitySelectBox",

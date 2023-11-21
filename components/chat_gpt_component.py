@@ -84,7 +84,7 @@ class ChatGptComponent:
             form_dict["ai_model_type"] = st.selectbox(
                 label="Model",
                 options=EnumHandler.get_enum_members(enum=AiModelEnum),
-                format_func=lambda x: x.value,
+                format_func=lambda x: x.name,
                 index=EnumHandler.enum_member_to_index(member=AiModelTypeSState.get()),
                 placeholder="Select model...",
                 key="ChatGpt_ModelSelectBox",
