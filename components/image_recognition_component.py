@@ -101,7 +101,7 @@ class ImageRecognitionComponent:
             )
             
             is_submited = st.form_submit_button(
-                label="Sumbit",
+                label="Submit",
                 disabled=SubmitSState.get(),
                 on_click=OnSubmitHandler.lock_submit_button,
                 type="primary",
