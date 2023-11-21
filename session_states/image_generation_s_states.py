@@ -31,50 +31,50 @@ class ErrorMessageSState(BaseSState[Optional[str]]):
         return None
 
 
-class AiModelSState(BaseSState[AiModelEnum]):
+class AiModelTypeSState(BaseSState[AiModelEnum]):
     @staticmethod
     def get_name() -> str:
-        return f"{ImageGenerationSStateEnum.MODEL}".replace(".", "_")
+        return f"{ImageGenerationSStateEnum.AI_MODEL_TYPE}".replace(".", "_")
 
     @staticmethod
     def get_default() -> AiModelEnum:
-        return AiModelEnum.DALL_E_3
+        return AiModelEnum.DALLE_3
 
 
-class SizeSState(BaseSState[SizeEnum]):
+class SizeTypeSState(BaseSState[SizeEnum]):
     @staticmethod
     def get_name() -> str:
-        return f"{ImageGenerationSStateEnum.SIZE}".replace(".", "_")
+        return f"{ImageGenerationSStateEnum.SIZE_TYPE}".replace(".", "_")
 
     @staticmethod
     def get_default() -> SizeEnum:
-        return SizeEnum.SIZE_1024X1024
+        return SizeEnum.W1024xH1024
 
 
-class QualitySState(BaseSState[QualityEnum]):
+class QualityTypeSState(BaseSState[QualityEnum]):
     @staticmethod
     def get_name() -> str:
-        return f"{ImageGenerationSStateEnum.QUALITY}".replace(".", "_")
+        return f"{ImageGenerationSStateEnum.QUALITY_TYPE}".replace(".", "_")
 
     @staticmethod
     def get_default() -> QualityEnum:
         return QualityEnum.STANDARD
 
 
-class PromptSState(BaseSState[Optional[str]]):
+class StoredPromptSState(BaseSState[Optional[str]]):
     @staticmethod
     def get_name() -> str:
-        return f"{ImageGenerationSStateEnum.PROMPT}".replace(".", "_")
+        return f"{ImageGenerationSStateEnum.STORED_PROMPT}".replace(".", "_")
 
     @staticmethod
     def get_default() -> Optional[str]:
         return None
 
 
-class GeneratedImageSState(BaseSState[Union[np.ndarray, str]]):
+class StoredImageSState(BaseSState[Union[np.ndarray, str]]):
     @staticmethod
     def get_name() -> str:
-        return f"{ImageGenerationSStateEnum.GENERATED_IMAGE}".replace(".", "_")
+        return f"{ImageGenerationSStateEnum.STORED_IMAGE}".replace(".", "_")
 
     @staticmethod
     def get_default() -> Union[np.ndarray, str]:

@@ -5,11 +5,11 @@ from pydantic import BaseModel, ValidationError, Field
 import streamlit as st
 from streamlit.runtime.uploaded_file_manager import UploadedFile
 
-from enums.image_recognition_enum import ExtensionsEnum
+from enums.image_recognition_enum import ExtensionEnum
 from handlers.image_handler import ImageHandler
 from handlers.enum_handler import EnumHandler
 from handlers.image_recognition_handler import ImageRecognitionHandler
-from session_states.image_recognition_s_states import SubmitSState, ErrorMessageSState, PromptSState, UploadedImageSState, AnswerSState
+from session_states.image_recognition_s_states import SubmitSState, ErrorMessageSState, StoredPromptSState, StoredImageSState, StoredAnswerSState
 from components.sub_compornent_result import SubComponentResult
 
 
@@ -67,10 +67,10 @@ class OnSubmitHandler:
 
     @staticmethod
     def update_s_states(form_schema: FormSchema, answer: Optional[str]):
-        PromptSState.set(value=form_schema.prompt)
-        UploadedImageSState.set(value=form_schema.uploaded_image_array_rgb)
+        StoredPromptSState.set(value=form_schema.prompt)
+        StoredImageSState.set(value=form_schema.uploaded_image_array_rgb)
         if answer:
-            AnswerSState.set(value=answer)
+            StoredAnswerSState.set(value=answer)
 
 
 class ImageRecognitionComponent:
@@ -96,7 +96,7 @@ class ImageRecognitionComponent:
 
             form_dict["uploaded_file"] = st.file_uploader(
                 label="Uploader", 
-                type=EnumHandler.get_enum_member_values(enum=ExtensionsEnum),
+                type=EnumHandler.get_enum_member_values(enum=ExtensionEnum),
                 key="ImageRecognition_UploadedFile",
             )
             
@@ -124,14 +124,14 @@ class ImageRecognitionComponent:
             OnSubmitHandler.unlock_submit_button()
             return SubComponentResult(call_rerun=True)
 
-        uploaded_image_array_bgr = UploadedImageSState.get()
+        uploaded_image_array_bgr = StoredImageSState.get()
         if type(uploaded_image_array_bgr) == np.ndarray:
             st.markdown("#### Recognized result")
             st.image(
                 image=uploaded_image_array_bgr,
-                caption=PromptSState.get(),
+                caption=StoredPromptSState.get(),
                 use_column_width=True,
             )
-            st.write(AnswerSState.get())
+            st.write(StoredAnswerSState.get())
 
         return SubComponentResult()

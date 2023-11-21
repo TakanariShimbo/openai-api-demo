@@ -6,7 +6,7 @@ import streamlit as st
 from enums.chatgpt_enum import AiModelEnum, SenderEnum
 from handlers.enum_handler import EnumHandler
 from handlers.chatgpt_handler import ChatGptHandler
-from session_states.chat_gpt_s_states import SubmitSState, ErrorMessageSState, AiModelSState, ChatHistorySState
+from session_states.chat_gpt_s_states import SubmitSState, ErrorMessageSState, AiModelTypeSState, StoredHistorySState
 from components.sub_compornent_result import SubComponentResult
 
 
@@ -47,17 +47,17 @@ class OnSubmitHandler:
             answer = ChatGptHandler.query_answer_and_display_streamly(
                 prompt=form_schema.prompt,
                 display_func=answer_area.write,
-                chat_history=ChatHistorySState.get_for_query(),
+                chat_history=StoredHistorySState.get_for_query(),
                 model_type=form_schema.ai_model_type,
             )
         return answer
 
     @staticmethod
     def update_s_states(form_schema: FormSchema, answer: Optional[str]):
-        AiModelSState.set(value=form_schema.ai_model_type)
-        ChatHistorySState.add(sender_type=SenderEnum.USER, sender_name=SenderEnum.USER.name, content=form_schema.prompt)
+        AiModelTypeSState.set(value=form_schema.ai_model_type)
+        StoredHistorySState.add(sender_type=SenderEnum.USER, sender_name=SenderEnum.USER.name, content=form_schema.prompt)
         if form_schema.ai_model_type.value and answer:
-            ChatHistorySState.add(sender_type=SenderEnum.ASSISTANT, sender_name=form_schema.ai_model_type.value, content=answer)
+            StoredHistorySState.add(sender_type=SenderEnum.ASSISTANT, sender_name=form_schema.ai_model_type.value, content=answer)
 
 
 class ChatGptComponent:
@@ -72,7 +72,7 @@ class ChatGptComponent:
         history_container = st.container()
         with history_container:
             st.markdown("#### Chat History")
-            for chat in ChatHistorySState.get():
+            for chat in StoredHistorySState.get():
                 with st.chat_message(name=chat["role_name"]):
                     st.write(chat["content"])
 
@@ -85,7 +85,7 @@ class ChatGptComponent:
                 label="Model",
                 options=EnumHandler.get_enum_members(enum=AiModelEnum),
                 format_func=lambda x: x.value,
-                index=EnumHandler.enum_member_to_index(member=AiModelSState.get()),
+                index=EnumHandler.enum_member_to_index(member=AiModelTypeSState.get()),
                 placeholder="Select model...",
                 key="ChatGpt_ModelSelectBox",
             )

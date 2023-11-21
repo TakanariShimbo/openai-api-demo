@@ -8,7 +8,7 @@ from enums.image_generation_enum import AiModelEnum, SizeEnum, QualityEnum
 from handlers.enum_handler import EnumHandler
 from handlers.image_handler import ImageHandler
 from handlers.image_generation_handler import ImageGenerationHandler
-from session_states.image_generation_s_states import SubmitSState, ErrorMessageSState, AiModelSState, SizeSState, QualitySState, PromptSState, GeneratedImageSState
+from session_states.image_generation_s_states import SubmitSState, ErrorMessageSState, AiModelTypeSState, SizeTypeSState, QualityTypeSState, StoredPromptSState, StoredImageSState
 from components.sub_compornent_result import SubComponentResult
 
 
@@ -55,11 +55,11 @@ class OnSubmitHandler:
         form_schema: FormSchema,
         generated_image: Union[np.ndarray, str],
     ) -> None:
-        AiModelSState.set(value=form_schema.ai_model_type)
-        SizeSState.set(value=form_schema.size_type)
-        QualitySState.set(value=form_schema.quality_type)
-        PromptSState.set(value=form_schema.prompt)
-        GeneratedImageSState.set(value=generated_image)
+        AiModelTypeSState.set(value=form_schema.ai_model_type)
+        SizeTypeSState.set(value=form_schema.size_type)
+        QualityTypeSState.set(value=form_schema.quality_type)
+        StoredPromptSState.set(value=form_schema.prompt)
+        StoredImageSState.set(value=generated_image)
 
 
 class ImageGenerationComponent:
@@ -81,7 +81,7 @@ class ImageGenerationComponent:
                 label="Model",
                 options=EnumHandler.get_enum_members(enum=AiModelEnum),
                 format_func=lambda x: x.value,
-                index=EnumHandler.enum_member_to_index(member=AiModelSState.get()),
+                index=EnumHandler.enum_member_to_index(member=AiModelTypeSState.get()),
                 placeholder="Select model...",
                 key="ImageGeneration_ModelSelectBox",
             )
@@ -90,7 +90,7 @@ class ImageGenerationComponent:
                 label="Size",
                 options=EnumHandler.get_enum_members(enum=SizeEnum),
                 format_func=lambda x: x.value,
-                index=EnumHandler.enum_member_to_index(member=SizeSState.get()),
+                index=EnumHandler.enum_member_to_index(member=SizeTypeSState.get()),
                 placeholder="Select size...",
                 key="ImageGeneration_SizeSelectBox",
             )
@@ -99,7 +99,7 @@ class ImageGenerationComponent:
                 label="Quality",
                 options=EnumHandler.get_enum_members(enum=QualityEnum),
                 format_func=lambda x: x.value,
-                index=EnumHandler.enum_member_to_index(member=QualitySState.get()),
+                index=EnumHandler.enum_member_to_index(member=QualityTypeSState.get()),
                 placeholder="Quality size...",
                 key="ImageGeneration_QualitySelectBox",
             )
@@ -152,8 +152,8 @@ class ImageGenerationComponent:
 
         st.markdown("#### Generated Image")
         st.image(
-            image=GeneratedImageSState.get(),
-            caption=PromptSState.get(),
+            image=StoredImageSState.get(),
+            caption=StoredPromptSState.get(),
             use_column_width=True,
         )
         return SubComponentResult()

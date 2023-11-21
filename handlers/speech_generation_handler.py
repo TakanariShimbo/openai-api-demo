@@ -11,11 +11,11 @@ class SpeechGenerationHandler:
     def generate_speech(
         cls,
         prompt: str,
-        voice: VoiceEnum = VoiceEnum.ALLOY,
+        voice_type: VoiceEnum = VoiceEnum.ALLOY,
     ) -> bytes:
         response = cls.client.audio.speech.create(
             model="tts-1",
-            voice=voice.value,
+            voice=voice_type.value,
             input=prompt
         )
         speech_bytes = bytes()

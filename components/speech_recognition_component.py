@@ -4,10 +4,10 @@ from pydantic import BaseModel, ValidationError
 import streamlit as st
 from streamlit.runtime.uploaded_file_manager import UploadedFile
 
-from enums.speech_recognition_enum import ExtensionsEnum, LanguageEnum
+from enums.speech_recognition_enum import ExtensionEnum, LanguageEnum
 from handlers.enum_handler import EnumHandler
 from handlers.speech_recognition_handler import SpeechRecognitionHandler
-from session_states.speech_recognition_s_states import SubmitSState, ErrorMessageSState, LanguageSState, SpeechSState, TextSState
+from session_states.speech_recognition_s_states import SubmitSState, ErrorMessageSState, LanguageTypeSState, StoredSpeechSState, StoredTranscriptSState
 from components.sub_compornent_result import SubComponentResult
 
 
@@ -51,10 +51,10 @@ class OnSubmitHandler:
 
     @staticmethod
     def update_s_states(form_schema: FormSchema, text: Optional[str]):
-        LanguageSState.set(value=form_schema.language_type)
-        SpeechSState.set(value=form_schema.uploaded_speech_file)
+        LanguageTypeSState.set(value=form_schema.language_type)
+        StoredSpeechSState.set(value=form_schema.uploaded_speech_file)
         if text:
-            TextSState.set(value=text)
+            StoredTranscriptSState.set(value=text)
 
 
 class SpeechRecognitionComponent:
@@ -75,14 +75,14 @@ class SpeechRecognitionComponent:
                 label="Language",
                 options=EnumHandler.get_enum_members(enum=LanguageEnum),
                 format_func=lambda x: x.name,
-                index=EnumHandler.enum_member_to_index(member=LanguageSState.get()),
+                index=EnumHandler.enum_member_to_index(member=LanguageTypeSState.get()),
                 placeholder="Select model...",
                 key="ChatGpt_LanguageSelectBox",
             )
 
             form_dict["uploaded_speech_file"] = st.file_uploader(
                 label="Uploader", 
-                type=EnumHandler.get_enum_member_values(enum=ExtensionsEnum),
+                type=EnumHandler.get_enum_member_values(enum=ExtensionEnum),
                 key="SpeechRecognition_UploadedFile",
             )
             
@@ -110,10 +110,10 @@ class SpeechRecognitionComponent:
             OnSubmitHandler.unlock_submit_button()
             return SubComponentResult(call_rerun=True)
 
-        text = TextSState.get()
+        text = StoredTranscriptSState.get()
         if text:
             st.markdown("#### Recognized result")
-            st.audio(data=SpeechSState.get(), format="audio/mp3")
+            st.audio(data=StoredSpeechSState.get(), format="audio/mp3")
             st.write(text)
 
         return SubComponentResult()

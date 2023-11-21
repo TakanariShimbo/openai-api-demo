@@ -26,30 +26,30 @@ class ErrorMessageSState(BaseSState[Optional[str]]):
         return None
 
 
-class PromptSState(BaseSState[Optional[str]]):
+class StoredPromptSState(BaseSState[Optional[str]]):
     @staticmethod
     def get_name() -> str:
-        return f"{ImageRecognitionSStateEnum.PROMPT}".replace(".", "_")
+        return f"{ImageRecognitionSStateEnum.STORED_PROMPT}".replace(".", "_")
 
     @staticmethod
     def get_default() -> Optional[str]:
         return None
 
 
-class UploadedImageSState(BaseSState[Optional[np.ndarray]]):
+class StoredImageSState(BaseSState[Optional[np.ndarray]]):
     @staticmethod
     def get_name() -> str:
-        return f"{ImageRecognitionSStateEnum.UPLOADED_IMAGE}".replace(".", "_")
+        return f"{ImageRecognitionSStateEnum.STORED_IMAGE}".replace(".", "_")
 
     @staticmethod
     def get_default() -> Optional[np.ndarray]:
         return None
     
 
-class AnswerSState(BaseSState[Optional[str]]):
+class StoredAnswerSState(BaseSState[Optional[str]]):
     @staticmethod
     def get_name() -> str:
-        return f"{ImageRecognitionSStateEnum.ANSWER}".replace(".", "_")
+        return f"{ImageRecognitionSStateEnum.STORED_ANSWER}".replace(".", "_")
 
     @staticmethod
     def get_default() -> Optional[str]:

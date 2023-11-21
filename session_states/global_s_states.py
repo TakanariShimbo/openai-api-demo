@@ -6,7 +6,7 @@ from session_states.base_s_states import BaseSState
 class PageSState(BaseSState[PageEnum]):
     @staticmethod
     def get_name() -> str:
-        return f"{GlobalSStateEnum.PAGE}".replace(".", "_")
+        return f"{GlobalSStateEnum.CURRENT_PAGE}".replace(".", "_")
 
     @staticmethod
     def get_default() -> PageEnum:

@@ -26,20 +26,20 @@ class ErrorMessageSState(BaseSState[Optional[str]]):
         return None
 
 
-class AiModelSState(BaseSState[AiModelEnum]):
+class AiModelTypeSState(BaseSState[AiModelEnum]):
     @staticmethod
     def get_name() -> str:
-        return f"{ChatGptSStateEnum.MODEL}".replace(".", "_")
+        return f"{ChatGptSStateEnum.AI_MODEL_TYPE}".replace(".", "_")
 
     @staticmethod
     def get_default() -> AiModelEnum:
         return AiModelEnum.NONE
 
 
-class ChatHistorySState(BaseSState[List[Dict[str, str]]]):
+class StoredHistorySState(BaseSState[List[Dict[str, str]]]):
     @staticmethod
     def get_name() -> str:
-        return f"{ChatGptSStateEnum.CHAT_HISTORY}".replace(".", "_")
+        return f"{ChatGptSStateEnum.STORED_HISTORY}".replace(".", "_")
 
     @staticmethod
     def get_default() -> List[Dict[str, str]]:

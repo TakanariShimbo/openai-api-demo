@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class ExtensionsEnum(Enum):
+class ExtensionEnum(Enum):
     MP3 = "mp3"
     MP4 = "mp4"
     MPEG = "mpeg"

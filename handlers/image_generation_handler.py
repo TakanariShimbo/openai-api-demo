@@ -12,8 +12,8 @@ class ImageGenerationHandler:
     def generate_image(
         cls,
         prompt: str,
-        model_type: AiModelEnum = AiModelEnum.DALL_E_3,
-        size_type: SizeEnum = SizeEnum.SIZE_1024X1024,
+        model_type: AiModelEnum = AiModelEnum.DALLE_3,
+        size_type: SizeEnum = SizeEnum.W1024xH1024,
         quality_type: QualityEnum = QualityEnum.STANDARD,
     ) -> str:
         response = cls.client.images.generate(

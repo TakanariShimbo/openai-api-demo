@@ -1,4 +1,4 @@
-from enum import Enum, auto
+from enum import Enum
 
 
 class PageEnum(Enum):
@@ -8,4 +8,3 @@ class PageEnum(Enum):
     IMAGE_GENERATION = "🌅 Image Generation"
     SPEECH_RECOGNITION = "👂 Speech Recognition"
     SPEECH_GENERATION = "📢 Speech Generation"
-   

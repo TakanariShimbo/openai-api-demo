@@ -25,30 +25,30 @@ class ErrorMessageSState(BaseSState[Optional[str]]):
         return None
 
 
-class PromptSState(BaseSState[Optional[str]]):
+class VoiceTypeSState(BaseSState[VoiceEnum]):
     @staticmethod
     def get_name() -> str:
-        return f"{SpeechGenerationSStateEnum.PROMPT}".replace(".", "_")
-
-    @staticmethod
-    def get_default() -> Optional[str]:
-        return None
-
-
-class VoiceSState(BaseSState[VoiceEnum]):
-    @staticmethod
-    def get_name() -> str:
-        return f"{SpeechGenerationSStateEnum.VOICE}".replace(".", "_")
+        return f"{SpeechGenerationSStateEnum.VOICE_TYPE}".replace(".", "_")
 
     @staticmethod
     def get_default() -> VoiceEnum:
         return VoiceEnum.ALLOY
     
 
-class GeneratedSpeechSState(BaseSState[Optional[bytes]]):
+class StoredPromptSState(BaseSState[Optional[str]]):
     @staticmethod
     def get_name() -> str:
-        return f"{SpeechGenerationSStateEnum.GENERATED_SPEECH}".replace(".", "_")
+        return f"{SpeechGenerationSStateEnum.STORED_PROMPT}".replace(".", "_")
+
+    @staticmethod
+    def get_default() -> Optional[str]:
+        return None
+    
+
+class StoredSpeechSState(BaseSState[Optional[bytes]]):
+    @staticmethod
+    def get_name() -> str:
+        return f"{SpeechGenerationSStateEnum.STORED_SPEECH}".replace(".", "_")
 
     @staticmethod
     def get_default() -> Optional[bytes]:

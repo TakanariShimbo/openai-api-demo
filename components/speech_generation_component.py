@@ -4,7 +4,7 @@ import streamlit as st
 from enums.speech_generation_enum import VoiceEnum
 from handlers.enum_handler import EnumHandler
 from handlers.speech_generation_handler import SpeechGenerationHandler
-from session_states.speech_generation_s_states import SubmitSState, ErrorMessageSState, VoiceSState, PromptSState, GeneratedSpeechSState
+from session_states.speech_generation_s_states import SubmitSState, ErrorMessageSState, VoiceTypeSState, StoredPromptSState, StoredSpeechSState
 from components.sub_compornent_result import SubComponentResult
 
 
@@ -34,7 +34,7 @@ class OnSubmitHandler:
     def generate_speech(form_schema: FormSchema) -> bytes:
         speech_bytes = SpeechGenerationHandler.generate_speech(
             prompt=form_schema.prompt,
-            voice=form_schema.voice_type,
+            voice_type=form_schema.voice_type,
         )
         return speech_bytes
 
@@ -43,9 +43,9 @@ class OnSubmitHandler:
         form_schema: FormSchema,
         generated_speech_bytes: bytes,
     ) -> None:
-        VoiceSState.set(value=form_schema.voice_type)
-        PromptSState.set(value=form_schema.prompt)
-        GeneratedSpeechSState.set(value=generated_speech_bytes)
+        VoiceTypeSState.set(value=form_schema.voice_type)
+        StoredPromptSState.set(value=form_schema.prompt)
+        StoredSpeechSState.set(value=generated_speech_bytes)
 
 
 class SpeechGenerationComponent:
@@ -66,7 +66,7 @@ class SpeechGenerationComponent:
                 label="Voice",
                 options=EnumHandler.get_enum_members(enum=VoiceEnum),
                 format_func=lambda x: x.value,
-                index=EnumHandler.enum_member_to_index(member=VoiceSState.get()),
+                index=EnumHandler.enum_member_to_index(member=VoiceTypeSState.get()),
                 placeholder="Select voice...",
                 key="SpeechGeneration_VoiceSelectBox",
             )
@@ -114,9 +114,9 @@ class SpeechGenerationComponent:
                 with form:
                     st.warning(error_message)
 
-        generated_speech = GeneratedSpeechSState.get()
+        generated_speech = StoredSpeechSState.get()
         if generated_speech:
             st.markdown("#### Generated Speech")
             st.audio(data=generated_speech, format="audio/mp3")
-            st.write(PromptSState.get())
+            st.write(StoredPromptSState.get())
         return SubComponentResult()

@@ -25,30 +25,30 @@ class ErrorMessageSState(BaseSState[Optional[str]]):
         return None
 
 
-class LanguageSState(BaseSState[LanguageEnum]):
+class LanguageTypeSState(BaseSState[LanguageEnum]):
     @staticmethod
     def get_name() -> str:
-        return f"{SpeechRecognitionSStateEnum.LANGUAGE}".replace(".", "_")
+        return f"{SpeechRecognitionSStateEnum.LANGUAGE_TYPE}".replace(".", "_")
 
     @staticmethod
     def get_default() -> LanguageEnum:
         return LanguageEnum.JAPANESE
     
 
-class SpeechSState(BaseSState[Optional[bytes]]):
+class StoredSpeechSState(BaseSState[Optional[bytes]]):
     @staticmethod
     def get_name() -> str:
-        return f"{SpeechRecognitionSStateEnum.SPEECH}".replace(".", "_")
+        return f"{SpeechRecognitionSStateEnum.STORED_SPEECH}".replace(".", "_")
 
     @staticmethod
     def get_default() -> Optional[bytes]:
         return None
     
 
-class TextSState(BaseSState[Optional[str]]):
+class StoredTranscriptSState(BaseSState[Optional[str]]):
     @staticmethod
     def get_name() -> str:
-        return f"{SpeechRecognitionSStateEnum.TEXT}".replace(".", "_")
+        return f"{SpeechRecognitionSStateEnum.STORED_TRANSCRIPT}".replace(".", "_")
 
     @staticmethod
     def get_default() -> Optional[str]:

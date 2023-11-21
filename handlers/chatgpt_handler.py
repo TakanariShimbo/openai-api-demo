@@ -15,7 +15,7 @@ class ChatGptHandler:
         cls,
         prompt: str,
         chat_history: List[Any] = [],
-        model_type: AiModelEnum = AiModelEnum.GPT_3_5_TURBO,
+        model_type: AiModelEnum = AiModelEnum.GPT35_TURBO,
     ) -> str:
         if model_type == AiModelEnum.NONE:
             raise InvalidModelTypeException()
@@ -36,7 +36,7 @@ class ChatGptHandler:
         prompt: str,
         display_func: Callable[[str], None] = print,
         chat_history: List[Any] = [],
-        model_type: AiModelEnum = AiModelEnum.GPT_3_5_TURBO,
+        model_type: AiModelEnum = AiModelEnum.GPT35_TURBO,
     ) -> str:
         if model_type == AiModelEnum.NONE:
             raise InvalidModelTypeException()
