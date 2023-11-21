@@ -13,13 +13,17 @@ from components.sub_compornent_result import SubComponentResult
 
 class FormSchema(BaseModel):
     language_type: LanguageEnum
-    uploaded_speech_file: Any
-    
-    @classmethod
-    def construct_using_form_dict(cls, language_type: LanguageEnum, uploaded_speech_file: UploadedFile):
-         return cls(language_type=language_type, uploaded_speech_file=uploaded_speech_file)
+    speech_file: Any
 
+    @classmethod
+    def construct_using_form_dict(cls, language_type: LanguageEnum, uploaded_speech: UploadedFile):
+        return cls(language_type=language_type, speech_file=uploaded_speech)
     
+    @property
+    def speech_bytes(self) -> bytes:
+        return self.speech_file.getvalue()
+
+
 class OnSubmitHandler:
     @staticmethod
     def lock_submit_button():
@@ -39,22 +43,22 @@ class OnSubmitHandler:
 
     @staticmethod
     def display_audio(form_schema: FormSchema) -> None:
-        st.audio(data=form_schema.uploaded_speech_file, format="audio/mp3")
+        st.audio(data=form_schema.speech_file, format="audio/mp3")
 
     @staticmethod
     def recognize_speech(form_schema: FormSchema) -> Optional[str]:
-        text = SpeechRecognitionHandler.recognize_speech(
-            speech_file=form_schema.uploaded_speech_file,
+        transcript = SpeechRecognitionHandler.recognize_speech(
+            speech_file=form_schema.speech_file,
             language_type=form_schema.language_type,
         )
-        return text
+        return transcript
 
     @staticmethod
-    def update_s_states(form_schema: FormSchema, text: Optional[str]):
+    def update_s_states(form_schema: FormSchema, transcript: Optional[str]):
         LanguageTypeSState.set(value=form_schema.language_type)
-        StoredSpeechSState.set(value=form_schema.uploaded_speech_file)
-        if text:
-            StoredTranscriptSState.set(value=text)
+        StoredSpeechSState.set(value=form_schema.speech_bytes)
+        if transcript:
+            StoredTranscriptSState.set(value=transcript)
 
 
 class SpeechRecognitionComponent:
@@ -67,9 +71,9 @@ class SpeechRecognitionComponent:
     @staticmethod
     def __sub_component() -> SubComponentResult:
         form_dict = {}
-        form = st.form(key="SpeechRecognition_PromptForm", clear_on_submit=True)
+        form = st.form(key="SpeechRecognition_Form", clear_on_submit=True)
         with form:
-            st.markdown("#### Prompt Form")
+            st.markdown("#### Form")
 
             form_dict["language_type"] = st.selectbox(
                 label="Language",
@@ -80,12 +84,12 @@ class SpeechRecognitionComponent:
                 key="ChatGpt_LanguageSelectBox",
             )
 
-            form_dict["uploaded_speech_file"] = st.file_uploader(
-                label="Uploader", 
+            form_dict["uploaded_speech"] = st.file_uploader(
+                label="Uploader",
                 type=EnumHandler.get_enum_member_values(enum=ExtensionEnum),
-                key="SpeechRecognition_UploadedFile",
+                key="SpeechRecognition_UploadedSpeech",
             )
-            
+
             is_submited = st.form_submit_button(
                 label="Submit",
                 disabled=SubmitSState.get(),
@@ -100,20 +104,20 @@ class SpeechRecognitionComponent:
                 OnSubmitHandler.set_error_message()
                 OnSubmitHandler.unlock_submit_button()
                 return SubComponentResult(call_rerun=True)
-            
-            st.markdown("#### Recognized result")
-            OnSubmitHandler.display_audio(form_schema=form_schema)
-            text = OnSubmitHandler.recognize_speech(form_schema=form_schema)
 
-            OnSubmitHandler.update_s_states(form_schema=form_schema, text=text)
+            st.markdown("#### Result")
+            OnSubmitHandler.display_audio(form_schema=form_schema)
+            generated_transcript = OnSubmitHandler.recognize_speech(form_schema=form_schema)
+
+            OnSubmitHandler.update_s_states(form_schema=form_schema, transcript=generated_transcript)
             OnSubmitHandler.reset_error_message()
             OnSubmitHandler.unlock_submit_button()
             return SubComponentResult(call_rerun=True)
 
-        text = StoredTranscriptSState.get()
-        if text:
-            st.markdown("#### Recognized result")
+        transcript = StoredTranscriptSState.get()
+        if transcript:
+            st.markdown("#### Result")
             st.audio(data=StoredSpeechSState.get(), format="audio/mp3")
-            st.write(text)
+            st.write(transcript)
 
         return SubComponentResult()

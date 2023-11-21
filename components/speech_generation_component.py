@@ -41,11 +41,11 @@ class OnSubmitHandler:
     @staticmethod
     def update_s_states(
         form_schema: FormSchema,
-        generated_speech_bytes: bytes,
+        speech_bytes: bytes,
     ) -> None:
         VoiceTypeSState.set(value=form_schema.voice_type)
         StoredPromptSState.set(value=form_schema.prompt)
-        StoredSpeechSState.set(value=generated_speech_bytes)
+        StoredSpeechSState.set(value=speech_bytes)
 
 
 class SpeechGenerationComponent:
@@ -58,9 +58,9 @@ class SpeechGenerationComponent:
     @staticmethod
     def __sub_component() -> SubComponentResult:
         form_dict = {}
-        form = st.form(key="SpeechGeneration_PromptForm", clear_on_submit=True)
+        form = st.form(key="SpeechGeneration_Form", clear_on_submit=True)
         with form:
-            st.markdown("#### Prompt Form")
+            st.markdown("#### Form")
 
             form_dict["voice_type"] = st.selectbox(
                 label="Voice",
@@ -99,7 +99,7 @@ class SpeechGenerationComponent:
 
             OnSubmitHandler.update_s_states(
                 form_schema=form_schema,
-                generated_speech_bytes=generated_speech_bytes,
+                speech_bytes=generated_speech_bytes,
             )
 
             OnSubmitHandler.reset_error_message()
@@ -114,9 +114,9 @@ class SpeechGenerationComponent:
                 with form:
                     st.warning(error_message)
 
-        generated_speech = StoredSpeechSState.get()
-        if generated_speech:
-            st.markdown("#### Generated Speech")
-            st.audio(data=generated_speech, format="audio/mp3")
+        speech_bytes = StoredSpeechSState.get()
+        if speech_bytes:
+            st.markdown("#### Result")
+            st.audio(data=speech_bytes, format="audio/mp3")
             st.write(StoredPromptSState.get())
         return SubComponentResult()

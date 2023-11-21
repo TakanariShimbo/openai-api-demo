@@ -77,9 +77,9 @@ class ChatGptComponent:
                     st.write(chat["content"])
 
         form_dict = {}
-        form = st.form(key="ChatGpt_PromptForm", clear_on_submit=True)
+        form = st.form(key="ChatGpt_Form", clear_on_submit=True)
         with form:
-            st.markdown("#### Prompt Form")
+            st.markdown("#### Form")
             
             form_dict["ai_model_type"] = st.selectbox(
                 label="Model",
@@ -114,8 +114,8 @@ class ChatGptComponent:
 
             with history_container:
                 OnSubmitHandler.display_prompt(prompt=form_schema.prompt)
-                answer = OnSubmitHandler.query_answer_and_display_streamly(form_schema=form_schema)
-            OnSubmitHandler.update_s_states(form_schema=form_schema, answer=answer)
+                generated_answer = OnSubmitHandler.query_answer_and_display_streamly(form_schema=form_schema)
+            OnSubmitHandler.update_s_states(form_schema=form_schema, answer=generated_answer)
             OnSubmitHandler.reset_error_message()
             OnSubmitHandler.unlock_submit_button()
             return SubComponentResult(call_rerun=True)

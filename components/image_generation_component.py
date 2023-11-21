@@ -72,9 +72,9 @@ class ImageGenerationComponent:
     @staticmethod
     def __sub_component() -> SubComponentResult:
         form_dict = {}
-        form = st.form(key="ImageGeneration_PromptForm", clear_on_submit=True)
+        form = st.form(key="ImageGeneration_Form", clear_on_submit=True)
         with form:
-            st.markdown("#### Prompt Form")
+            st.markdown("#### Form")
             left_col, center_col, right_col = st.columns(3)
 
             form_dict["ai_model_type"] = left_col.selectbox(
@@ -150,7 +150,7 @@ class ImageGenerationComponent:
                 with form:
                     st.warning(error_message)
 
-        st.markdown("#### Generated Image")
+        st.markdown("#### Result")
         st.image(
             image=StoredImageSState.get(),
             caption=StoredPromptSState.get(),
