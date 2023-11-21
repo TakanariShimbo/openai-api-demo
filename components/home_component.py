@@ -5,7 +5,7 @@ import streamlit as st
 
 class HomeComponent:
     @staticmethod
-    def display_content() -> None:
+    def display_component() -> None:
         content = dedent(
             f"""
             #### Overview

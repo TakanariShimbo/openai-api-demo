@@ -37,3 +37,11 @@ class SpeechGenerationSStateEnum(Enum):
     PROMPT = auto()
     VOICE = auto()
     GENERATED_SPEECH = auto()
+
+
+class SpeechRecognitionSStateEnum(Enum):
+    SUBMIT = auto()
+    ERROR_MESSAGE = auto()
+    LANGUAGE = auto()
+    SPEECH = auto()
+    TEXT = auto()

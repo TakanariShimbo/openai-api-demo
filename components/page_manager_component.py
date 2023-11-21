@@ -27,7 +27,7 @@ class PageManagerComponent:
     @staticmethod
     def __display_selected_page(page_type: PageEnum):
         if page_type == PageEnum.HOME:
-            HomeComponent.display_content()
+            HomeComponent.display_component()
         elif page_type == PageEnum.CHAT_GPT:
             ChatGptComponent.display_component()
         elif page_type == PageEnum.IMAGE_RECOGNITION:
@@ -35,6 +35,6 @@ class PageManagerComponent:
         elif page_type == PageEnum.IMAGE_GENERATION:
             ImageGenerationComponent.display_component()
         elif page_type == PageEnum.SPEECH_RECOGNITION:
-            SpeechRecognitionComponent.display_content()
+            SpeechRecognitionComponent.display_component()
         elif page_type == PageEnum.SPEECH_GENERATION:
             SpeechGenerationComponent.display_component()
