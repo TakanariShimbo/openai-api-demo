@@ -7,6 +7,7 @@ from components.home_component import HomeComponent
 from components.chat_gpt_component import ChatGptComponent
 from components.image_recognition_component import ImageRecognitionComponent
 from components.image_generation_component import ImageGenerationComponent
+from components.speech_recognition_component import SpeechRecognitionComponent
 from components.speech_generation_component import SpeechGenerationComponent
 
 
@@ -33,5 +34,7 @@ class PageManagerComponent:
             ImageRecognitionComponent.display_component()
         elif page_type == PageEnum.IMAGE_GENERATION:
             ImageGenerationComponent.display_component()
+        elif page_type == PageEnum.SPEECH_RECOGNITION:
+            SpeechRecognitionComponent.display_content()
         elif page_type == PageEnum.SPEECH_GENERATION:
             SpeechGenerationComponent.display_component()

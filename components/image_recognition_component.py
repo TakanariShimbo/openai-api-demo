@@ -110,7 +110,7 @@ class ImageRecognitionComponent:
         if is_submited:
             try:
                 form_schema = FormSchema.construct_using_form_dict(**form_dict)
-            except ValidationError:
+            except:
                 OnSubmitHandler.set_error_message()
                 OnSubmitHandler.unlock_submit_button()
                 return SubComponentResult(call_rerun=True)
