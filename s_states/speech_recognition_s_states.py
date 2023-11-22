@@ -2,7 +2,7 @@ from typing import Optional
 
 from enums.speech_recognition_enum import LanguageEnum
 from enums.s_state_enum import SpeechRecognitionSStateEnum
-from session_states.base_s_states import BaseSState
+from s_states.base_s_states import BaseSState
 
 
 class SubmitSState(BaseSState[bool]):

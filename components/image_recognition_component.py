@@ -9,7 +9,7 @@ from enums.image_recognition_enum import ExtensionEnum
 from handlers.image_handler import ImageHandler
 from handlers.enum_handler import EnumHandler
 from handlers.image_recognition_handler import ImageRecognitionHandler
-from session_states.image_recognition_s_states import SubmitSState, ErrorMessageSState, StoredPromptSState, StoredImageSState, StoredAnswerSState
+from s_states.image_recognition_s_states import SubmitSState, ErrorMessageSState, StoredPromptSState, StoredImageSState, StoredAnswerSState
 from components.sub_compornent_result import SubComponentResult
 
 

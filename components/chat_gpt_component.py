@@ -6,7 +6,7 @@ import streamlit as st
 from enums.chatgpt_enum import AiModelEnum, SenderEnum
 from handlers.enum_handler import EnumHandler
 from handlers.chatgpt_handler import ChatGptHandler
-from session_states.chat_gpt_s_states import SubmitSState, ErrorMessageSState, AiModelTypeSState, StoredHistorySState
+from s_states.chat_gpt_s_states import SubmitSState, ErrorMessageSState, AiModelTypeSState, StoredHistorySState
 from components.sub_compornent_result import SubComponentResult
 
 

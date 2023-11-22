@@ -7,7 +7,7 @@ from streamlit.runtime.uploaded_file_manager import UploadedFile
 from enums.speech_recognition_enum import ExtensionEnum, LanguageEnum
 from handlers.enum_handler import EnumHandler
 from handlers.speech_recognition_handler import SpeechRecognitionHandler
-from session_states.speech_recognition_s_states import SubmitSState, ErrorMessageSState, LanguageTypeSState, StoredSpeechSState, StoredTranscriptSState
+from s_states.speech_recognition_s_states import SubmitSState, ErrorMessageSState, LanguageTypeSState, StoredSpeechSState, StoredTranscriptSState
 from components.sub_compornent_result import SubComponentResult
 
 

@@ -3,7 +3,7 @@ from typing import Optional
 import numpy as np
 
 from enums.s_state_enum import ImageRecognitionSStateEnum
-from session_states.base_s_states import BaseSState
+from s_states.base_s_states import BaseSState
 
 
 class SubmitSState(BaseSState[bool]):

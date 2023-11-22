@@ -1,6 +1,6 @@
 from enums.global_enum import PageEnum
 from enums.s_state_enum import GlobalSStateEnum
-from session_states.base_s_states import BaseSState
+from s_states.base_s_states import BaseSState
 
 
 class PageSState(BaseSState[PageEnum]):

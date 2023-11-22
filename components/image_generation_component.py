@@ -8,7 +8,7 @@ from enums.image_generation_enum import AiModelEnum, SizeEnum, QualityEnum
 from handlers.enum_handler import EnumHandler
 from handlers.image_handler import ImageHandler
 from handlers.image_generation_handler import ImageGenerationHandler
-from session_states.image_generation_s_states import SubmitSState, ErrorMessageSState, AiModelTypeSState, SizeTypeSState, QualityTypeSState, StoredPromptSState, StoredImageSState
+from s_states.image_generation_s_states import SubmitSState, ErrorMessageSState, AiModelTypeSState, SizeTypeSState, QualityTypeSState, StoredPromptSState, StoredImageSState
 from components.sub_compornent_result import SubComponentResult
 
 

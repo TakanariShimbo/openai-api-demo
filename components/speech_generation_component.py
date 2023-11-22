@@ -4,7 +4,7 @@ import streamlit as st
 from enums.speech_generation_enum import VoiceEnum
 from handlers.enum_handler import EnumHandler
 from handlers.speech_generation_handler import SpeechGenerationHandler
-from session_states.speech_generation_s_states import SubmitSState, ErrorMessageSState, VoiceTypeSState, StoredPromptSState, StoredSpeechSState
+from s_states.speech_generation_s_states import SubmitSState, ErrorMessageSState, VoiceTypeSState, StoredPromptSState, StoredSpeechSState
 from components.sub_compornent_result import SubComponentResult
 
 

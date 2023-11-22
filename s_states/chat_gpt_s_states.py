@@ -3,7 +3,7 @@ from typing import List, Dict, Optional
 
 from enums.chatgpt_enum import AiModelEnum, SenderEnum
 from enums.s_state_enum import ChatGptSStateEnum
-from session_states.base_s_states import BaseSState
+from s_states.base_s_states import BaseSState
 
 
 class SubmitSState(BaseSState[bool]):

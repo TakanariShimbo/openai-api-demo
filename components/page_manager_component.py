@@ -2,7 +2,7 @@ import streamlit as st
 
 from enums.global_enum import PageEnum
 from handlers.enum_handler import EnumHandler
-from session_states.global_s_states import PageSState
+from s_states.global_s_states import PageSState
 from components.home_component import HomeComponent
 from components.chat_gpt_component import ChatGptComponent
 from components.image_recognition_component import ImageRecognitionComponent

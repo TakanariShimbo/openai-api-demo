@@ -5,10 +5,10 @@ import numpy as np
 
 from enums.image_generation_enum import SizeEnum, AiModelEnum, QualityEnum
 from enums.s_state_enum import ImageGenerationSStateEnum
-from session_states.base_s_states import BaseSState
+from s_states.base_s_states import BaseSState
 
 
-DUMMY_IMAGE = cv2.imread(filename="images/dummy.jpg", flags=cv2.IMREAD_COLOR)
+DUMMY_IMAGE = cv2.imread(filename="./static/images/dummy.jpg", flags=cv2.IMREAD_COLOR)
 
 
 class SubmitSState(BaseSState[bool]):

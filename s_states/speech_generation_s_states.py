@@ -2,7 +2,7 @@ from typing import Optional
 
 from enums.speech_generation_enum import VoiceEnum
 from enums.s_state_enum import SpeechGenerationSStateEnum
-from session_states.base_s_states import BaseSState
+from s_states.base_s_states import BaseSState
 
 
 class SubmitSState(BaseSState[bool]):
