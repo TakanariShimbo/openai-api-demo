@@ -1,7 +1,7 @@
 from typing import Optional
 
 import numpy as np
-from openai import OpenAI
+from openai import OpenAI, AuthenticationError
 from pydantic import BaseModel, ValidationError, Field
 import streamlit as st
 from streamlit.runtime.uploaded_file_manager import UploadedFile
@@ -21,16 +21,16 @@ class FormSchema(BaseModel):
     @classmethod
     def construct_using_form_dict(cls, prompt: str, uploaded_image: UploadedFile):
         return cls(prompt=prompt, image_bytes=uploaded_image.getvalue())
-    
+
     @property
     def image_b64(self) -> str:
         return ImageHandler.bytes_to_b64(image_bytes=self.image_bytes)
-    
+
     @property
     def image_array_rgb(self) -> np.ndarray:
         return ImageHandler.bytes_to_array_rgb(image_bytes=self.image_bytes)
 
-    
+
 class OnSubmitHandler:
     @staticmethod
     def lock_submit_button():
@@ -41,7 +41,7 @@ class OnSubmitHandler:
         SubmitSState.reset()
 
     @staticmethod
-    def set_error_message(error_message: str = "Please fill out the form completely.") -> None:
+    def set_error_message(error_message: str) -> None:
         ErrorMessageSState.set(value=error_message)
 
     @staticmethod
@@ -51,8 +51,8 @@ class OnSubmitHandler:
     @staticmethod
     def display_uploaded_image(form_schema: FormSchema) -> None:
         st.image(
-            image=form_schema.image_array_rgb, 
-            caption=form_schema.prompt, 
+            image=form_schema.image_array_rgb,
+            caption=form_schema.prompt,
             use_column_width=True,
         )
 
@@ -97,11 +97,11 @@ class ImageRecognitionComponent:
             )
 
             form_dict["uploaded_image"] = st.file_uploader(
-                label="Uploader", 
+                label="Uploader",
                 type=EnumHandler.get_enum_member_values(enum=ExtensionEnum),
                 key="ImageRecognition_UploadedImage",
             )
-            
+
             is_submited = st.form_submit_button(
                 label="Submit",
                 disabled=SubmitSState.get(),
@@ -109,18 +109,26 @@ class ImageRecognitionComponent:
                 type="primary",
             )
 
+            error_message = ErrorMessageSState.get()
+            if error_message:
+                st.warning(error_message)
+
         if is_submited:
             try:
                 form_schema = FormSchema.construct_using_form_dict(**form_dict)
             except:
-                OnSubmitHandler.set_error_message()
+                OnSubmitHandler.set_error_message(error_message="Please fill out the form completely.")
                 OnSubmitHandler.unlock_submit_button()
                 return SubComponentResult(call_rerun=True)
-            
+
             st.markdown("#### Result")
             OnSubmitHandler.display_uploaded_image(form_schema=form_schema)
-            generated_answer = OnSubmitHandler.query_answer_and_display_streamly(client=client, form_schema=form_schema)
-
+            try:
+                generated_answer = OnSubmitHandler.query_answer_and_display_streamly(client=client, form_schema=form_schema)
+            except AuthenticationError:
+                OnSubmitHandler.set_error_message(error_message="Specified OpenAI APIKey isn't valid.")
+                OnSubmitHandler.unlock_submit_button()
+                return SubComponentResult(call_rerun=True)
             OnSubmitHandler.update_s_states(form_schema=form_schema, answer=generated_answer)
             OnSubmitHandler.reset_error_message()
             OnSubmitHandler.unlock_submit_button()

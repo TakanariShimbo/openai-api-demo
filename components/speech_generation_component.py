@@ -1,4 +1,4 @@
-from openai import OpenAI
+from openai import OpenAI, AuthenticationError
 from pydantic import BaseModel, ValidationError, Field
 import streamlit as st
 
@@ -24,7 +24,7 @@ class OnSubmitHandler:
         SubmitSState.reset()
 
     @staticmethod
-    def set_error_message(error_message: str = "Please fill out the form completely.") -> None:
+    def set_error_message(error_message: str) -> None:
         ErrorMessageSState.set(value=error_message)
 
     @staticmethod
@@ -87,17 +87,26 @@ class SpeechGenerationComponent:
                 type="primary",
             )
 
+            error_message = ErrorMessageSState.get()
+            if error_message:
+                st.warning(error_message)
+
         if is_submited:
             try:
                 form_schema = FormSchema(**form_dict)
             except ValidationError:
-                OnSubmitHandler.set_error_message()
+                OnSubmitHandler.set_error_message(error_message="Please fill out the form completely.")
                 OnSubmitHandler.unlock_submit_button()
                 return SubComponentResult(call_rerun=True)
 
             with form:
                 with st.spinner("Generating..."):
-                    generated_speech_bytes = OnSubmitHandler.generate_speech(client=client, form_schema=form_schema)
+                    try:
+                        generated_speech_bytes = OnSubmitHandler.generate_speech(client=client, form_schema=form_schema)
+                    except AuthenticationError:
+                        OnSubmitHandler.set_error_message(error_message="Specified OpenAI APIKey isn't valid.")
+                        OnSubmitHandler.unlock_submit_button()
+                        return SubComponentResult(call_rerun=True)
 
             OnSubmitHandler.update_s_states(
                 form_schema=form_schema,
@@ -107,14 +116,6 @@ class SpeechGenerationComponent:
             OnSubmitHandler.reset_error_message()
             OnSubmitHandler.unlock_submit_button()
             return SubComponentResult(call_rerun=True)
-
-        try:
-            form_schema = FormSchema(**form_dict)
-        except ValidationError:
-            error_message = ErrorMessageSState.get()
-            if error_message:
-                with form:
-                    st.warning(error_message)
 
         speech_bytes = StoredSpeechSState.get()
         if speech_bytes:

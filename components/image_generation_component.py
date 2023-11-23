@@ -1,7 +1,7 @@
 from typing import Union
 
 import numpy as np
-from openai import OpenAI
+from openai import OpenAI, AuthenticationError
 from pydantic import BaseModel, ValidationError, Field
 import streamlit as st
 
@@ -9,7 +9,15 @@ from enums.image_generation_enum import AiModelEnum, SizeEnum, QualityEnum
 from handlers.enum_handler import EnumHandler
 from handlers.image_handler import ImageHandler
 from handlers.image_generation_handler import ImageGenerationHandler
-from s_states.image_generation_s_states import SubmitSState, ErrorMessageSState, AiModelTypeSState, SizeTypeSState, QualityTypeSState, StoredPromptSState, StoredImageSState
+from s_states.image_generation_s_states import (
+    SubmitSState,
+    ErrorMessageSState,
+    AiModelTypeSState,
+    SizeTypeSState,
+    QualityTypeSState,
+    StoredPromptSState,
+    StoredImageSState,
+)
 from components.sub_compornent_result import SubComponentResult
 
 
@@ -120,37 +128,33 @@ class ImageGenerationComponent:
                 type="primary",
             )
 
+            error_message = ErrorMessageSState.get()
+            if error_message:
+                st.warning(error_message)
+
         if is_submited:
             try:
                 form_schema = FormSchema(**form_dict)
             except ValidationError:
-                OnSubmitHandler.set_error_message()
+                OnSubmitHandler.set_error_message(error_message="Please fill out the form completely.")
                 OnSubmitHandler.unlock_submit_button()
                 return SubComponentResult(call_rerun=True)
 
             with form:
                 with st.status("Generating..."):
                     st.write("Querying...")
-                    generated_image_url = OnSubmitHandler.generate_image(client=client, form_schema=form_schema)
+                    try:
+                        generated_image_url = OnSubmitHandler.generate_image(client=client, form_schema=form_schema)
+                    except AuthenticationError:
+                        OnSubmitHandler.set_error_message(error_message="Specified OpenAI APIKey isn't valid.")
+                        OnSubmitHandler.unlock_submit_button()
+                        return SubComponentResult(call_rerun=True)
                     st.write(f"[Downloading...]({generated_image_url})")
                     generated_image_rgb = OnSubmitHandler.download_image(image_url=generated_image_url)
-
-            OnSubmitHandler.update_s_states(
-                form_schema=form_schema,
-                generated_image=generated_image_rgb,
-            )
-
+            OnSubmitHandler.update_s_states(form_schema=form_schema, generated_image=generated_image_rgb)
             OnSubmitHandler.reset_error_message()
             OnSubmitHandler.unlock_submit_button()
             return SubComponentResult(call_rerun=True)
-
-        try:
-            form_schema = FormSchema(**form_dict)
-        except ValidationError:
-            error_message = ErrorMessageSState.get()
-            if error_message:
-                with form:
-                    st.warning(error_message)
 
         st.markdown("#### Result")
         st.image(

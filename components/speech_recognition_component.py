@@ -1,6 +1,6 @@
 from typing import Optional, Any
 
-from openai import OpenAI
+from openai import OpenAI, AuthenticationError
 from pydantic import BaseModel, ValidationError
 import streamlit as st
 from streamlit.runtime.uploaded_file_manager import UploadedFile
@@ -19,7 +19,7 @@ class FormSchema(BaseModel):
     @classmethod
     def construct_using_form_dict(cls, language_type: LanguageEnum, uploaded_speech: UploadedFile):
         return cls(language_type=language_type, speech_file=uploaded_speech)
-    
+
     @property
     def speech_bytes(self) -> bytes:
         return self.speech_file.getvalue()
@@ -35,7 +35,7 @@ class OnSubmitHandler:
         SubmitSState.reset()
 
     @staticmethod
-    def set_error_message(error_message: str = "Please fill out the form completely.") -> None:
+    def set_error_message(error_message: str) -> None:
         ErrorMessageSState.set(value=error_message)
 
     @staticmethod
@@ -99,18 +99,26 @@ class SpeechRecognitionComponent:
                 type="primary",
             )
 
+            error_message = ErrorMessageSState.get()
+            if error_message:
+                st.warning(error_message)
+
         if is_submited:
             try:
                 form_schema = FormSchema.construct_using_form_dict(**form_dict)
             except:
-                OnSubmitHandler.set_error_message()
+                OnSubmitHandler.set_error_message(error_message="Please fill out the form completely.")
                 OnSubmitHandler.unlock_submit_button()
                 return SubComponentResult(call_rerun=True)
 
             st.markdown("#### Result")
             OnSubmitHandler.display_audio(form_schema=form_schema)
-            generated_transcript = OnSubmitHandler.recognize_speech(client=client, form_schema=form_schema)
-
+            try:
+                generated_transcript = OnSubmitHandler.recognize_speech(client=client, form_schema=form_schema)
+            except AuthenticationError:
+                OnSubmitHandler.set_error_message(error_message="Specified OpenAI APIKey isn't valid.")
+                OnSubmitHandler.unlock_submit_button()
+                return SubComponentResult(call_rerun=True)
             OnSubmitHandler.update_s_states(form_schema=form_schema, transcript=generated_transcript)
             OnSubmitHandler.reset_error_message()
             OnSubmitHandler.unlock_submit_button()

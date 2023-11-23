@@ -1,3 +1,5 @@
+from time import sleep
+
 from openai import OpenAI
 import streamlit as st
 
@@ -16,6 +18,7 @@ class PageManagerComponent:
     @classmethod
     def display_component(cls) -> None:
         cls.__display_api_key_input_component()
+        sleep(0.05)
         cls.__display_component_of_selected_page(page_type=PageSState.get())
 
     @classmethod
