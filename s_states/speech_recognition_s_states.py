@@ -33,7 +33,7 @@ class LanguageTypeSState(BaseSState[LanguageEnum]):
     @staticmethod
     def get_default() -> LanguageEnum:
         return LanguageEnum.JAPANESE
-    
+
 
 class StoredSpeechSState(BaseSState[Optional[bytes]]):
     @staticmethod
@@ -43,7 +43,7 @@ class StoredSpeechSState(BaseSState[Optional[bytes]]):
     @staticmethod
     def get_default() -> Optional[bytes]:
         return None
-    
+
 
 class StoredTranscriptSState(BaseSState[Optional[str]]):
     @staticmethod

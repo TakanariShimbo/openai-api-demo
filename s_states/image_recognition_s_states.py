@@ -44,7 +44,7 @@ class StoredImageSState(BaseSState[Optional[np.ndarray]]):
     @staticmethod
     def get_default() -> Optional[np.ndarray]:
         return None
-    
+
 
 class StoredAnswerSState(BaseSState[Optional[str]]):
     @staticmethod

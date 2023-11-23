@@ -3,6 +3,7 @@ from enum import Enum, auto
 
 class GlobalSStateEnum(Enum):
     CURRENT_PAGE = auto()
+    OPENAI_CLIENT = auto()
 
 
 class ChatGptSStateEnum(Enum):

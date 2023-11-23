@@ -33,7 +33,7 @@ class VoiceTypeSState(BaseSState[VoiceEnum]):
     @staticmethod
     def get_default() -> VoiceEnum:
         return VoiceEnum.ALLOY
-    
+
 
 class StoredPromptSState(BaseSState[Optional[str]]):
     @staticmethod
@@ -43,7 +43,7 @@ class StoredPromptSState(BaseSState[Optional[str]]):
     @staticmethod
     def get_default() -> Optional[str]:
         return None
-    
+
 
 class StoredSpeechSState(BaseSState[Optional[bytes]]):
     @staticmethod

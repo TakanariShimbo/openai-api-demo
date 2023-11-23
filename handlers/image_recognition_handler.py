@@ -2,7 +2,6 @@ from typing import Any, Callable
 
 from openai import OpenAI
 
-from enums.env_enum import EnvEnum
 from enums.chatgpt_enum import SenderEnum
 from exceptions.exceptions import EmptyResponseException
 
@@ -11,15 +10,14 @@ VISION_MODEL = "gpt-4-vision-preview"
 
 
 class ImageRecognitionHandler:
-    client = OpenAI(api_key=EnvEnum.DEFAULT_OPENAI_APIKEY.value)
-
     @classmethod
     def query_answer(
         cls,
+        client: OpenAI,
         image_b64: str,
         prompt: str,
     ) -> str:
-        response = cls.client.chat.completions.create(
+        response = client.chat.completions.create(
             model=VISION_MODEL,
             messages=[
                 cls.__get_user_prompt_with_image(prompt=prompt, image_b64=image_b64),
@@ -35,11 +33,12 @@ class ImageRecognitionHandler:
     @classmethod
     def query_answer_and_display_streamly(
         cls,
+        client: OpenAI,
         image_b64: str,
         prompt: str,
         display_func: Callable[[str], None] = print,
     ) -> str:
-        stream_response = cls.client.chat.completions.create(
+        stream_response = client.chat.completions.create(
             model=VISION_MODEL,
             messages=[
                 cls.__get_user_prompt_with_image(prompt=prompt, image_b64=image_b64),

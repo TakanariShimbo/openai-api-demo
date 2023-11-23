@@ -39,4 +39,3 @@ class BaseSState(Generic[T], abc.ABC):
     @classmethod
     def reset(cls) -> None:
         st.session_state[cls.get_name()] = cls.get_default()
-
