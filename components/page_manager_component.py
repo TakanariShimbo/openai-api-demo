@@ -1,5 +1,3 @@
-from time import sleep
-
 from openai import OpenAI
 import streamlit as st
 
@@ -21,17 +19,23 @@ class PageManagerComponent:
         cls.__display_component_of_selected_page(page_type=PageSState.get())
 
     @classmethod
-    def __display_component_of_api_key_input(cls):
+    def __display_component_of_api_key_input(cls) -> None:
         inputed_api_key = st.sidebar.text_input(
             label="OpenAI API Key",
             type="password",
             key="Sidebar_API_Key_TextInput",
         )
 
-        if inputed_api_key:
-            OpenAiClientSState.set(value=OpenAI(api_key=inputed_api_key))
-        else:
+        if not inputed_api_key:
             OpenAiClientSState.reset()
+            return
+        client = OpenAiClientSState.get()
+        if not client:
+            OpenAiClientSState.set(value=OpenAI(api_key=inputed_api_key))
+            return
+        if inputed_api_key != client.api_key:
+            OpenAiClientSState.set(value=OpenAI(api_key=inputed_api_key))
+            return
 
     @staticmethod
     def __display_component_of_selected_page(page_type: PageEnum) -> None:
