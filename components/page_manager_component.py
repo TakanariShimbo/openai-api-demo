@@ -15,21 +15,37 @@ from components.speech_generation_component import SpeechGenerationComponent
 class PageManagerComponent:
     @classmethod
     def display_component(cls) -> None:
+        cls.__display_api_key_input_component()
+        cls.__display_component_of_selected_page(page_type=PageSState.get())
+
+    @classmethod
+    def __display_api_key_input_component(cls):
+        inputed_api_key = st.sidebar.text_input(
+            label="OpenAI API Key",
+            type="password",
+            key="Sidebar_API_Key_TextInput",
+        )
+
+        if inputed_api_key:
+            OpenAiClientSState.set(value=OpenAI(api_key=inputed_api_key))
+        else:
+            OpenAiClientSState.reset()
+
+    @staticmethod
+    def __display_component_of_selected_page(page_type: PageEnum) -> None:
+        client = OpenAiClientSState.get()
+
+        if not client:
+            st.warning("OpenAI API Key hasn't been set yet.")
+            return
+
         st.sidebar.selectbox(
-            label='Pages',
+            label="Pages Selection",
             options=EnumHandler.get_enum_members(PageEnum),
             format_func=lambda x: x.value,
             key=PageSState.get_name(),
         )
 
-        client = OpenAiClientSState.get()
-        if not client:
-            st.warning("OpenAI APIKey hasn't been set yet.")
-            return 
-        cls.__display_selected_page(page_type=PageSState.get(), client=client)
-
-    @staticmethod
-    def __display_selected_page(page_type: PageEnum, client: OpenAI):
         st.write(f"## {page_type.value}")
         if page_type == PageEnum.HOME:
             HomeComponent.display_component(client=client)
