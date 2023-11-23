@@ -1,0 +1,5 @@
+[runner]
+magicEnabled = false
+
+[server]
+port = 50000
