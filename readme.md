@@ -29,3 +29,8 @@
     ```
     streamlit run server.py
     ```
+
+3. check access
+    ```
+    http://localhost:50000/
+    ```
