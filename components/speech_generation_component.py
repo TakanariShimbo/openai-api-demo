@@ -1,3 +1,4 @@
+from openai import OpenAI
 from pydantic import BaseModel, ValidationError, Field
 import streamlit as st
 
@@ -31,8 +32,9 @@ class OnSubmitHandler:
         ErrorMessageSState.reset()
 
     @staticmethod
-    def generate_speech(form_schema: FormSchema) -> bytes:
+    def generate_speech(client: OpenAI, form_schema: FormSchema) -> bytes:
         speech_bytes = SpeechGenerationHandler.generate_speech(
+            client=client,
             prompt=form_schema.prompt,
             voice_type=form_schema.voice_type,
         )
@@ -50,13 +52,13 @@ class OnSubmitHandler:
 
 class SpeechGenerationComponent:
     @classmethod
-    def display_component(cls) -> None:
-        res = cls.__sub_component()
+    def display_component(cls, client: OpenAI) -> None:
+        res = cls.__sub_component(client=client)
         if res.call_return:
             st.rerun()
 
     @staticmethod
-    def __sub_component() -> SubComponentResult:
+    def __sub_component(client: OpenAI) -> SubComponentResult:
         form_dict = {}
         form = st.form(key="SpeechGeneration_Form", clear_on_submit=True)
         with form:
@@ -95,7 +97,7 @@ class SpeechGenerationComponent:
 
             with form:
                 with st.spinner("Generating..."):
-                    generated_speech_bytes = OnSubmitHandler.generate_speech(form_schema=form_schema)
+                    generated_speech_bytes = OnSubmitHandler.generate_speech(client=client, form_schema=form_schema)
 
             OnSubmitHandler.update_s_states(
                 form_schema=form_schema,

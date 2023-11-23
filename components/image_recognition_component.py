@@ -1,6 +1,7 @@
 from typing import Optional
 
 import numpy as np
+from openai import OpenAI
 from pydantic import BaseModel, ValidationError, Field
 import streamlit as st
 from streamlit.runtime.uploaded_file_manager import UploadedFile
@@ -56,9 +57,10 @@ class OnSubmitHandler:
         )
 
     @staticmethod
-    def query_answer_and_display_streamly(form_schema: FormSchema) -> Optional[str]:
+    def query_answer_and_display_streamly(client: OpenAI, form_schema: FormSchema) -> Optional[str]:
         answer_area = st.empty()
         answer = ImageRecognitionHandler.query_answer_and_display_streamly(
+            client=client,
             image_b64=form_schema.image_b64,
             prompt=form_schema.prompt,
             display_func=answer_area.write,
@@ -75,13 +77,13 @@ class OnSubmitHandler:
 
 class ImageRecognitionComponent:
     @classmethod
-    def display_component(cls) -> None:
-        res = cls.__sub_component()
+    def display_component(cls, client: OpenAI) -> None:
+        res = cls.__sub_component(client=client)
         if res.call_return:
             st.rerun()
 
     @staticmethod
-    def __sub_component() -> SubComponentResult:
+    def __sub_component(client: OpenAI) -> SubComponentResult:
         form_dict = {}
         form = st.form(key="ImageRecognition_Form", clear_on_submit=True)
         with form:
@@ -117,7 +119,7 @@ class ImageRecognitionComponent:
             
             st.markdown("#### Result")
             OnSubmitHandler.display_uploaded_image(form_schema=form_schema)
-            generated_answer = OnSubmitHandler.query_answer_and_display_streamly(form_schema=form_schema)
+            generated_answer = OnSubmitHandler.query_answer_and_display_streamly(client=client, form_schema=form_schema)
 
             OnSubmitHandler.update_s_states(form_schema=form_schema, answer=generated_answer)
             OnSubmitHandler.reset_error_message()

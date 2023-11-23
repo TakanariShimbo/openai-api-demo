@@ -1,11 +1,12 @@
 from textwrap import dedent
 
+from openai import OpenAI
 import streamlit as st
 
 
 class HomeComponent:
     @staticmethod
-    def display_component() -> None:
+    def display_component(client: OpenAI) -> None:
         content = dedent(
             f"""
             #### Overview

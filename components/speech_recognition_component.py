@@ -1,5 +1,6 @@
 from typing import Optional, Any
 
+from openai import OpenAI
 from pydantic import BaseModel, ValidationError
 import streamlit as st
 from streamlit.runtime.uploaded_file_manager import UploadedFile
@@ -46,8 +47,9 @@ class OnSubmitHandler:
         st.audio(data=form_schema.speech_file, format="audio/mp3")
 
     @staticmethod
-    def recognize_speech(form_schema: FormSchema) -> Optional[str]:
+    def recognize_speech(client: OpenAI, form_schema: FormSchema) -> Optional[str]:
         transcript = SpeechRecognitionHandler.recognize_speech(
+            client=client,
             speech_file=form_schema.speech_file,
             language_type=form_schema.language_type,
         )
@@ -63,13 +65,13 @@ class OnSubmitHandler:
 
 class SpeechRecognitionComponent:
     @classmethod
-    def display_component(cls) -> None:
-        res = cls.__sub_component()
+    def display_component(cls, client: OpenAI) -> None:
+        res = cls.__sub_component(client=client)
         if res.call_return:
             st.rerun()
 
     @staticmethod
-    def __sub_component() -> SubComponentResult:
+    def __sub_component(client: OpenAI) -> SubComponentResult:
         form_dict = {}
         form = st.form(key="SpeechRecognition_Form", clear_on_submit=True)
         with form:
@@ -107,7 +109,7 @@ class SpeechRecognitionComponent:
 
             st.markdown("#### Result")
             OnSubmitHandler.display_audio(form_schema=form_schema)
-            generated_transcript = OnSubmitHandler.recognize_speech(form_schema=form_schema)
+            generated_transcript = OnSubmitHandler.recognize_speech(client=client, form_schema=form_schema)
 
             OnSubmitHandler.update_s_states(form_schema=form_schema, transcript=generated_transcript)
             OnSubmitHandler.reset_error_message()

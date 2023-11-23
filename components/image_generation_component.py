@@ -1,6 +1,7 @@
 from typing import Union
 
 import numpy as np
+from openai import OpenAI
 from pydantic import BaseModel, ValidationError, Field
 import streamlit as st
 
@@ -37,8 +38,9 @@ class OnSubmitHandler:
         ErrorMessageSState.reset()
 
     @staticmethod
-    def generate_image(form_schema: FormSchema) -> str:
+    def generate_image(client: OpenAI, form_schema: FormSchema) -> str:
         image_url = ImageGenerationHandler.generate_image(
+            client=client,
             prompt=form_schema.prompt,
             model_type=form_schema.ai_model_type,
             size_type=form_schema.size_type,
@@ -64,13 +66,13 @@ class OnSubmitHandler:
 
 class ImageGenerationComponent:
     @classmethod
-    def display_component(cls) -> None:
-        res = cls.__sub_component()
+    def display_component(cls, client: OpenAI) -> None:
+        res = cls.__sub_component(client=client)
         if res.call_return:
             st.rerun()
 
     @staticmethod
-    def __sub_component() -> SubComponentResult:
+    def __sub_component(client: OpenAI) -> SubComponentResult:
         form_dict = {}
         form = st.form(key="ImageGeneration_Form", clear_on_submit=True)
         with form:
@@ -129,7 +131,7 @@ class ImageGenerationComponent:
             with form:
                 with st.status("Generating..."):
                     st.write("Querying...")
-                    generated_image_url = OnSubmitHandler.generate_image(form_schema=form_schema)
+                    generated_image_url = OnSubmitHandler.generate_image(client=client, form_schema=form_schema)
                     st.write(f"[Downloading...]({generated_image_url})")
                     generated_image_rgb = OnSubmitHandler.download_image(image_url=generated_image_url)
 

@@ -1,5 +1,6 @@
 from typing import Optional
 
+from openai import OpenAI
 from pydantic import BaseModel, ValidationError, Field
 import streamlit as st
 
@@ -38,13 +39,14 @@ class OnSubmitHandler:
             st.write(prompt)
 
     @staticmethod
-    def query_answer_and_display_streamly(form_schema: FormSchema) -> Optional[str]:
+    def query_answer_and_display_streamly(client: OpenAI, form_schema: FormSchema) -> Optional[str]:
         if not form_schema.ai_model_type.value:
             return None
 
         with st.chat_message(name=form_schema.ai_model_type.value):
             answer_area = st.empty()
             answer = ChatGptHandler.query_answer_and_display_streamly(
+                client=client,
                 prompt=form_schema.prompt,
                 display_func=answer_area.write,
                 chat_history=StoredHistorySState.get_for_query(),
@@ -62,13 +64,13 @@ class OnSubmitHandler:
 
 class ChatGptComponent:
     @classmethod
-    def display_component(cls) -> None:
-        res = cls.__sub_component()
+    def display_component(cls, client: OpenAI) -> None:
+        res = cls.__sub_component(client=client)
         if res.call_return:
             st.rerun()
 
     @staticmethod
-    def __sub_component() -> SubComponentResult:
+    def __sub_component(client: OpenAI) -> SubComponentResult:
         history_container = st.container()
         with history_container:
             st.markdown("#### Chat History")
@@ -114,7 +116,7 @@ class ChatGptComponent:
 
             with history_container:
                 OnSubmitHandler.display_prompt(prompt=form_schema.prompt)
-                generated_answer = OnSubmitHandler.query_answer_and_display_streamly(form_schema=form_schema)
+                generated_answer = OnSubmitHandler.query_answer_and_display_streamly(client=client, form_schema=form_schema)
             OnSubmitHandler.update_s_states(form_schema=form_schema, answer=generated_answer)
             OnSubmitHandler.reset_error_message()
             OnSubmitHandler.unlock_submit_button()
