@@ -109,12 +109,12 @@ class ChatGptComponent:
             error_message = ErrorMessageSState.get()
             if error_message:
                 st.warning(error_message)
-                
+
         if is_submited:
             try:
                 form_schema = FormSchema(**form_dict)
             except ValidationError:
-                OnSubmitHandler.set_error_message("Please fill out the form completely.")
+                OnSubmitHandler.set_error_message(error_message="Please fill out the form completely.")
                 OnSubmitHandler.unlock_submit_button()
                 return SubComponentResult(call_rerun=True)
 
@@ -123,7 +123,7 @@ class ChatGptComponent:
                 try:
                     generated_answer = OnSubmitHandler.query_answer_and_display_streamly(client=client, form_schema=form_schema)
                 except AuthenticationError:
-                    OnSubmitHandler.set_error_message("Specified OpenAI APIKey isn't valid.")
+                    OnSubmitHandler.set_error_message(error_message="Specified OpenAI APIKey isn't valid.")
                     OnSubmitHandler.unlock_submit_button()
                     return SubComponentResult(call_rerun=True)
             OnSubmitHandler.update_s_states(form_schema=form_schema, answer=generated_answer)
