@@ -13,7 +13,7 @@ from components.speech_generation_component import SpeechGenerationComponent
 
 class PageManagerComponent:
     @classmethod
-    def display_content(cls) -> None:
+    def display_component(cls) -> None:
         st.sidebar.selectbox(
             label='Pages',
             options=EnumHandler.get_enum_members(PageEnum),
