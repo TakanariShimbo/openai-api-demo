@@ -17,11 +17,11 @@ from components.speech_generation_component import SpeechGenerationComponent
 class PageManagerComponent:
     @classmethod
     def display_component(cls) -> None:
-        cls.__display_api_key_input_component()
+        cls.__display_component_of_api_key_input()
         cls.__display_component_of_selected_page(page_type=PageSState.get())
 
     @classmethod
-    def __display_api_key_input_component(cls):
+    def __display_component_of_api_key_input(cls):
         inputed_api_key = st.sidebar.text_input(
             label="OpenAI API Key",
             type="password",
