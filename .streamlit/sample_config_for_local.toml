@@ -3,3 +3,9 @@ magicEnabled = false
 
 [server]
 port = 50003
+
+[theme]
+primaryColor="#db4277"
+backgroundColor="#fffaf4"
+secondaryBackgroundColor="#ffeee5"
+textColor="#553501"
