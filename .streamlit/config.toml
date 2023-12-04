@@ -2,6 +2,7 @@
 magicEnabled = false
 
 [theme]
+base="light"
 primaryColor="#db8242"
 backgroundColor="#fffaf4"
 secondaryBackgroundColor="#ffeee5"
