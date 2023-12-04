@@ -12,9 +12,9 @@ class ConfigComponent:
         )
 
 
-        # FOR HEADER MENU: 
+        # FOR HIDE HEADER MENU: 
         #       [data-testid="stToolbar"] {visibility: hidden !important;}
-        # FOR FOOTER MENU: 
+        # FOR HIDE FOOTER MENU: 
         #       footer {visibility: hidden !important;}
         hide_streamlit_style = dedent("""
             <style>
