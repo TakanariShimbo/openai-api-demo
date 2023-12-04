@@ -18,6 +18,7 @@ class ConfigComponent:
         #       footer {visibility: hidden !important;}
         hide_streamlit_style = dedent("""
             <style>
+            [data-testid="stToolbar"] {visibility: hidden !important;}
             footer {visibility: hidden !important;}
             </style>
         """)
