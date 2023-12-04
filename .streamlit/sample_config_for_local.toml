@@ -5,6 +5,7 @@ magicEnabled = false
 port = 50003
 
 [theme]
+base="light"
 primaryColor="#db8242"
 backgroundColor="#fffaf4"
 secondaryBackgroundColor="#ffeee5"
