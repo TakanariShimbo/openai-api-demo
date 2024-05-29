@@ -2,7 +2,7 @@
 magicEnabled = false
 
 [server]
-port = 55503
+port = 50004
 
 [theme]
 base="light"

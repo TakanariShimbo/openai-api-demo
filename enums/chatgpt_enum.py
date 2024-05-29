@@ -8,6 +8,7 @@ class SenderEnum(Enum):
     
 class AiModelEnum(Enum):
     NONE = None
+    GPT4O = "gpt-4o"
     GPT4_TURBO = "gpt-4-turbo"
     GPT4 = "gpt-4"
     GPT35_TURBO = "gpt-3.5-turbo"
