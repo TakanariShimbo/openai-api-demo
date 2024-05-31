@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  sample-streamlit-for-openai-api-service:
+    container_name: sample-streamlit-for-openai-api-container
+
+    image: uttechcenter/sample_streamlit_for_openai:v1.0.0
+
+    ports:
+      - "${SERVER_PORT}:8501"
+
+    environment:
+      - DEFAULT_OPENAI_APIKEY=${DEFAULT_OPENAI_APIKEY}
+
+    command: streamlit run server.py
+
+    restart: always
