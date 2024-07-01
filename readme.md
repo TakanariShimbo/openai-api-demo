@@ -1,10 +1,14 @@
-# Deploy
+## 🚀About
 
-## Requires
+OpenAI API Demo
+
+## 🐋Docker
+
+### Requires
 
 - docker
 
-## Deploy
+### Build server
 
 1. create .env  
    Create .env and set params by refering .env_sample
@@ -15,20 +19,20 @@
 docker compose up -d
 ```
 
-## build image
+### Build image
 
 ```
 docker build -t uttechcenter/sample_streamlit_for_openai:v1.0.0 .
 ```
 
-# Dev
+## 🐍Conda
 
-## Requires
+### Requires
 
 - python: 3.10
 - libs (written in requirements.txt)
 
-## Setup
+### Setup venv
 
 1. create python3.10 venv and activate
 
@@ -46,7 +50,7 @@ docker build -t uttechcenter/sample_streamlit_for_openai:v1.0.0 .
 3. create .env  
    Create .env and set params by refering .env_sample
 
-## Build
+### Build server
 
 1. activate venv
 
