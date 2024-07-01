@@ -29,8 +29,7 @@ docker build -t uttechcenter/sample_streamlit_for_openai:v1.0.0 .
 
 ### Requires
 
-- python: 3.10
-- libs (written in requirements.txt)
+- conda
 
 ### Setup venv
 
